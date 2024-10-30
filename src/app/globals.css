@@ -32,7 +32,7 @@ body {
   color: var(--color-complementario);
 }
 
-.sidebar h6 {
+.sidebar h6 p {
   font-size: 0.9rem;
 }
 
