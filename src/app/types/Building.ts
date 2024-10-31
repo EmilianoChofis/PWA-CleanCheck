@@ -1,4 +1,5 @@
 export type Building = {
+  id: number;
   name: string;
   cleanRooms: number;
   dirtyRooms: number;

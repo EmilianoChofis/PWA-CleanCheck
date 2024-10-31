@@ -49,7 +49,9 @@ const BuildingTable = () => {
         <thead>
           <tr className="bg-gray-100 text-left text-sm font-medium text-gray-700 border-b border-gray-200 font-[family-name:var(--font-jost-bold)]">
             <th className="py-3 px-4">#</th>
-            <th className="py-3 px-4 w-[250px]">Edificio</th>
+            <th className="py-3 px-4 w-[250px] md:w-[200px] lg:w-[300px]">
+              Edificio
+            </th>
             <th className="py-3 px-4">Habitaciones limpias</th>
             <th className="py-3 px-4">Habitaciones sin limpiar</th>
             <th className="py-3 px-4">Habitaciones reportadas</th>
@@ -59,7 +61,7 @@ const BuildingTable = () => {
         </thead>
         <tbody className="text-primary">
           {buildingData.map((building: Building, index) => (
-            <tr className="border-b border-gray-200">
+            <tr key={building.id} className="border-b border-gray-200">
               <td className="py-3 px-4">{index + 1}</td>
               <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">
                 <button className="p-2 bg-primary rounded-full">
