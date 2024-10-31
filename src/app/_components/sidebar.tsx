@@ -8,18 +8,17 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar w-64 bg-gray-100 h-full p-4 font-[family-name:var(--font-jost-medium)]">
+    <aside className="sidebar w-64 bg-gray-100 p-4 font-[family-name:var(--font-jost-medium)]">
       <h6 className="mb-4">
         Hola Furro,
-        <p className="font-[family-name:var(--font-jost-bold)]">¿Qué quieres hacer hoy?</p>
+        <p className="font-[family-name:var(--font-jost-bold)]">
+          ¿Qué quieres hacer hoy?
+        </p>
       </h6>
       <nav>
         <ul>
           {menuItems.map((item) => (
-            <li
-              key={item.path}
-              className={"mb-2 font-semibold"}
-            >
+            <li key={item.path} className={"mb-2 font-semibold"}>
               <Link href={item.path}>{item.label}</Link>
             </li>
           ))}

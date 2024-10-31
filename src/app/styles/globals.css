@@ -26,6 +26,7 @@ body {
 .sidebar {
   background-color: var(--background);
   color: var(--color-primario);
+  box-shadow: 2px 0px 5px gray;
 }
 
 .sidebar a:hover {

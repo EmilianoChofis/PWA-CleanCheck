@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+}
+
+.card {
+  min-width: 200px;
+  flex-shrink: 0;
+}

@@ -1,5 +1,6 @@
 import Title from "./title";
 import WorkZoneCard from "./work_zone_card";
+import styles from "../styles/components/work_zones.module.css";
 
 const work_zones = [
   {
@@ -17,17 +18,22 @@ const work_zones = [
     zone: "Zona 3",
     location: "Descripción de la zona 3",
   },
+  {
+    id: 4,
+    zone: "Zona 1",
+    location: "Descripción de la zona 1",
+  },
 ];
 
 const WorkZones = () => {
   return (
     <div>
       <Title title="Zonas de trabajo" />
-      <main className="flex gap-4 overflow-x-auto pt-4 pb-4">
+      <div className={styles.container}>
         {work_zones.map((work_zone) => (
           <WorkZoneCard key={work_zone.id} {...work_zone} />
         ))}
-      </main>
+      </div>
     </div>
   );
 };

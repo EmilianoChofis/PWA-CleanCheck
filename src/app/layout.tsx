@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
+import "./styles/globals.css";
 import Sidebar from "./_components/sidebar";
 import Navbar from "./_components/navbar";
 
@@ -33,10 +33,10 @@ export default function RootLayout({
         className={`${jostMedium.variable} ${jostBold.variable} ${jostRegular.variable} antialiased`}
       >
         <Navbar />
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen h-screen">
           <Sidebar />
-          <div className="flex flex-col w-full min-h-screen">
-            <main className="flex-grow">{children}</main>
+          <div className="flex flex-col w-full">
+            <main className="flex-grow overflow-auto">{children}</main>
           </div>
         </div>
       </body>
