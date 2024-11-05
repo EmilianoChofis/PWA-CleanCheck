@@ -1,8 +1,5 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./styles/globals.css";
-import Sidebar from "./_components/sidebar";
-import Navbar from "./_components/navbar";
+import localFont from "next/font/local";
 
 const jostBold = localFont({
   src: "./fonts/Jost-Bold.ttf",
@@ -24,21 +21,15 @@ const jostRegular = localFont({
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
         className={`${jostMedium.variable} ${jostBold.variable} ${jostRegular.variable} antialiased`}
       >
-        <Navbar />
-        <div className="flex min-h-screen h-screen">
-          <Sidebar />
-          <div className="flex flex-col w-full">
-            <main className="flex-grow overflow-auto">{children}</main>
-          </div>
-        </div>
+        {children}
       </body>
     </html>
   );

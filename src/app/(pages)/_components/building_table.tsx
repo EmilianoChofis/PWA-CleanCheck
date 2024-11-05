@@ -1,6 +1,6 @@
-import { Building } from "../types/Building";
-import Title from "./title";
-import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
+import { Building } from "../../types/Building";
+import Title from "../../_components/title";
+import { ApartmentOutlined } from "@mui/icons-material";
 
 const buildingData = [
   {
@@ -44,7 +44,7 @@ const buildingData = [
 const BuildingTable = () => {
   return (
     <div className="table-container font-[family-name:var(--font-jost-regular)]">
-      <Title title="Lista de edificios" />
+      <Title className="text-2xl text-primary" title="Lista de edificios" />
       <table className="w-full border-collapse">
         <thead>
           <tr className="bg-gray-100 text-left text-sm font-medium text-gray-700 border-b border-gray-200 font-[family-name:var(--font-jost-bold)]">
@@ -65,7 +65,7 @@ const BuildingTable = () => {
               <td className="py-3 px-4">{index + 1}</td>
               <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">
                 <button className="p-2 bg-primary rounded-full">
-                  <ApartmentOutlinedIcon className="text-background" />
+                  <ApartmentOutlined className="text-background" />
                 </button>
                 {building.name}
               </td>

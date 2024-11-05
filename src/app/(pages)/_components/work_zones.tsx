@@ -1,6 +1,6 @@
-import Title from "./title";
+import Title from "../../_components/title";
 import WorkZoneCard from "./work_zone_card";
-import styles from "../styles/components/work_zones.module.css";
+import styles from "../../styles/components/work_zones.module.css";
 
 const work_zones = [
   {
@@ -28,7 +28,7 @@ const work_zones = [
 const WorkZones = () => {
   return (
     <div>
-      <Title title="Zonas de trabajo" />
+      <Title className="text-2xl text-primary" title="Zonas de trabajo" />
       <div className={styles.container}>
         {work_zones.map((work_zone) => (
           <WorkZoneCard key={work_zone.id} {...work_zone} />

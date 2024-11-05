@@ -1,5 +1,5 @@
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
-import { WorkZone } from "../types/WorkZone";
+import { WorkZone } from "../../types/WorkZone";
 
 const WorkZoneCard = ({ zone, location }: WorkZone) => {
   return (
