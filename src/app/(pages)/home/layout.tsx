@@ -7,14 +7,12 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <Navbar />
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <div className="flex flex-col w-full ml-64 mt-16">{children}</div>
-        </div>
-      </body>
-    </html>
+    <>
+      <Navbar />
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <div className="flex flex-col w-full ml-64 mt-16">{children}</div>
+      </div>
+    </>
   );
 }

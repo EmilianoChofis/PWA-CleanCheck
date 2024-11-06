@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Banner from "./(pages)/(auth)/_components/banner";
 import TextInput from "./_components/text_input";
 import {
@@ -13,17 +14,27 @@ import ButtonCustom from "./_components/button_custom";
 import Title from "./_components/title";
 
 const LoginPage: React.FC = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ email, password });
+
+    // Simula un token al hacer login (solo para pruebas)
+    const fakeToken = "test-token";
+
+    // Guarda el token en las cookies
+    document.cookie = `authToken=${fakeToken}; path=/;`; // Guarda el token en las cookies del navegador
+
+    // Redirige a la ruta `/home`
+    router.push("/home");
   };
 
   const handleForgetPassword = () => {
-    console.log("Olvidaste tu contraseña");
+    // router.push("/recoverPassword");
+    router.push("/resetPassword");
   };
 
   const handlePasswordVisibility = () => {
