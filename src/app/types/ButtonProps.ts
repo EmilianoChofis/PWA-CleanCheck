@@ -16,4 +16,5 @@ export type ButtonProps = {
   backgroundColor?: string;
   icon?: React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 };

@@ -11,6 +11,11 @@ import {
   VisibilityOffOutlined,
   KeyboardArrowRight,
 } from "@mui/icons-material";
+import {
+  validatePassword,
+  validateConfirmPassword,
+} from "@/app/utils/validations";
+import PasswordChecker from "../_components/password_checker";
 
 const RecoverPasswordPage: React.FC = () => {
   const router = useRouter();
@@ -18,6 +23,38 @@ const RecoverPasswordPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState({ password: "", confirmPassword: "" });
+  const [strength, setStrength] = useState(0);
+
+  const calculateStrength = (password: string) => {
+    let strengthValue = 0;
+    if (password.length >= 8) strengthValue++;
+    if (/[A-Z]/.test(password)) strengthValue++;
+    if (/[0-9]/.test(password)) strengthValue++;
+    if (/[^A-Za-z0-9]/.test(password)) strengthValue++;
+    return strengthValue;
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    setStrength(calculateStrength(password));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      password: validatePassword(value) || "",
+    }));
+  };
+
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+    setConfirmPassword(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      confirmPassword: validateConfirmPassword(password, value) || "",
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +86,7 @@ const RecoverPasswordPage: React.FC = () => {
               label="Contraseña nueva"
               type={showPassword ? "text" : "password"}
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               iconLeft={<LockOutlined />}
               iconRight={
                 showPassword ? (
@@ -60,12 +97,13 @@ const RecoverPasswordPage: React.FC = () => {
               }
               onIconClick={handleShowPassword}
               placeholder="Ingresa tu nueva contraseña"
+              error={errors.password}
             />
             <TextInput
               label="Confirmar contraseña"
               type={showConfirmPassword ? "text" : "password"}
               required
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleConfirmPasswordChange}
               iconLeft={<LockOutlined />}
               iconRight={
                 showConfirmPassword ? (
@@ -76,7 +114,11 @@ const RecoverPasswordPage: React.FC = () => {
               }
               onIconClick={handleShowConfirmPassword}
               placeholder="Confirma tu nueva contraseña"
+              error={errors.confirmPassword}
             />
+            <div className="px-2 mb-3">
+              <PasswordChecker strength={strength} />
+            </div>
           </div>
           <ButtonCustom
             className="w-full"
@@ -85,6 +127,12 @@ const RecoverPasswordPage: React.FC = () => {
             backgroundColor="primary"
             icon={<KeyboardArrowRight className="text-background" />}
             colorText="background"
+            disabled={
+              !password ||
+              !confirmPassword ||
+              !!errors.password ||
+              !!errors.confirmPassword
+            }
           >
             Cambiar contraseña
           </ButtonCustom>

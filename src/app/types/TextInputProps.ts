@@ -8,4 +8,5 @@ export type TextInputProps = {
   type?: string;
   required?: boolean;
   disabled?: boolean;
+  error?: string;
 };

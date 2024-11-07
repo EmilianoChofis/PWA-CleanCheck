@@ -12,23 +12,40 @@ import {
 } from "@mui/icons-material";
 import ButtonCustom from "./_components/button_custom";
 import Title from "./_components/title";
+import { validateEmail, validatePassword } from "./utils/validations";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({ email: "", password: "" });
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      email: validateEmail(value) || "",
+    }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      password: validatePassword(value) || "",
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simula un token al hacer login (solo para pruebas)
     const fakeToken = "test-token";
 
-    // Guarda el token en las cookies
-    document.cookie = `authToken=${fakeToken}; path=/;`; // Guarda el token en las cookies del navegador
+    document.cookie = `authToken=${fakeToken}; path=/;`;
 
-    // Redirige a la ruta `/home`
     router.push("/home");
   };
 
@@ -52,15 +69,16 @@ const LoginPage: React.FC = () => {
               label="Correo"
               type="email"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               iconLeft={<EmailOutlined />}
               placeholder="Correo electrónico"
+              error={errors.email}
             />
             <TextInput
               label="Contraseña"
               type={showPassword ? "text" : "password"}
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               iconLeft={<LockOutlined />}
               iconRight={
                 showPassword ? (
@@ -71,6 +89,7 @@ const LoginPage: React.FC = () => {
               }
               onIconClick={handlePasswordVisibility}
               placeholder="••••••••••••••"
+              error={errors.password}
             />
           </div>
           <ButtonCustom
@@ -80,6 +99,9 @@ const LoginPage: React.FC = () => {
             backgroundColor="primary"
             icon={<InputOutlined />}
             colorText="background"
+            disabled={
+              !email || !password || !!errors.email || !!errors.password
+            }
           >
             Iniciar sesión
           </ButtonCustom>

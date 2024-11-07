@@ -6,10 +6,21 @@ import Title from "@/app/_components/title";
 import TextInput from "@/app/_components/text_input";
 import ButtonCustom from "@/app/_components/button_custom";
 import { EmailOutlined, KeyboardArrowRight } from "@mui/icons-material";
+import { validateEmail } from "@/app/utils/validations";
 
 const RecoverPasswordPage: React.FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState({ email: "" });
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      email: validateEmail(value) || "",
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,9 +45,10 @@ const RecoverPasswordPage: React.FC = () => {
               label="Correo"
               type="email"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               iconLeft={<EmailOutlined />}
               placeholder="Correo electrónico"
+              error={errors.email}
             />
           </div>
           <ButtonCustom
@@ -46,6 +58,7 @@ const RecoverPasswordPage: React.FC = () => {
             backgroundColor="primary"
             icon={<KeyboardArrowRight className="text-background" />}
             colorText="background"
+            disabled={!email || !!errors.email}
           >
             Enviar correo
           </ButtonCustom>

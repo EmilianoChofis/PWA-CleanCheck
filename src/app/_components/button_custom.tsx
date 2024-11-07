@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import { ButtonProps } from "../types/ButtonProps";
 
@@ -11,6 +11,7 @@ const ButtonCustom = ({
   backgroundColor = "primary",
   type = "button",
   onClick,
+  disabled = false,
   ...props
 }: ButtonProps) => {
   const baseClass = `${className} gap-2 px-4 py-2 rounded-full text-sm font-[family-name:var(--font-jost-medium)]`;
@@ -53,7 +54,13 @@ const ButtonCustom = ({
   }, [backgroundColor, colorText, variant, className]);
 
   return (
-    <button {...props} className={combinedClass} onClick={onClick}>
+    <button
+      {...props}
+      className={combinedClass}
+      onClick={onClick}
+      type={type}
+      disabled={disabled}
+    >
       {children}
       {icon && <span className="icon px-2">{icon}</span>}
     </button>

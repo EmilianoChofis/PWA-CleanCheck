@@ -11,10 +11,11 @@ const TextInput = ({
   type = "text",
   required = false,
   disabled = false,
+  error,
 }: TextInputProps) => {
   return (
     <div className="mb-4">
-      <label className="block text-gray-700 mb-1 font-medium">{label}</label>
+      <label className="block text-primary mb-1 font-medium">{label}</label>
       <div className="relative flex items-center">
         {iconLeft && (
           <div className="absolute left-3 text-primary">
@@ -44,6 +45,7 @@ const TextInput = ({
           </div>
         )}
       </div>
+      {error && <p className="mt-2 text-sm text-error">{error}</p>}
     </div>
   );
 };
