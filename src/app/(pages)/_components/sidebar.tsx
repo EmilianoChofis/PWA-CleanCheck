@@ -1,10 +1,40 @@
-import Link from "next/link";
+"use client";
+import SidebarItem from "./sidebar_item";
+import {
+  HomeOutlined,
+  ReportProblemOutlined,
+  PersonOutlineOutlined,
+} from "@mui/icons-material";
 
 const Sidebar = () => {
   const menuItems = [
-    { label: "Inicio", path: "/inicio" },
-    { label: "Incidencias", path: "/incidencias" },
-    { label: "Perfil", path: "/profile" },
+    {
+      label: "Inicio",
+      path: "/inicio",
+      icon: <HomeOutlined className="text-primary" />,
+      active: true,
+      onClick: () => {
+        console.log("Inicio");
+      },
+    },
+    {
+      label: "Incidencias",
+      path: "/incidencias",
+      icon: <ReportProblemOutlined className="text-primary" />,
+      active: false,
+      onClick: () => {
+        console.log("Incidencias");
+      },
+    },
+    {
+      label: "Perfil",
+      path: "/profile",
+      icon: <PersonOutlineOutlined className="text-primary" />,
+      active: false,
+      onClick: () => {
+        console.log("Perfil");
+      },
+    },
   ];
 
   return (
@@ -17,10 +47,14 @@ const Sidebar = () => {
       </h6>
       <nav>
         <ul>
-          {menuItems.map((item) => (
-            <li key={item.path} className={"mb-2 font-semibold"}>
-              <Link href={item.path}>{item.label}</Link>
-            </li>
+          {menuItems.map((item, index) => (
+            <SidebarItem
+              key={index}
+              label={item.label}
+              icon={item.icon}
+              active={item.active}
+              onClick={item.onClick}
+            />
           ))}
         </ul>
       </nav>

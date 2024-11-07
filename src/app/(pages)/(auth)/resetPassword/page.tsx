@@ -14,7 +14,7 @@ import {
 import {
   validatePassword,
   validateConfirmPassword,
-} from "@/app/utils/validations";
+} from "@/app/utils/Validations";
 import PasswordChecker from "../_components/password_checker";
 
 const RecoverPasswordPage: React.FC = () => {

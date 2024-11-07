@@ -6,7 +6,7 @@ import Title from "@/app/_components/title";
 import TextInput from "@/app/_components/text_input";
 import ButtonCustom from "@/app/_components/button_custom";
 import { EmailOutlined, KeyboardArrowRight } from "@mui/icons-material";
-import { validateEmail } from "@/app/utils/validations";
+import { validateEmail } from "@/app/utils/Validations";
 
 const RecoverPasswordPage: React.FC = () => {
   const router = useRouter();
