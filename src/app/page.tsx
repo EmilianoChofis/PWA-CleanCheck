@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Banner from "./(pages)/(auth)/_components/banner";
 import TextInput from "./_components/text_input";
 import {
@@ -11,19 +12,46 @@ import {
 } from "@mui/icons-material";
 import ButtonCustom from "./_components/button_custom";
 import Title from "./_components/title";
+import { validateEmail, validatePassword } from "./utils/Validations";
 
 const LoginPage: React.FC = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({ email: "", password: "" });
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      email: validateEmail(value) || "",
+    }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      password: validatePassword(value) || "",
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ email, password });
+
+    const fakeToken = "test-token";
+
+    document.cookie = `authToken=${fakeToken}; path=/;`;
+
+    router.push("/home");
   };
 
   const handleForgetPassword = () => {
-    console.log("Olvidaste tu contraseña");
+    // router.push("/recoverPassword");
+    router.push("/resetPassword");
   };
 
   const handlePasswordVisibility = () => {
@@ -41,15 +69,16 @@ const LoginPage: React.FC = () => {
               label="Correo"
               type="email"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               iconLeft={<EmailOutlined />}
               placeholder="Correo electrónico"
+              error={errors.email}
             />
             <TextInput
               label="Contraseña"
               type={showPassword ? "text" : "password"}
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               iconLeft={<LockOutlined />}
               iconRight={
                 showPassword ? (
@@ -60,6 +89,7 @@ const LoginPage: React.FC = () => {
               }
               onIconClick={handlePasswordVisibility}
               placeholder="••••••••••••••"
+              error={errors.password}
             />
           </div>
           <ButtonCustom
@@ -69,6 +99,9 @@ const LoginPage: React.FC = () => {
             backgroundColor="primary"
             icon={<InputOutlined />}
             colorText="background"
+            disabled={
+              !email || !password || !!errors.email || !!errors.password
+            }
           >
             Iniciar sesión
           </ButtonCustom>
