@@ -43,7 +43,7 @@ const buildingData = [
 
 const BuildingTable = () => {
   return (
-    <div className="table-container font-[family-name:var(--font-jost-regular)]">
+    <div className="table-container">
       <Title className="text-2xl text-primary" title="Lista de edificios" />
       <table className="w-full border-collapse">
         <thead>

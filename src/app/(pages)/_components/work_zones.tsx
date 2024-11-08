@@ -30,8 +30,8 @@ const WorkZones = () => {
     <div>
       <Title className="text-2xl text-primary" title="Zonas de trabajo" />
       <div className={styles.container}>
-        {work_zones.map((work_zone) => (
-          <WorkZoneCard key={work_zone.id} {...work_zone} />
+        {work_zones.map((work_zone, index) => (
+          <WorkZoneCard key={index} {...work_zone} />
         ))}
       </div>
     </div>

@@ -12,7 +12,7 @@ import {
 } from "@mui/icons-material";
 import ButtonCustom from "./_components/button_custom";
 import Title from "./_components/title";
-import { validateEmail, validatePassword } from "./utils/Validations";
+import { validateEmail, validatePassword } from "./utils/validations";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
