@@ -1,5 +1,5 @@
-import { Building } from "../../types/Building";
-import Title from "../../_components/title";
+import { Building } from "@/app/types/Building";
+import Title from "@/app/_components/title";
 import { ApartmentOutlined } from "@mui/icons-material";
 
 const buildingData = [

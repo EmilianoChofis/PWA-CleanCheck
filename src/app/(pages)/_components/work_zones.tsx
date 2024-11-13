@@ -1,6 +1,6 @@
-import Title from "../../_components/title";
+import Title from "@/app/_components/title";
 import WorkZoneCard from "./work_zone_card";
-import styles from "../../styles/components/work_zones.module.css";
+import styles from "@/app/styles/components/work_zones.module.css";
 
 const work_zones = [
   {

@@ -9,6 +9,7 @@ const ButtonCustom = ({
   className = "",
   colorText = "primary",
   backgroundColor = "primary",
+  borderColor = "primary",
   type = "button",
   onClick,
   disabled = false,
@@ -43,10 +44,22 @@ const ButtonCustom = ({
       white: "bg-white",
     };
 
+    const borderColorMap: { [key: string]: string } = {
+      primary: "border-primary",
+      secondary: "border-secondary",
+      complementary: "border-complementary",
+      disabled: "border-disabled",
+      success: "border-success",
+      error: "border-error",
+      warning: "border-warning",
+      black: "border-black",
+      white: "border-white",
+    };
+
     const variantClass = {
       filled: `hover:bg-opacity-80 ${backgroundColorMap[backgroundColor]}`,
       text: "bg-transparent hover:underline",
-      outlined: `border border-primary hover:bg-indigo-100`,
+      outlined: `border ${borderColorMap[borderColor]} hover:bg-indigo-100`,
     };
 
     const textColorClass = colorMap[colorText] || colorMap.foreground;
