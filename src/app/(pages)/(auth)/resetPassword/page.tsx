@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import Banner from "../_components/banner";
 import Title from "@/app/_components/title";
 import TextInput from "@/app/_components/text_input";
@@ -14,11 +13,10 @@ import {
 import {
   validatePassword,
   validateConfirmPassword,
-} from "@/app/utils/Validations";
+} from "@/app/utils/validations";
 import PasswordChecker from "../_components/password_checker";
 
 const RecoverPasswordPage: React.FC = () => {
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

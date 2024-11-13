@@ -12,14 +12,14 @@ import {
 } from "@mui/icons-material";
 import ButtonCustom from "./_components/button_custom";
 import Title from "./_components/title";
-import { validateEmail, validatePassword } from "./utils/Validations";
+import { validateEmail, validatePassword } from "./utils/validations";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ email: "" });
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -33,10 +33,6 @@ const LoginPage: React.FC = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      password: validatePassword(value) || "",
-    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -89,7 +85,6 @@ const LoginPage: React.FC = () => {
               }
               onIconClick={handlePasswordVisibility}
               placeholder="••••••••••••••"
-              error={errors.password}
             />
           </div>
           <ButtonCustom
@@ -99,9 +94,7 @@ const LoginPage: React.FC = () => {
             backgroundColor="primary"
             icon={<InputOutlined />}
             colorText="background"
-            disabled={
-              !email || !password || !!errors.email || !!errors.password
-            }
+            disabled={!email || !password || !!errors.email}
           >
             Iniciar sesión
           </ButtonCustom>

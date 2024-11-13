@@ -1,9 +1,9 @@
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
-import { WorkZone } from "../../types/WorkZone";
+import { WorkZone } from "@/app/types/WorkZone";
 
 const WorkZoneCard = ({ zone, location }: WorkZone) => {
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md p-4 min-w-[200px] flex flex-row items-center font-[family-name:var(--font-jost-regular)]">
+    <div className="bg-gray-200 rounded-lg shadow-md p-4 min-w-[200px] flex flex-row items-center">
       <button className="p-2 bg-white rounded-full">
         <BedOutlinedIcon className="text-primary" />
       </button>

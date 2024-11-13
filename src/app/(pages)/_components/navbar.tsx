@@ -1,5 +1,5 @@
 import { KeyboardArrowRight, PersonOutlineOutlined } from "@mui/icons-material";
-import ButtonCustom from "../../_components/button_custom";
+import ButtonCustom from "@/app/_components/button_custom";
 
 const Navbar = () => {
   return (

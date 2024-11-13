@@ -1,0 +1,21 @@
+.categoryButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.categoryButton {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.categoryButton.active {
+  background-color: #e0e0e0;
+}
+
+.categoryButton:hover {
+  background-color: #f0f0f0;
+}

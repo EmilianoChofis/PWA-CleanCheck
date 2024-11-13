@@ -1,10 +1,10 @@
-// PasswordStrengthBar.jsx
 import React from "react";
 
-interface PasswordCheckerBarProps {
+type PasswordCheckerBarProps = {
   strength: number;
-}
-const PasswordChecker: React.FC<PasswordCheckerBarProps> = ({ strength }) => {
+};
+
+const PasswordChecker = ({ strength }: PasswordCheckerBarProps) => {
   const getStrengthColor = (strength: number) => {
     switch (strength) {
       case 0:
@@ -35,8 +35,7 @@ const PasswordChecker: React.FC<PasswordCheckerBarProps> = ({ strength }) => {
           borderRadius: "1rem",
         }}
       ></div>
-      <p className="text-sm text-gray-500 text-right mt-1"
-      >
+      <p className="text-sm text-gray-500 text-right mt-1">
         {strength === 0
           ? "Muy débil"
           : strength === 1
