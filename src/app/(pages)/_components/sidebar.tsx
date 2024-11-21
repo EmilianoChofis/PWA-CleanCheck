@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import SidebarItem from "./sidebar_item";
 import {
   HomeOutlined,
@@ -7,33 +9,29 @@ import {
 } from "@mui/icons-material";
 
 const Sidebar = () => {
+  const router = useRouter();
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleItemClick = (index: number, path: string) => {
+    setActiveIndex(index);
+    router.push(path);
+  };
+
   const menuItems = [
     {
       label: "Inicio",
-      path: "/inicio",
+      path: "/home",
       icon: <HomeOutlined className="text-primary" />,
-      active: true,
-      onClick: () => {
-        console.log("Inicio");
-      },
     },
     {
       label: "Incidencias",
-      path: "/incidencias",
+      path: "/incidences",
       icon: <ReportProblemOutlined className="text-primary" />,
-      active: false,
-      onClick: () => {
-        console.log("Incidencias");
-      },
     },
     {
       label: "Perfil",
       path: "/profile",
       icon: <PersonOutlineOutlined className="text-primary" />,
-      active: false,
-      onClick: () => {
-        console.log("Perfil");
-      },
     },
   ];
 
@@ -52,8 +50,8 @@ const Sidebar = () => {
               key={index}
               label={item.label}
               icon={item.icon}
-              active={item.active}
-              onClick={item.onClick}
+              active={index === activeIndex}
+              onClick={() => handleItemClick(index, item.path)}
             />
           ))}
         </ul>
