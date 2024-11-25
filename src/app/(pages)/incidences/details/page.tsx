@@ -1,6 +1,7 @@
 import Title from "@/app/_components/title";
 import Breadcrumb from "../../_components/breadcrumb";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
+import { ReportProblemOutlined } from "@mui/icons-material";
 
 export default function IncidencesDetails() {
   return (
@@ -24,7 +25,9 @@ export default function IncidencesDetails() {
             </h2>
             <div className="bg-gray-100 p-4 rounded-md shadow-sm border">
               <p className="text-gray-700 flex items-center">
-                <span className="mr-2">⚠️</span>
+                <span className="mr-2">
+                  <ReportProblemOutlined className="text-primary" />
+                </span>
                 La televisión está rota y el cristal de las ventanas se
                 encuentran estrellados.
               </p>
