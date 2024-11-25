@@ -19,14 +19,16 @@ const RegisterEntryRoom = ({
             {buildingName}
           </h3>
           <p className="text-sm">
-            Habitación:
+            Habitación:{' '}
             <span className="text-primary font-[family-name:var(--font-jost-bold)]">
-              {` ${roomNumber}`}
-            </span>
+              {roomNumber}
+            </span>{' '}
           </p>
           <p className="text-sm">
-            Estado:
-            <span className="text-primary"> {status}</span>
+            Estado:{' '}
+            <span className="text-primary font-[family-name:var(--font-jost-bold)]">
+              {status}
+            </span>{' '}
           </p>
         </div>
       </div>

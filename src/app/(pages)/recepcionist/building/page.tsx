@@ -52,7 +52,7 @@ const roomsData: RoomSelectedProps[] = [
 
 export default function Building() {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
 
   const handleCategoryClick = (category: string) => {
     console.log(`Clicked on ${category || "all"}`);
@@ -69,16 +69,16 @@ export default function Building() {
   };
 
   const handleMarkEntry = () => {
-    setModalOpen(true);
+    setIsModalOpen(true); 
   };
 
   const handleCloseModal = () => {
-    setModalOpen(false);
+    setIsModalOpen(false);
   };
 
   const handleContinue = () => {
     console.log(`Entrada marcada para la habitación: ${selectedRoom}`);
-    setModalOpen(false);
+    setIsModalOpen(false);
   };
 
   return (
@@ -142,7 +142,7 @@ export default function Building() {
         onClose={handleCloseModal}
         onConfirm={handleContinue}
         buildingName="Edificio Altapalmira"
-        roomNumber={selectedRoom || "N/A"}
+        roomNumber={selectedRoom ?? "N/A"}
       />
     </div>
   );

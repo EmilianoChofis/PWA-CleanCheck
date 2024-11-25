@@ -4,7 +4,7 @@ import { Shortcuts } from "@/app/types/Shortcuts";
 import ActionModal from "../recepcionist/_components/action_modal";
 
 const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
-    const [isModalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const handleOpenModal = () => {
         setModalOpen(true);
@@ -18,6 +18,7 @@ const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
         let title = "";
         let description = "";
         let buildings = ["Edificio 1", "Edificio 2", "Edificio 3"];
+
         if (action === "Marcar Entrada") {
             title = "Marcar Entrada";
             description = "Selecciona el edificio deseado para ver las habitaciones disponibles y marcar una entrada.";
@@ -28,9 +29,10 @@ const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
             title = "Ver Habitaciones";
             description = "Accede a la lista de habitaciones disponibles.";
         }
+
         return (
             <ActionModal
-                isOpen={isModalOpen}
+                isOpen={modalOpen}
                 onClose={handleCloseModal}
                 onContinue={handleCloseModal}
                 title={title}
