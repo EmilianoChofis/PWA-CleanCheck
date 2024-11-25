@@ -28,8 +28,8 @@ const Shortcuts = () => {
         <div>
             <Title className="text-2xl text-primary mb-4" title="Accesos directos" />
             <div className={styles.container}>
-                {shortcuts.map((shortcut, index) => (
-                    <ShortcutsCard key={index} {...shortcut} />
+                {shortcuts.map((shortcut) => (
+                    <ShortcutsCard key={shortcut.id} {...shortcut} />
                 ))}
             </div>
         </div>

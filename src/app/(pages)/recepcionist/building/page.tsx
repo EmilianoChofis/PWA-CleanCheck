@@ -6,9 +6,8 @@ import Legend from "./_components/leyend";
 import { RoomSelectedProps } from "@/app/types/RoomSelectedProps";
 import RoomFloor from "./_components/room_floor";
 import RegisterEntryRoom from "./_components/register_entry_room";
-import ActionModalRoom from "./_components/action_modal_room"; // Importa el modal
+import ActionModalRoom from "./_components/action_modal_room";
 import { useState } from "react";
-import { Business } from "@mui/icons-material";
 
 const roomsData: RoomSelectedProps[] = [
   {
@@ -108,9 +107,9 @@ export default function Building() {
           </div>
           <Legend />
           <div className="px-2 py-2">
-            {roomsData.map((floor, index) => (
+            {roomsData.map((floor) => (
               <RoomFloor
-                key={index}
+                key={floor.floorNumber}
                 floorNumber={floor.floorNumber}
                 rooms={floor.rooms}
                 onRoomSelect={handleRoomSelect}

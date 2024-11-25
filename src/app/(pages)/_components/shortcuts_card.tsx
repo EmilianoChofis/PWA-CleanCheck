@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Shortcuts } from "@/app/types/Shortcuts";
 import ActionModal from "../recepcionist/_components/action_modal";
@@ -29,7 +28,6 @@ const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
             title = "Ver Habitaciones";
             description = "Accede a la lista de habitaciones disponibles.";
         }
-
         return (
             <ActionModal
                 isOpen={isModalOpen}

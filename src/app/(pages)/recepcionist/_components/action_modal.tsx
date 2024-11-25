@@ -1,3 +1,4 @@
+"use client";
 import ButtonCustom from "@/app/_components/button_custom";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -48,21 +49,21 @@ const ActionModal = ({
                 </h2>
                 <p className="text-primary mb-4">{description}</p>
                 <div className="mb-4">
-                    <label className="block text-primary mb-2">Selecciona un edificio:</label>
+                    <label htmlFor="building-select" className="block text-primary mb-2">Selecciona un edificio:</label>
                     <select
+                        id="building-select"
                         value={selectedBuilding || ""}
                         onChange={handleBuildingChange}
                         className="w-full p-2 border border-gray-300 rounded-lg"
                     >
-                        <option value="">-- Elige un edificio --</option>
-                        {buildings.map((building, index) => (
-                            <option key={index} value={building}>
+                        <option value="">-- Selecciona un edificio --</option>
+                        {buildings.map((building) => (
+                            <option key={building} value={building}>
                                 {building}
                             </option>
                         ))}
                     </select>
                 </div>
-
                 <div className="flex justify-end gap-4 px-5">
                     <ButtonCustom
                         colorText="complementary"

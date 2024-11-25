@@ -1,6 +1,6 @@
 import ButtonCustom from "@/app/_components/button_custom";
 import { RegisterEntryRoomProps } from "@/app/types/RegisterEntryRoomProps";
-import { Business, KeyboardTabOutlined  } from "@mui/icons-material";
+import { Business, KeyboardTabOutlined } from "@mui/icons-material";
 
 const RegisterEntryRoom = ({
   buildingName,
@@ -21,15 +21,13 @@ const RegisterEntryRoom = ({
           <p className="text-sm">
             Habitación:
             <span className="text-primary font-[family-name:var(--font-jost-bold)]">
-              {" "}
-              {roomNumber}
+              {` ${roomNumber}`}
             </span>
           </p>
           <p className="text-sm">
             Estado:
             <span className="text-primary"> {status}</span>
           </p>
-          
         </div>
       </div>
       <div className="py-3">

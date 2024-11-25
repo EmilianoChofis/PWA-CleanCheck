@@ -16,12 +16,14 @@ const Room = ({ number, status, isSelected, onSelect }: RoomPropsExtended) => {
     };
 
     return (
-        <div
+        <button
             onClick={handleClick}
             className={`${styles.room} ${statusClass} ${isSelected ? styles.selected : ""}`}
+            disabled={status === "deshabilitada"}
+            aria-label={`Seleccionar habitación ${number}`}
         >
             {number}
-        </div>
+        </button>
     );
 };
 
