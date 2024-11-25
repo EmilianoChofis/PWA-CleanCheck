@@ -8,7 +8,7 @@ export default function Home() {
         <div className="flex flex-row justify-between items-center mb-3">
           <WorkZones />
         </div>
-        <div className="flex flex-row justify-between items-center">
+        <div className="py-2">
           <BuildingTable />
         </div>
       </main>

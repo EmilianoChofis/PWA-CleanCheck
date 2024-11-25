@@ -51,9 +51,21 @@ const roomsData: RoomFloorProps[] = [
 export default function Building() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDetailedModalOpen, setDetailedModalOpen] = useState(false);
+  const [categories, setCategories] = useState([
+    { label: "Todas", active: true },
+    { label: "Sin limpiar", active: false },
+    { label: "Limpias", active: false },
+    { label: "Reportadas", active: false },
+    { label: "Deshabilitadas", active: false },
+  ]);
 
-  const handleCategoryClick = (category: string) => {
-    console.log(`Clicked on ${category || "all"}`);
+  const handleCategoryClick = (clickedCategory: string) => {
+    setCategories((prevCategories) =>
+      prevCategories.map((category) => ({
+        ...category,
+        active: category.label === clickedCategory,
+      }))
+    );
   };
 
   const handleMarkClean = () => {
@@ -97,13 +109,7 @@ export default function Building() {
           <Title className="text-2xl text-primary" title="Habitaciones" />
           <div className="px-2 py-2">
             <CategoryButton
-              categories={[
-                { label: "Todas", active: true },
-                { label: "Sin limpiar", active: false },
-                { label: "Limpias", active: false },
-                { label: "Reportadas", active: false },
-                { label: "Deshabilitadas", active: false },
-              ]}
+              categories={categories}
               onCategoryClick={(category) => handleCategoryClick(category)}
             />
           </div>

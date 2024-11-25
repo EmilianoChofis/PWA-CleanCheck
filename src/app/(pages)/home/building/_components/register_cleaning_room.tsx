@@ -12,7 +12,7 @@ const RegisterCleaningRoom = ({
 }: RegisterCleaningRoomProps) => {
   return (
     <>
-      <div className="bg-gray-200 p-4 rounded-lg shadow-md flex flex-row items-center">
+      <section className="mb-4 bg-gray-100 p-4 rounded-md shadow-sm border flex flex-row items-center">
         <button className="p-4 bg-complementary rounded-full me-4">
           <Business className="text-disabled" style={{ fontSize: 30 }} />
         </button>
@@ -36,7 +36,7 @@ const RegisterCleaningRoom = ({
             </span>
           </p>
         </div>
-      </div>
+      </section>
       <div className="py-3">
         <ButtonCustom
           className="w-full mb-3"
