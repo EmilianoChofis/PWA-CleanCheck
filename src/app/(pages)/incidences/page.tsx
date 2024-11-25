@@ -3,6 +3,7 @@ import { useState } from "react";
 import Title from "@/app/_components/title";
 import Searchbar from "../_components/searchbar";
 import CategoryButton from "../_components/category_button";
+import IncidencesTable from "./_components/incidences_table";
 
 export default function Incidences() {
   const [categories, setCategories] = useState([
@@ -35,6 +36,9 @@ export default function Incidences() {
             categories={categories}
             onCategoryClick={(category) => handleCategoryClick(category)}
           />
+        </div>
+        <div className="py-2">
+          <IncidencesTable />
         </div>
       </main>
     </div>

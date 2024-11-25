@@ -1,0 +1,23 @@
+.statusDisponible {
+  background-color: #2c2c54;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+}
+
+.statusReportada {
+  background-color: #ff9f1a;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+}
+
+.statusDeshabilitada {
+  background-color: #d63031;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+}

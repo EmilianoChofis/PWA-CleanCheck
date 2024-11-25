@@ -47,7 +47,7 @@ const BuildingTable = () => {
       <Title className="text-2xl text-primary" title="Lista de edificios" />
       <table className="w-full border-collapse">
         <thead>
-          <tr className="bg-gray-100 text-left text-sm font-medium text-gray-700 border-b border-gray-200 font-[family-name:var(--font-jost-bold)]">
+          <tr className="bg-gray-100 text-left text-sm border-b border-gray-200 font-[family-name:var(--font-jost-bold)]">
             <th className="py-3 px-4">#</th>
             <th className="py-3 px-4 w-[250px] md:w-[200px] lg:w-[300px]">
               Edificio
