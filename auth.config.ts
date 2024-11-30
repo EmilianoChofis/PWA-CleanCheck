@@ -1,5 +1,5 @@
-import { db } from "@/app/lib/db";
 import { loginSchema } from "@/app/lib/zod";
+import { login } from "@/app/utils/auth-service";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -7,23 +7,23 @@ export default {
   providers: [
     Credentials({
       authorize: async (credentials) => {
-        const { data, success } = loginSchema.safeParse(credentials);
+        const { email, password } = await loginSchema.parseAsync(credentials);
 
-        if (!success) {
-          throw new Error("Invalid credentials");
-        }
-
-        const user = await db.user.findUnique({
-          where: {
-            email: data.email,
-          },
-        });
+        const {
+          data: { user, token },
+        } = await login(email, password);
 
         if (!user) {
           throw new Error("Invalid credentials");
         }
 
-        return user;
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role.name,
+          token: token,
+        };
       },
     }),
   ],

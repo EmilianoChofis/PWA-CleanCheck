@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +21,8 @@ import { loginSchema } from "@/app/lib/zod";
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>(undefined);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -31,7 +33,13 @@ const LoginPage: React.FC = () => {
 
   const onSubmitHandler = async (values: z.infer<typeof loginSchema>) => {
     const response = await loginAction(values);
-    console.log(response);
+    startTransition(() => {
+      if (response.success) {
+        router.push("/home");
+      } else {
+        setError(response.error);
+      }
+    });
   };
 
   const handleForgetPassword = () => {
@@ -77,6 +85,11 @@ const LoginPage: React.FC = () => {
               placeholder="••••••••••••••"
               error={form.formState.errors.password?.message}
             />
+            {
+              <p className="mt-2 text-sm text-error">
+                {error ? error : " "}
+              </p>
+            }
           </div>
           <ButtonCustom
             className="w-full"
@@ -86,7 +99,9 @@ const LoginPage: React.FC = () => {
             icon={<InputOutlined />}
             colorText="background"
             disabled={
-              !!form.formState.errors.email || !!form.formState.errors.password
+              !!form.formState.errors.email ||
+              !!form.formState.errors.password ||
+              isPending
             }
           >
             Iniciar sesión

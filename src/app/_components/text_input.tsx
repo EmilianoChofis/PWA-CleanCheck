@@ -1,7 +1,8 @@
 import React, { forwardRef } from "react";
 import { TextInputProps } from "../types/TextInputProps";
 
-const TextInput = forwardRef<HTMLInputElement, any>((props, ref) => {
+const TextInput = forwardRef<HTMLInputElement, TextInputProps
+>((props, ref) => {
   const {
     label,
     type,
@@ -41,5 +42,7 @@ const TextInput = forwardRef<HTMLInputElement, any>((props, ref) => {
     </div>
   );
 });
+
+TextInput.displayName = "TextInput";
 
 export default TextInput;
