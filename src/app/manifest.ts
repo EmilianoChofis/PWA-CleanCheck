@@ -2,21 +2,21 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Next.js PWA",
-    short_name: "NextPWA",
-    description: "A Progressive Web App built with Next.js",
+    name: "CleanCheck PWA",
+    short_name: "CleanCheck",
+    description: "A Progressive Web App for CleanCheck",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#000000",
+    background_color: "#262351",
+    theme_color: "#ffffff",
     icons: [
       {
-        src: "/icon-192x192.png",
+        src: "/icons/dry-clean.png",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        src: "/icon-512x512.png",
+        src: "/icons/dry-clean.png",
         sizes: "512x512",
         type: "image/png",
       },
