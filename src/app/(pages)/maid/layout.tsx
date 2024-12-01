@@ -1,5 +1,5 @@
-import Navbar from "../(pages)/_components/navbar";
-import Sidebar from "../(pages)/_components/sidebar";
+import Navbar from "../_components/navbar";
+import Sidebar from "../_components/sidebar";
 
 export default function Layout({
   children,

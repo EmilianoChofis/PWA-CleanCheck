@@ -1,5 +1,5 @@
-import BuildingTable from "../_components/building_table";
-import WorkZones from "../_components/work_zones";
+import BuildingTable from "../../_components/building_table";
+import WorkZones from "../../_components/work_zones";
 
 export default function Home() {
   return (

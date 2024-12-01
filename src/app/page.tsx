@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
     const response = await loginAction(values);
     startTransition(() => {
       if (response.success) {
-        router.push("/home");
+        router.push("/maid/home");
       } else {
         setError(response.error);
       }

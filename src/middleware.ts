@@ -1,16 +1,18 @@
 import NextAuth from "next-auth";
-import authConfig from "./auth.config";
+import authConfig from "./auth/auth.config";
 import { NextResponse } from "next/server";
 
 const { auth: middleware } = NextAuth(authConfig);
 
 const publicRoutes = ["/", "/recoverPassword", "/resetPassword"];
+const maidRoutes = ["/maid/*"];
 
 export default middleware((req) => {
   const { nextUrl, auth } = req;
   const isLoggedIn = !!auth?.user;
 
-  // Proteger rutas privadas
+  console.log("isLoggedIn", isLoggedIn);
+
   if (!publicRoutes.includes(nextUrl.pathname) && !isLoggedIn) {
     return NextResponse.redirect(new URL("/", nextUrl));
   }

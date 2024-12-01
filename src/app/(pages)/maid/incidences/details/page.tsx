@@ -1,5 +1,5 @@
 import Title from "@/app/_components/title";
-import Breadcrumb from "../../_components/breadcrumb";
+import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
 import { ReportProblemOutlined } from "@mui/icons-material";
 

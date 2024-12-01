@@ -1,6 +1,6 @@
 "use server";
 import { AuthError } from "next-auth";
-import { signIn } from "../../../auth";
+import { signIn } from "@/auth/auth";
 
 export const loginAction = async (values: {
   email: string;
