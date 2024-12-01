@@ -2,7 +2,7 @@ import { SearchbarProps } from "@/app/types/SearchbarProps";
 import { MenuOutlined, SearchOutlined } from "@mui/icons-material";
 import React from "react";
 
-const Searchbar = ({ label, onChange }: SearchbarProps) => {
+const Searchbar = ({ onChange }: SearchbarProps) => {
   return (
     <div className="mb-4">
       <div className="relative flex items-center">

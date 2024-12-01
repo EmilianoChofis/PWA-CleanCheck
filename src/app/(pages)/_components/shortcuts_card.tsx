@@ -17,7 +17,7 @@ const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
     const handleAction = () => {
         let title = "";
         let description = "";
-        let buildings = ["Edificio 1", "Edificio 2", "Edificio 3"];
+        const buildings = ["Edificio 1", "Edificio 2", "Edificio 3"];
 
         if (action === "Marcar Entrada") {
             title = "Marcar Entrada";
