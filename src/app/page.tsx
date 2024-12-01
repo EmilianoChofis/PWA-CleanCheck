@@ -1,6 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import Banner from "./(pages)/(auth)/_components/banner";
 import TextInput from "./_components/text_input";
 import {
@@ -12,37 +15,31 @@ import {
 } from "@mui/icons-material";
 import ButtonCustom from "./_components/button_custom";
 import Title from "./_components/title";
-import { validateEmail, validatePassword } from "./utils/validations";
+import { loginAction } from "@/app/actions/auth-actions";
+import { loginSchema } from "@/app/lib/zod";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({ email: "" });
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>(undefined);
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setEmail(value);
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      email: validateEmail(value) || "",
-    }));
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPassword(value);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const fakeToken = "test-token";
-
-    document.cookie = `authToken=${fakeToken}; path=/;`;
-
-    router.push("/home");
+  const onSubmitHandler = async (values: z.infer<typeof loginSchema>) => {
+    const response = await loginAction(values);
+    startTransition(() => {
+      if (response.success) {
+        router.push("/maid/home");
+      } else {
+        setError(response.error);
+      }
+    });
   };
 
   const handleForgetPassword = () => {
@@ -59,22 +56,23 @@ const LoginPage: React.FC = () => {
       <Banner />
       <div className="w-full md:w-1/2 p-8 font-[family-name:var(--font-jost-medium)]">
         <Title className="text-2xl text-primary" title="Iniciar sesión" />
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmitHandler)}
+          className="space-y-4"
+        >
           <div className="px-2 py-2">
             <TextInput
               label="Correo"
+              {...form.register("email")}
               type="email"
-              required
-              onChange={handleEmailChange}
               iconLeft={<EmailOutlined />}
               placeholder="Correo electrónico"
-              error={errors.email}
+              error={form.formState.errors.email?.message}
             />
             <TextInput
               label="Contraseña"
+              {...form.register("password")}
               type={showPassword ? "text" : "password"}
-              required
-              onChange={handlePasswordChange}
               iconLeft={<LockOutlined />}
               iconRight={
                 showPassword ? (
@@ -85,7 +83,13 @@ const LoginPage: React.FC = () => {
               }
               onIconClick={handlePasswordVisibility}
               placeholder="••••••••••••••"
+              error={form.formState.errors.password?.message}
             />
+            {
+              <p className="mt-2 text-sm text-error">
+                {error ? error : " "}
+              </p>
+            }
           </div>
           <ButtonCustom
             className="w-full"
@@ -94,7 +98,11 @@ const LoginPage: React.FC = () => {
             backgroundColor="primary"
             icon={<InputOutlined />}
             colorText="background"
-            disabled={!email || !password || !!errors.email}
+            disabled={
+              !!form.formState.errors.email ||
+              !!form.formState.errors.password ||
+              isPending
+            }
           >
             Iniciar sesión
           </ButtonCustom>

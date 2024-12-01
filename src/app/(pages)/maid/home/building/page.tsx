@@ -1,7 +1,7 @@
 "use client";
 import Title from "@/app/_components/title";
-import Breadcrumb from "../../_components/breadcrumb";
-import CategoryButton from "../../_components/category_button";
+import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
+import CategoryButton from "@/app/(pages)/_components/category_button";
 import Legend from "./_components/leyend";
 import { RoomFloorProps } from "@/app/types/RoomFloorProps";
 import RoomFloor from "./_components/room_floor";
