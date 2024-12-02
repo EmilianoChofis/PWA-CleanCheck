@@ -2,7 +2,7 @@ import ButtonCustom from "@/app/_components/button_custom";
 import TextInput from "@/app/_components/text_input";
 import { DetailedReportProps } from "@/app/types/DetailedReportProps";
 import { ReportProblemOutlined, AttachFileOutlined } from "@mui/icons-material";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const DetailedReportModal = ({
   isOpen,

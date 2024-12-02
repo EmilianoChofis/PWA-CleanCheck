@@ -5,8 +5,6 @@ import { NextResponse } from "next/server";
 const { auth: middleware } = NextAuth(authConfig);
 
 const publicRoutes = ["/", "/recoverPassword", "/resetPassword"];
-const maidRoutes = ["/maid/*"];
-
 export default middleware((req) => {
   const { nextUrl, auth } = req;
   const isLoggedIn = !!auth?.user;
