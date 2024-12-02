@@ -7,8 +7,10 @@ import {
   ReportProblemOutlined,
   PersonOutlineOutlined,
 } from "@mui/icons-material";
+import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -20,7 +22,7 @@ const Sidebar = () => {
   const menuItems = [
     {
       label: "Inicio",
-      path: "/home",
+      path: `/${session?.user.role}/home`,
       icon: <HomeOutlined className="text-primary" />,
     },
     {
@@ -38,7 +40,7 @@ const Sidebar = () => {
   return (
     <aside className="sidebar fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-gray-100 p-4 font-[family-name:var(--font-jost-medium)] z-10">
       <h6 className="mb-4">
-        Hola Furro,
+        Hola {session?.user.name},
         <p className="font-[family-name:var(--font-jost-bold)]">
           ¿Qué quieres hacer hoy?
         </p>
