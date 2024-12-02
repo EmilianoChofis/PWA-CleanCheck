@@ -1,7 +1,7 @@
 import { URL_BASE } from "./url-base";
 
 export const getBuildings = async () => {
-  const response = await fetch(`${URL_BASE}/building/getAll`, {
+  const response = await fetch(`${URL_BASE}/dashboard/getAll`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

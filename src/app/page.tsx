@@ -15,7 +15,7 @@ import {
 } from "@mui/icons-material";
 import ButtonCustom from "./_components/button_custom";
 import Title from "./_components/title";
-import { loginAction } from "@/app/actions/auth-actions";
+import { getRole, loginAction } from "@/app/actions/auth-actions";
 import { loginSchema } from "@/app/lib/zod";
 
 const LoginPage: React.FC = () => {
@@ -35,7 +35,11 @@ const LoginPage: React.FC = () => {
     const response = await loginAction(values);
     startTransition(() => {
       if (response.success) {
-        router.push("/maid/home");
+        const getSession = async () => {
+          const role = await getRole();
+          router.push(`${role}/home`);
+        };
+        getSession();
       } else {
         setError(response.error);
       }
@@ -85,11 +89,7 @@ const LoginPage: React.FC = () => {
               placeholder="••••••••••••••"
               error={form.formState.errors.password?.message}
             />
-            {
-              <p className="mt-2 text-sm text-error">
-                {error ? error : " "}
-              </p>
-            }
+            {<p className="mt-2 text-sm text-error">{error ? error : " "}</p>}
           </div>
           <ButtonCustom
             className="w-full"

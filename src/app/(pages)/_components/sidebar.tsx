@@ -2,14 +2,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SidebarItem from "./sidebar_item";
-import {
-  HomeOutlined,
-  ReportProblemOutlined,
-  PersonOutlineOutlined,
-} from "@mui/icons-material";
 import { useSession } from "next-auth/react";
 
-const Sidebar = () => {
+const Sidebar = ({ menuItems }: { menuItems: any[] }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -18,24 +13,6 @@ const Sidebar = () => {
     setActiveIndex(index);
     router.push(path);
   };
-
-  const menuItems = [
-    {
-      label: "Inicio",
-      path: `/${session?.user.role}/home`,
-      icon: <HomeOutlined className="text-primary" />,
-    },
-    {
-      label: "Incidencias",
-      path: "/incidences",
-      icon: <ReportProblemOutlined className="text-primary" />,
-    },
-    {
-      label: "Perfil",
-      path: "/profile",
-      icon: <PersonOutlineOutlined className="text-primary" />,
-    },
-  ];
 
   return (
     <aside className="sidebar fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-gray-100 p-4 font-[family-name:var(--font-jost-medium)] z-10">

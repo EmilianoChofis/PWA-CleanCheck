@@ -7,9 +7,4 @@ export type Building = {
   status: boolean;
   createdAt: string;
   floors: Floor[];
-  cleanRooms: number;
-  dirtyRooms: number;
-  reportedRooms: number;
-  disabledRooms: number;
-  totalRooms: number;
 };
