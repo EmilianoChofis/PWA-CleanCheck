@@ -6,7 +6,6 @@ const NumberInput = ({
     value,
     iconLeft,
     iconRight,
-    onIconClick,
     placeholder = "",
     required = false,
     disabled = false,
@@ -18,11 +17,6 @@ const NumberInput = ({
             onChange(e);
         }
     };
-
-    const handleIconClick = (e: React.MouseEvent | React.KeyboardEvent) => {
-        onIconClick && onIconClick();
-    };
-
 
     return (
         <div className="mb-4">
@@ -45,12 +39,6 @@ const NumberInput = ({
                     <button
                         type="button"
                         className="absolute right-3 cursor-pointer text-primary"
-                        onClick={handleIconClick}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                handleIconClick(e);
-                            }
-                        }}
                         tabIndex={0}
                     >
                         <span className="icon">{iconRight}</span>
