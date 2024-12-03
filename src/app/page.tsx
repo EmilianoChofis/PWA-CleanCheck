@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +22,7 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -31,16 +32,32 @@ const LoginPage: React.FC = () => {
     },
   });
 
+  const getSession = async () => {
+    const role = await getRole();
+    setIsLoading(false);
+    router.push(`${role}/home`);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    const checkSession = async () => {
+      const role = await getRole();
+      setIsLoading(false);
+      if (role) {
+        router.push(`${role}/home`);
+      }
+    };
+    checkSession();
+  }, []);
+
   const onSubmitHandler = async (values: z.infer<typeof loginSchema>) => {
     const response = await loginAction(values);
     startTransition(() => {
+      setIsLoading(true);
       if (response.success) {
-        const getSession = async () => {
-          const role = await getRole();
-          router.push(`${role}/home`);
-        };
         getSession();
       } else {
+        setIsLoading(false);
         setError(response.error);
       }
     });
@@ -103,6 +120,7 @@ const LoginPage: React.FC = () => {
               !!form.formState.errors.password ||
               isPending
             }
+            isLoading={isLoading}
           >
             Iniciar sesión
           </ButtonCustom>

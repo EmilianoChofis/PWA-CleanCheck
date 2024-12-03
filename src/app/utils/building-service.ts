@@ -15,14 +15,15 @@ export const getBuildings = async () => {
 	return response.json();
 };
 
-export const getBuildingsByStatus = async (status: string) => {
-	const response = await fetch(`${URL_BASE}/room/getByStatus`, {
+export const getBuildingsByStatus = async (buildingId: string, status: string) => {
+	const response = await fetch(`${URL_BASE}/room/getByStatusAndBuilding`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
 			status: status,
+			buildingId: buildingId,
 		}),
 	});
 

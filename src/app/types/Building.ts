@@ -1,7 +1,7 @@
 import { Floor } from "./Floor";
 
 export type Building = {
-  id: number;
+  id: string;
   name: string;
   number: number;
   status: boolean;

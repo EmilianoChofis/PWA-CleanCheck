@@ -43,6 +43,8 @@ const RegisterCleaningRoom = ({
             colorText="background"
             variant="filled"
             onClick={data.onMarkClean}
+            disabled={data.roomStatus === "CLEAN"}
+            isLoading={data.isLoading}
           >
             Marcar como limpia
           </ButtonCustom>

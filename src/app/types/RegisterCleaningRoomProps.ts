@@ -3,6 +3,8 @@ export type RegisterCleaningRoomProps = {
 	staff: string;
 	date: string;
 	roomNumber: string;
+	roomStatus: string;
 	onMarkClean: () => void;
 	onReportIssue: () => void;
+	isLoading?: boolean;
 };
