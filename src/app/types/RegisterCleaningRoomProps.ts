@@ -1,8 +1,8 @@
 export type RegisterCleaningRoomProps = {
-  buildingName: string;
-  staff: any;
-  date: string;
-  roomNumber: string;
-  onMarkClean: () => void;
-  onReportIssue: () => void;
+	buildingName: string;
+	staff: string;
+	date: string;
+	roomNumber: string;
+	onMarkClean: () => void;
+	onReportIssue: () => void;
 };

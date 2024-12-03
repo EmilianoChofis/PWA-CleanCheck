@@ -1,15 +1,15 @@
-import { RoomFloorProps } from "@/app/types/RoomFloorProps";
 import styles from "@/app/styles/components/room.module.css";
 import RoomBox from "./room_box";
 import { Divider } from "@mui/material";
 import { Floor } from "@/app/types/Floor";
+import { Room } from "@/app/types/Room";
 
 const RoomFloor = ({
   floorSelected,
   onClickRoomSelected,
 }: {
   floorSelected: Floor;
-  onClickRoomSelected: (room: any) => void;
+  onClickRoomSelected: (room: Room) => void;
 }) => {
   return (
     <div className={styles.floor}>

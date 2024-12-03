@@ -1,5 +1,5 @@
 export type Room = {
-  id: number;
+  id: string;
   identifier: string;
   name: string;
   status: "OCCUPIED" | "UNOCCUPIED" | "CLEAN" | "CHECKED" | "IN_MAINTENANCE";
