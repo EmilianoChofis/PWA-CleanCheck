@@ -1,17 +1,23 @@
-# Dockerfile
+# Usar la imagen oficial de Node.js como base
+FROM node:18-alpine
 
-# Etapa de construcción
-FROM node:18
+# Configurar directorio de trabajo
+WORKDIR /app
+
+# Copiar package.json y package-lock.json
+COPY package*.json ./
 
 # Instalar dependencias
 RUN npm install
 
-# Copiar el código de la aplicación y construirla
+# Copiar todo el código de la aplicación
 COPY . .
+
+# Construir la aplicación Next.js
 RUN npm run build
 
-# Etapa de producción
-RUN npm run start
-
-# Exponer el puerto de Nginx
+# Exponer el puerto utilizado por Next.js
 EXPOSE 3000
+
+# Comando para iniciar la aplicación
+CMD ["npm", "start"]
