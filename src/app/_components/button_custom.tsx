@@ -65,7 +65,7 @@ const ButtonCustom = ({
 
     const textColorClass = colorMap[colorText] || colorMap.foreground;
     setCombinedClass(`${baseClass} ${variantClass[variant]} ${textColorClass}`);
-  }, [backgroundColor, colorText, variant, className]);
+  }, [backgroundColor, colorText, variant, className, borderColor, baseClass]);
 
   return (
     <button

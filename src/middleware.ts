@@ -6,8 +6,6 @@ import { getToken } from "next-auth/jwt";
 const { auth: middleware } = NextAuth(authConfig);
 
 const publicRoutes = ["/", "/recoverPassword", "/resetPassword"];
-const maidRoutes = ["/maid"];
-const recepcionistRoutes = ["/recepcionist"];
 
 export default middleware(async (req) => {
   const { nextUrl, auth } = req;

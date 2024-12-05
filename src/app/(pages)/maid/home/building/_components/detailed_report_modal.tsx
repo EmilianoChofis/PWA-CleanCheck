@@ -2,7 +2,8 @@ import ButtonCustom from "@/app/_components/button_custom";
 import TextInput from "@/app/_components/text_input";
 import { DetailedReportProps } from "@/app/types/DetailedReportProps";
 import { ReportProblemOutlined, AttachFileOutlined } from "@mui/icons-material";
-import { useState } from "react";
+import React, { useState } from "react";
+import Image from 'next/image'
 
 const DetailedReportModal = ({
   isOpen,
@@ -63,7 +64,7 @@ const DetailedReportModal = ({
               key={index}
               className="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center overflow-hidden"
             >
-              <img
+              <Image
                 src={URL.createObjectURL(file)}
                 alt={`Preview ${index + 1}`}
                 className="object-cover w-full h-full"
