@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Shortcuts } from "@/app/types/Shortcuts";
-import ActionModal from "../recepcionist/_components/action_modal";
+import ActionModal from "../receptionist/home/_components/action_modal";
 
 const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
     const [modalOpen, setModalOpen] = useState(false);

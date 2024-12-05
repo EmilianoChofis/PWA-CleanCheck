@@ -34,7 +34,7 @@ const ActionModal = ({
 
     const handleContinue = () => {
         if (selectedBuilding) {
-            router.push(`/recepcionist/building/`);
+            router.push(`/receptionist/home/building`);
             onContinue();
         }
     };
@@ -52,7 +52,7 @@ const ActionModal = ({
                     <label htmlFor="building-select" className="block text-primary mb-2">Selecciona un edificio:</label>
                     <select
                         id="building-select"
-                        value={selectedBuilding || ""}
+                        value={selectedBuilding ?? ""}
                         onChange={handleBuildingChange}
                         className="w-full p-2 border border-gray-300 rounded-lg"
                     >

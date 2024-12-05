@@ -1,5 +1,5 @@
-import BuildingTable from "../_components/building_table";
-import Shortcuts from "../_components/shortcuts";
+import BuildingTable from "../../_components/building_table";
+import Shortcuts from "../../_components/shortcuts";
 
 export default function RecepcionistHome() {
     return (

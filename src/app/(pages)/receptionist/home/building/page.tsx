@@ -1,13 +1,13 @@
 "use client";
 import Title from "@/app/_components/title";
-import Breadcrumb from "../../_components/breadcrumb";
-import CategoryButton from "../../_components/category_button";
 import Legend from "./_components/leyend";
 import { RoomSelectedProps } from "@/app/types/RoomSelectedProps";
 import RoomFloor from "./_components/room_floor";
 import RegisterEntryRoom from "./_components/register_entry_room";
 import ActionModalRoom from "./_components/action_modal_room";
 import { useState } from "react";
+import CategoryButton from "@/app/(pages)/_components/category_button";
+import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
 
 const roomsData: RoomSelectedProps[] = [
   {
@@ -52,7 +52,7 @@ const roomsData: RoomSelectedProps[] = [
 
 export default function Building() {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCategoryClick = (category: string) => {
     console.log(`Clicked on ${category || "all"}`);
@@ -69,7 +69,7 @@ export default function Building() {
   };
 
   const handleMarkEntry = () => {
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -83,7 +83,7 @@ export default function Building() {
 
   return (
     <div className="grid grid-cols-3 gap-4 p-8 pb-20 w-full font-[family-name:var(--font-jost-regular)]">
-      <div className="col-span-2">
+      <div className="col-span-2 overflow-y-auto max-h-[calc(100vh-200px)]">
         <Breadcrumb
           items={[
             { label: "Inicio", link: "/home" },
