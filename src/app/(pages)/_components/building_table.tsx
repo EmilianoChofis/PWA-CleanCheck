@@ -2,6 +2,7 @@ import { Building } from "@/app/types/Building";
 import Title from "@/app/_components/title";
 import { ApartmentOutlined } from "@mui/icons-material";
 import { BuildingDashboard } from "@/app/types/BuildingDashboard";
+import Link from "next/link";
 
 const BuildingTable = ({ buildings, onClick }: { buildings: BuildingDashboard[]; onClick: (building: Building) => void }) => {
   return (
@@ -22,7 +23,7 @@ const BuildingTable = ({ buildings, onClick }: { buildings: BuildingDashboard[];
           </tr>
         </thead>
         <tbody className="text-primary">
-          {buildings.map((buildingDash: BuildingDashboard, index) => (
+          {Array.isArray(buildings) && buildings.map((buildingDash: BuildingDashboard, index) => (
             <tr
               key={buildingDash.building.id}
               className="border-b border-gray-200 hover:bg-gray-200 cursor-pointer transition-colors duration-200 ease-in-out"
@@ -33,17 +34,15 @@ const BuildingTable = ({ buildings, onClick }: { buildings: BuildingDashboard[];
                 <button className="p-2 bg-primary rounded-full">
                   <ApartmentOutlined className="text-background" />
                 </button>
-                {buildingDash.building.name}
+                <Link href={`/receptionist/home/building`} className="hover:underline">
+                  {buildingDash.building.name}
+                </Link>
               </td>
               <td className="py-3 px-4">{buildingDash.cleanedRooms}</td>
               <td className="py-3 px-4">{buildingDash.dirtyRooms}</td>
-              <td className="py-3 px-4 text-warning">
-                {buildingDash.reportedRooms}
-              </td>
+              <td className="py-3 px-4 text-warning">{buildingDash.reportedRooms}</td>
               <td className="py-3 px-4 text-error">{buildingDash.disabledRooms}</td>
-              <td className="py-3 px-4 font-[family-name:var(--font-jost-medium)]">
-                {buildingDash.totalRooms}
-              </td>
+              <td className="py-3 px-4 font-[family-name:var(--font-jost-medium)]">{buildingDash.totalRooms}</td>
             </tr>
           ))}
         </tbody>
