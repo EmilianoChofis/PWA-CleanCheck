@@ -5,7 +5,8 @@ import Searchbar from "../../_components/searchbar"
 import CategoryButton from "../../_components/category_button";
 import BuildingManagerTable from "../../_components/building_manager_table";
 import ButtonCustom from "@/app/_components/button_custom";
-import RegisterBuildingModal from "../_components/register_building_modal";
+import RegisterBuildingModal from "../home/_components/register_building_modal";
+
 
 export default function RecepcionistHome() {
     const [categories, setCategories] = useState([

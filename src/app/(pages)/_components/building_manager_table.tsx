@@ -59,12 +59,12 @@ const BuildingManagerTable = () => {
             <thead>
                 <tr className="bg-gray-100 text-left text-sm border-b border-gray-200 font-bold">
                     <th className="py-3 px-4">#</th>
-                    <th className="py-3 px-4">Edificio</th>
-                    <th className="py-3 px-4">Habitaciones Reportadas</th>
-                    <th className="py-3 px-4">Habitaciones Deshabilitadas</th>
-                    <th className="py-3 px-4">Total de habitaciones</th>
-                    <th className="py-3 px-4">Acciones</th>
-                    <th className="py-3 px-4">Estado</th>
+                    <th className="py-3 px-4 text-center">Edificio</th>
+                    <th className="py-3 px-4 text-center">Habitaciones Reportadas</th>
+                    <th className="py-3 px-4 text-center">Habitaciones Deshabilitadas</th>
+                    <th className="py-3 px-4 text-center">Total de habitaciones</th>
+                    <th className="py-3 px-4 text-center">Acciones</th>
+                    <th className="py-3 px-4 text-center">Estado</th>
                 </tr>
             </thead>
             <tbody>

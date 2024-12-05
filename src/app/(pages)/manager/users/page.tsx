@@ -5,7 +5,7 @@ import Searchbar from "../../_components/searchbar";
 import CategoryButton from "../../_components/category_button";
 import ButtonCustom from "@/app/_components/button_custom";
 import UsersTable from "../../_components/users_table";
-import RegisterUserModal from "../_components/register_users_modal";
+import RegisterUserModal from "../home/_components/register_users_modal";
 
 export default function GestionUsers() {
     const [categories, setCategories] = useState([

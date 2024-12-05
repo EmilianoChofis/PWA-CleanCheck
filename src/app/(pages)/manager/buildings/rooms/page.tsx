@@ -5,8 +5,8 @@ import Searchbar from "../../../_components/searchbar"
 import CategoryButton from "../../../_components/category_button";
 import ButtonCustom from "@/app/_components/button_custom";
 import RoomsTable from "@/app/(pages)/_components/rooms_table";
-import RegisterRoomsModal from "../../_components/register_rooms_modal";
 import Legend from "./_components/legend";
+import RegisterRoomsModal from "../../home/_components/register_rooms_modal";
 
 export default function RecepcionistHome() {
     const [categories, setCategories] = useState([
