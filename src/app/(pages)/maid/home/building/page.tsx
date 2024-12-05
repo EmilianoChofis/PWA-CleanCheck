@@ -76,26 +76,11 @@ export default function Building() {
   };
 
   const handleReportIssue = () => {
-    console.log("Reportar problema");
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
+    setModalOpen(!isModalOpen);
   };
 
   const handleGenerateReport = () => {
-    console.log("Generar reporte");
-    setDetailedModalOpen(true);
-  };
-
-  const handleCloseDetailedModal = () => {
-    setDetailedModalOpen(false);
-  };
-
-  const handleSubmitReport = (description: string, files: File[]) => {
-    console.log("Descripción:", description);
-    console.log("Archivos:", files);
+    setDetailedModalOpen(!isDetailedModalOpen);
   };
 
   if (!selectedBuilding) {
@@ -163,14 +148,14 @@ export default function Building() {
       </div>
       <ConfirmReportModal
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        onClose={handleReportIssue}
         onReport={handleGenerateReport}
       />
       <DetailedReportModal
         isOpen={isDetailedModalOpen}
-        onClose={handleCloseDetailedModal}
-        onSubmitReport={handleSubmitReport}
-        roomNumber={"P1H8"}
+        onClose={handleGenerateReport}
+        onCloseConfirm={handleReportIssue}
+        roomNumber={roomSelected ? roomSelected.name : ""}
       />
     </div>
   );
