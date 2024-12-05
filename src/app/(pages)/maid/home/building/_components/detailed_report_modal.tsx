@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSession } from "next-auth/react";
 import { createReportSchema } from "@/app/lib/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -6,17 +7,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ButtonCustom from "@/app/_components/button_custom";
 import TextInput from "@/app/_components/text_input";
 import { DetailedReportProps } from "@/app/types/DetailedReportProps";
-import { ReportProblemOutlined, AttachFileOutlined, DeleteOutlined } from "@mui/icons-material";
+import { ReportProblemOutlined, AttachFileOutlined } from "@mui/icons-material";
 import Image from "next/image";
 import FileInput from "@/app/_components/file_input";
 import { confirmDialog } from "@/app/lib/confirmDialog";
+import { createReport } from "@/app/utils/building-service";
+import { Toast } from "@/app/lib/toast";
 
 const DetailedReportModal = ({
   isOpen,
   onClose,
   onCloseConfirm,
-  roomNumber,
+  room,
 }: DetailedReportProps) => {
+  const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof createReportSchema>>({
     resolver: zodResolver(createReportSchema),
     defaultValues: {
@@ -29,17 +34,44 @@ const DetailedReportModal = ({
     confirmDialog(
       "Reportar incidencia",
       "¿Estás seguro de que deseas reportar esta incidencia de la habitación: " +
-        roomNumber +
+        room?.name +
         "?",
       "Sí, reportar",
       "Cancelar",
-      () => {
-        console.log(values);
-        form.reset();
-        onCloseConfirm && onCloseConfirm();
-        onClose();
+      async () => {
+        try {
+          setIsLoading(true);
+          const response = await createReport(
+            values.description,
+            session?.user?.id ? session.user.id : "",
+            room?.id ? room.id : "",
+            values.files
+          );
+          if (response.statusCode === 200) {
+            setIsLoading(false);
+            form.reset();
+            onCloseConfirm && onCloseConfirm();
+            onClose();
+            Toast.fire({
+              icon: "success",
+              title: "Incidencia reportada con éxito",
+            });
+          }
+        } catch (error) {
+          setIsLoading(false);
+          Toast.fire({
+            icon: "error",
+            title: "Error al reportar la incidencia",
+          });
+        }
       }
     );
+  };
+
+  const handleCloseModal = () => {
+    onCloseConfirm && onCloseConfirm();
+    onClose();
+    form.reset();
   };
 
   if (!isOpen) return null;
@@ -54,7 +86,7 @@ const DetailedReportModal = ({
           Describe y adjunta fotos de evidencia que ayuden a detallar el
           problema de la habitación{" "}
           <span className="font-[family-name:var(--font-jost-medium)]">
-            {roomNumber}
+            {room?.name}
           </span>
           .
         </p>
@@ -105,7 +137,7 @@ const DetailedReportModal = ({
               colorText="complementary"
               variant="outlined"
               borderColor="disabled"
-              onClick={onClose}
+              onClick={handleCloseModal}
             >
               Cancelar
             </ButtonCustom>
@@ -115,6 +147,7 @@ const DetailedReportModal = ({
               colorText="background"
               backgroundColor="primary"
               type="submit"
+              isLoading={isLoading}
             >
               Generar reporte
             </ButtonCustom>

@@ -21,15 +21,19 @@
   background-color: var(--color-desactivado);
 }
 
-.sinLimpiar {
+.desocupada {
   background-color: var(--background);
   border: 1px solid #d8d8d8;
 }
 
-.reportada {
+.enMantenimiento {
   background-color: var(--color-advertencia);
 }
 
-.deshabilitada {
+.ocupada {
   background-color: var(--color-error);
+}
+
+.revisadas {
+  background-color: var(--color-exito);
 }

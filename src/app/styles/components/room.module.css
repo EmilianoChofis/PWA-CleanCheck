@@ -18,22 +18,26 @@
   transition: background-color 0.2s;
 }
 
-.room.limpia {
+.room.CLEAN {
   background-color: var(--color-desactivado);
 }
 
-.room.sinLimpiar {
+.room.UNOCCUPIED {
   background-color: var(--background);
   border: 1px solid #d8d8d8;
 }
 
-.room.reportada {
+.room.IN_MAINTENANCE {
   background-color: var(--color-advertencia);
 }
 
-.room.deshabilitada {
+.room.OCCUPIED {
   background-color: var(--color-error);
   color: #fff;
+}
+
+.room.CHECKED {
+  background-color: var(--color-exito);
 }
 
 .floor {

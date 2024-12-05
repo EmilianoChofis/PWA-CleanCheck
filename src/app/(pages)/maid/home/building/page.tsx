@@ -155,7 +155,7 @@ export default function Building() {
         isOpen={isDetailedModalOpen}
         onClose={handleGenerateReport}
         onCloseConfirm={handleReportIssue}
-        roomNumber={roomSelected ? roomSelected.name : ""}
+        room={roomSelected ? roomSelected : undefined}
       />
     </div>
   );
