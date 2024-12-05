@@ -1,75 +1,78 @@
 "use client";
+import { useState } from "react";
+import { useBuildingContext } from "../BuildingContext";
 import Title from "@/app/_components/title";
 import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
 import CategoryButton from "@/app/(pages)/_components/category_button";
 import Legend from "./_components/leyend";
-import { RoomFloorProps } from "@/app/types/RoomFloorProps";
 import RoomFloor from "./_components/room_floor";
 import RegisterCleaningRoom from "./_components/register_cleaning_room";
-import { useState } from "react";
 import ConfirmReportModal from "./_components/confirm_report_modal";
 import DetailedReportModal from "./_components/detailed_report_modal";
-
-const roomsData: RoomFloorProps[] = [
-  {
-    floorNumber: 1,
-    rooms: [
-      { number: "P1H1", status: "sinLimpiar" },
-      { number: "P1H2", status: "limpia" },
-      { number: "P1H3", status: "reportada" },
-      { number: "P1H4", status: "deshabilitada" },
-    ],
-  },
-  {
-    floorNumber: 2,
-    rooms: [
-      { number: "P2H1", status: "reportada" },
-      { number: "P2H2", status: "sinLimpiar" },
-      { number: "P2H3", status: "limpia" },
-    ],
-  },
-  {
-    floorNumber: 3,
-    rooms: [
-      { number: "P3H1", status: "limpia" },
-      { number: "P3H2", status: "deshabilitada" },
-      { number: "P3H3", status: "reportada" },
-      { number: "P3H4", status: "sinLimpiar" },
-      { number: "P3H5", status: "limpia" },
-      { number: "P3H6", status: "sinLimpiar" },
-      { number: "P3H7", status: "reportada" },
-      { number: "P3H8", status: "deshabilitada" },
-      { number: "P3H9", status: "limpia" },
-      { number: "P3H10", status: "sinLimpiar" },
-      { number: "P3H11", status: "limpia" },
-      { number: "P3H12", status: "reportada" },
-      { number: "P3H13", status: "deshabilitada" },
-    ],
-  },
-];
+import { useSession } from "next-auth/react";
+import {
+  changeStatusRoom,
+  getBuildingsByStatus,
+} from "@/app/utils/building-service";
+import { Room } from "@/app/types/Room";
+import { Toast } from "@/app/lib/toast";
 
 export default function Building() {
+  const { data: session } = useSession();
+  const { selectedBuilding, setSelectedBuilding } = useBuildingContext();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDetailedModalOpen, setDetailedModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([
-    { label: "Todas", active: true },
-    { label: "Sin limpiar", active: false },
-    { label: "Limpias", active: false },
-    { label: "Reportadas", active: false },
-    { label: "Deshabilitadas", active: false },
+    { label: "Todas", value: null, active: true },
+    { label: "Ocupadas", value: "OCCUPIED", active: false },
+    { label: "Desocupadas", value: "UNOCCUPIED", active: false },
+    { label: "Limpias", value: "CLEAN", active: false },
+    { label: "Revisadas", value: "CHECKED", active: false },
+    { label: "En mantenimiento", value: "IN_MAINTENANCE", active: false },
   ]);
+  const [roomSelected, setRoomSelected] = useState<Room>();
 
-  const handleCategoryClick = (clickedCategory: string) => {
+  const handleCategoryClick = async (clickedCategory: string) => {
     setCategories((prevCategories) =>
       prevCategories.map((category) => ({
         ...category,
-        active: category.label === clickedCategory,
+        active: category.value === clickedCategory,
       }))
     );
+
+    if (selectedBuilding?.id) {
+      const response = await getBuildingsByStatus(
+        selectedBuilding.id,
+        clickedCategory
+      );
+      setSelectedBuilding(response.data);
+    } else {
+      throw new Error("No se seleccionó ningún edificio.");
+    }
   };
 
-  const handleMarkClean = () => {
-    console.log("Marcar como limpia");
+  const handleRoomSelect = (room: Room) => {
+    setRoomSelected(room);
+  };
+
+  const handleMarkClean = async (room: Room) => {
+    setIsLoading(true);
+    const response = await changeStatusRoom(room.id, "CLEAN");
+
+    if (response.statusCode === 200) {
+      Toast.fire({
+        icon: "success",
+        title: "Habitación marcada como limpia",
+      });
+      setIsLoading(false);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Error al marcar la habitación como limpia",
+      });
+      setIsLoading(false);
+    }
   };
 
   const handleReportIssue = () => {
@@ -95,13 +98,17 @@ export default function Building() {
     console.log("Archivos:", files);
   };
 
+  if (!selectedBuilding) {
+    return <p>No se seleccionó ningún edificio.</p>;
+  }
+
   return (
     <div className="grid grid-cols-3 gap-4 p-8 pb-20 w-full font-[family-name:var(--font-jost-regular)]">
       <div className="col-span-2">
         <Breadcrumb
           items={[
-            { label: "Inicio", link: "/home" },
-            { label: "Edificio" },
+            { label: "Inicio", link: "/maid/home" },
+            { label: selectedBuilding.name },
             { label: "Habitaciones", disabled: true },
           ]}
         />
@@ -115,13 +122,19 @@ export default function Building() {
           </div>
           <Legend />
           <div className="px-2 py-2">
-            {roomsData.map((floor, index) => (
-              <RoomFloor
-                key={index}
-                floorNumber={floor.floorNumber}
-                rooms={floor.rooms}
-              />
-            ))}
+            {
+              selectedBuilding.floors.length > 0 ? selectedBuilding.floors.map((floor, index) => (
+                <RoomFloor
+                  key={index}
+                  floorSelected={floor}
+                  onClickRoomSelected={(room) => handleRoomSelect(room)}
+                />
+              )) : (
+                <div className="text-center mt-5">
+                  <p>No hay habitaciones disponibles</p>
+                </div>
+              )
+            }
           </div>
         </main>
       </div>
@@ -131,12 +144,21 @@ export default function Building() {
           title="Registrar limpieza"
         />
         <RegisterCleaningRoom
-          buildingName="Edificio Altapalmira"
-          staff="Cristopher Soto Ventura"
-          date="10/10/2024"
-          roomNumber="P1H8"
-          onMarkClean={handleMarkClean}
-          onReportIssue={handleReportIssue}
+          data={{
+            buildingName: selectedBuilding.name,
+            staff: session?.user?.name
+              ? session.user.name
+              : "Nombre del personal",
+            date: new Date().toLocaleDateString(),
+            roomNumber: roomSelected
+              ? roomSelected.name
+              : "Selecciona una habitación",
+            roomStatus: roomSelected ? roomSelected.status : "",
+            onMarkClean: () => roomSelected && handleMarkClean(roomSelected),
+            onReportIssue: handleReportIssue,
+            isLoading: isLoading,
+          }}
+          isRoomSelected={!!roomSelected}
         />
       </div>
       <ConfirmReportModal

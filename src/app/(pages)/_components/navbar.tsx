@@ -3,6 +3,7 @@ import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { KeyboardArrowRight, PersonOutlineOutlined } from "@mui/icons-material";
 import { Menu, MenuItem } from "@mui/material";
+import ButtonCustom from "@/app/_components/button_custom";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -51,7 +52,15 @@ const Navbar = () => {
           horizontal: "right",
         }}
       >
-        <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+        <MenuItem>
+          <ButtonCustom
+            colorText="primary"
+            variant="text"
+            onClick={handleLogout}
+          >
+            Cerrar sesión
+          </ButtonCustom>
+        </MenuItem>
       </Menu>
     </header>
   );

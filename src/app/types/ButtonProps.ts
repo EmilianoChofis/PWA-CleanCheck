@@ -18,4 +18,5 @@ export type ButtonProps = {
   icon?: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
+  isLoading?: boolean;
 };

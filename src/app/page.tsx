@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,13 +15,14 @@ import {
 } from "@mui/icons-material";
 import ButtonCustom from "./_components/button_custom";
 import Title from "./_components/title";
-import { loginAction } from "@/app/actions/auth-actions";
+import { getRole, loginAction } from "@/app/actions/auth-actions";
 import { loginSchema } from "@/app/lib/zod";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -31,12 +32,32 @@ const LoginPage: React.FC = () => {
     },
   });
 
+  const getSession = async () => {
+    const role = await getRole();
+    setIsLoading(false);
+    router.push(`${role}/home`);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    const checkSession = async () => {
+      const role = await getRole();
+      setIsLoading(false);
+      if (role) {
+        router.push(`${role}/home`);
+      }
+    };
+    checkSession();
+  }, []);
+
   const onSubmitHandler = async (values: z.infer<typeof loginSchema>) => {
     const response = await loginAction(values);
     startTransition(() => {
+      setIsLoading(true);
       if (response.success) {
-        router.push("/maid/home");
+        getSession();
       } else {
+        setIsLoading(false);
         setError(response.error);
       }
     });
@@ -85,11 +106,7 @@ const LoginPage: React.FC = () => {
               placeholder="••••••••••••••"
               error={form.formState.errors.password?.message}
             />
-            {
-              <p className="mt-2 text-sm text-error">
-                {error ? error : " "}
-              </p>
-            }
+            {<p className="mt-2 text-sm text-error">{error ? error : " "}</p>}
           </div>
           <ButtonCustom
             className="w-full"
@@ -103,6 +120,7 @@ const LoginPage: React.FC = () => {
               !!form.formState.errors.password ||
               isPending
             }
+            isLoading={isLoading}
           >
             Iniciar sesión
           </ButtonCustom>

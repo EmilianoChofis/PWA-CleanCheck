@@ -1,47 +1,9 @@
 import { Building } from "@/app/types/Building";
 import Title from "@/app/_components/title";
 import { ApartmentOutlined } from "@mui/icons-material";
+import { BuildingDashboard } from "@/app/types/BuildingDashboard";
 
-const buildingData = [
-  {
-    id: 1,
-    name: "Edificio Altapalmira",
-    cleanRooms: 10,
-    dirtyRooms: 5,
-    reportedRooms: 2,
-    disabledRooms: 1,
-    totalRooms: 18,
-  },
-  {
-    id: 2,
-    name: "Edificio Paseos del río",
-    cleanRooms: 7,
-    dirtyRooms: 7,
-    reportedRooms: 3,
-    disabledRooms: 2,
-    totalRooms: 19,
-  },
-  {
-    id: 3,
-    name: "Edificio Calle de los doctores",
-    cleanRooms: 12,
-    dirtyRooms: 3,
-    reportedRooms: 1,
-    disabledRooms: 0,
-    totalRooms: 16,
-  },
-  {
-    id: 4,
-    name: "Edificio La panochera",
-    cleanRooms: 15,
-    dirtyRooms: 0,
-    reportedRooms: 0,
-    disabledRooms: 0,
-    totalRooms: 15,
-  },
-];
-
-const BuildingTable = () => {
+const BuildingTable = ({ buildings, onClick }: { buildings: BuildingDashboard[]; onClick: (building: Building) => void }) => {
   return (
     <div className="table-container">
       <Title className="text-2xl text-primary" title="Lista de edificios" />
@@ -60,23 +22,27 @@ const BuildingTable = () => {
           </tr>
         </thead>
         <tbody className="text-primary">
-          {buildingData.map((building: Building, index) => (
-            <tr key={building.id} className="border-b border-gray-200">
+          {buildings.map((buildingDash: BuildingDashboard, index) => (
+            <tr
+              key={buildingDash.building.id}
+              className="border-b border-gray-200 hover:bg-gray-200 cursor-pointer transition-colors duration-200 ease-in-out"
+              onClick={() => onClick(buildingDash.building)}
+            >
               <td className="py-3 px-4">{index + 1}</td>
               <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">
                 <button className="p-2 bg-primary rounded-full">
                   <ApartmentOutlined className="text-background" />
                 </button>
-                {building.name}
+                {buildingDash.building.name}
               </td>
-              <td className="py-3 px-4">{building.cleanRooms}</td>
-              <td className="py-3 px-4">{building.dirtyRooms}</td>
+              <td className="py-3 px-4">{buildingDash.cleanedRooms}</td>
+              <td className="py-3 px-4">{buildingDash.dirtyRooms}</td>
               <td className="py-3 px-4 text-warning">
-                {building.reportedRooms}
+                {buildingDash.reportedRooms}
               </td>
-              <td className="py-3 px-4 text-error">{building.disabledRooms}</td>
+              <td className="py-3 px-4 text-error">{buildingDash.disabledRooms}</td>
               <td className="py-3 px-4 font-[family-name:var(--font-jost-medium)]">
-                {building.totalRooms}
+                {buildingDash.totalRooms}
               </td>
             </tr>
           ))}

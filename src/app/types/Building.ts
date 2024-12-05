@@ -1,9 +1,10 @@
+import { Floor } from "./Floor";
+
 export type Building = {
-  id: number;
+  id: string;
   name: string;
-  cleanRooms: number;
-  dirtyRooms: number;
-  reportedRooms: number;
-  disabledRooms: number;
-  totalRooms: number;
+  number: number;
+  status: boolean;
+  createdAt: string;
+  floors: Floor[];
 };
