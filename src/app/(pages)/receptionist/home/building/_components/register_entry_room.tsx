@@ -1,12 +1,13 @@
 import ButtonCustom from "@/app/_components/button_custom";
 import { RegisterEntryRoomProps } from "@/app/types/RegisterEntryRoomProps";
-import { Business, KeyboardTabOutlined } from "@mui/icons-material";
+import { Business, KeyboardTabOutlined, ExitToApp } from "@mui/icons-material";
 
 const RegisterEntryRoom = ({
   buildingName,
   status,
   roomNumber,
   onMarkEntry,
+  onMarkExit,
 }: RegisterEntryRoomProps) => {
   return (
     <>
@@ -33,15 +34,29 @@ const RegisterEntryRoom = ({
         </div>
       </div>
       <div className="py-3">
-        <ButtonCustom
-          className="w-full mb-3"
-          colorText="background"
-          variant="filled"
-          onClick={onMarkEntry}
-        >
-          Marcar Entrada
-          <KeyboardTabOutlined className="ml-2" />
-        </ButtonCustom>
+        {status === "OCCUPIED" ? (
+          <ButtonCustom
+            className="w-full mb-3"
+            colorText="background"
+            variant="filled"
+            onClick={onMarkExit}
+          >
+            Marcar Salida
+            <ExitToApp className="ml-2" />
+          </ButtonCustom>
+        ) : status === "UNOCCUPIED" ? (
+          <ButtonCustom
+            className="w-full mb-3"
+            colorText="background"
+            variant="filled"
+            onClick={onMarkEntry}
+          >
+            Marcar Entrada
+            <KeyboardTabOutlined className="ml-2" />
+          </ButtonCustom>
+        ) : (
+          <p>No se puede seleccionar una acción para este estado.</p>
+        )}
       </div>
     </>
   );

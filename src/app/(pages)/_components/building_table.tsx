@@ -2,7 +2,6 @@ import { Building } from "@/app/types/Building";
 import Title from "@/app/_components/title";
 import { ApartmentOutlined } from "@mui/icons-material";
 import { BuildingDashboard } from "@/app/types/BuildingDashboard";
-import Link from "next/link";
 
 const BuildingTable = ({ buildings, onClick }: { buildings: BuildingDashboard[]; onClick: (building: Building) => void }) => {
   return (
@@ -15,11 +14,11 @@ const BuildingTable = ({ buildings, onClick }: { buildings: BuildingDashboard[];
             <th className="py-3 px-4 w-[250px] md:w-[200px] lg:w-[300px]">
               Edificio
             </th>
-            <th className="py-3 px-4">Habitaciones limpias</th>
-            <th className="py-3 px-4">Habitaciones sin limpiar</th>
-            <th className="py-3 px-4">Habitaciones reportadas</th>
-            <th className="py-3 px-4">Habitaciones deshabilitadas</th>
-            <th className="py-3 px-4">Total de habitaciones</th>
+            <th className="py-3 px-4 text-center">Habitaciones limpias</th>
+            <th className="py-3 px-4 text-center">Habitaciones sin limpiar</th>
+            <th className="py-3 px-4 text-center">Habitaciones reportadas</th>
+            <th className="py-3 px-4 text-center">Habitaciones deshabilitadas</th>
+            <th className="py-3 px-4 text-center">Total de habitaciones</th>
           </tr>
         </thead>
         <tbody className="text-primary">
@@ -31,18 +30,16 @@ const BuildingTable = ({ buildings, onClick }: { buildings: BuildingDashboard[];
             >
               <td className="py-3 px-4">{index + 1}</td>
               <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">
-                <button className="p-2 bg-primary rounded-full">
+                <button className="p-2 bg-primary rounded-full text-center">
                   <ApartmentOutlined className="text-background" />
                 </button>
-                <Link href={`/receptionist/home/building`} className="hover:underline">
-                  {buildingDash.building.name}
-                </Link>
+                {buildingDash.building.name}
               </td>
-              <td className="py-3 px-4">{buildingDash.cleanedRooms}</td>
-              <td className="py-3 px-4">{buildingDash.dirtyRooms}</td>
-              <td className="py-3 px-4 text-warning">{buildingDash.reportedRooms}</td>
-              <td className="py-3 px-4 text-error">{buildingDash.disabledRooms}</td>
-              <td className="py-3 px-4 font-[family-name:var(--font-jost-medium)]">{buildingDash.totalRooms}</td>
+              <td className="py-3 px-4 text-center">{buildingDash.cleanedRooms}</td>
+              <td className="py-3 px-4 text-center">{buildingDash.dirtyRooms}</td>
+              <td className="py-3 px-4 text-warning text-center">{buildingDash.reportedRooms}</td>
+              <td className="py-3 px-4 text-error text-center">{buildingDash.disabledRooms}</td>
+              <td className="py-3 px-4 font-[family-name:var(--font-jost-medium)] text-center">{buildingDash.totalRooms}</td>
             </tr>
           ))}
         </tbody>

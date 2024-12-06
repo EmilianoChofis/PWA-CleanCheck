@@ -2,6 +2,7 @@
 import ButtonCustom from "@/app/_components/button_custom";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useBuildingContext } from "../BuildingContext"
 
 interface ModalProps {
     isOpen: boolean;
@@ -9,35 +10,48 @@ interface ModalProps {
     onContinue: () => void;
     title: string;
     description: string;
-    buildings: string[];
+    buildings: any[];
+    loading: boolean;
+    error: unknown;
 }
 
 const ActionModal = ({
     isOpen,
     onClose,
-    onContinue,
     title,
     description,
     buildings,
 }: ModalProps) => {
-    const [selectedBuilding, setSelectedBuilding] = useState<string | null>(null);
+    const { setSelectedBuilding } = useBuildingContext();
+    const [selectedBuildingName, setSelectedBuildingName] = useState<string | null>(null);
     const router = useRouter();
 
     const handleBuildingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedBuilding(event.target.value);
+        setSelectedBuildingName(event.target.value);
     };
 
     const handleClose = () => {
-        setSelectedBuilding(null);
+        setSelectedBuildingName(null);
         onClose();
     };
 
     const handleContinue = () => {
-        if (selectedBuilding) {
-            router.push(`/receptionist/home/building`);
-            onContinue();
+        if (selectedBuildingName) {
+            const buildingObject = buildings.find(
+                (building) =>
+                    building.building?.name.toLowerCase().trim() ===
+                    selectedBuildingName.toLowerCase().trim()
+            );
+    
+            if (buildingObject) {
+                setSelectedBuilding(buildingObject.building);
+                router.push("/receptionist/home/building");
+            } else {
+                console.error("Edificio no encontrado.");
+            }
         }
     };
+    
 
     if (!isOpen) return null;
 
@@ -52,14 +66,14 @@ const ActionModal = ({
                     <label htmlFor="building-select" className="block text-primary mb-2">Selecciona un edificio:</label>
                     <select
                         id="building-select"
-                        value={selectedBuilding ?? ""}
+                        value={selectedBuildingName ?? ""}
                         onChange={handleBuildingChange}
                         className="w-full p-2 border border-gray-300 rounded-lg"
                     >
                         <option value="">-- Selecciona un edificio --</option>
-                        {buildings.map((building) => (
-                            <option key={building} value={building}>
-                                {building}
+                        {buildings.map((building, index) => (
+                            <option key={index} value={building?.building?.name || ''}>
+                                {building?.building?.name || ''}
                             </option>
                         ))}
                     </select>
@@ -74,12 +88,12 @@ const ActionModal = ({
                         Cancelar
                     </ButtonCustom>
                     <ButtonCustom
-                        className={`w-full ${!selectedBuilding ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-full ${!selectedBuildingName ? 'opacity-50 cursor-not-allowed' : ''}`}
                         variant="filled"
                         colorText="background"
                         backgroundColor="primary"
                         onClick={handleContinue}
-                        disabled={!selectedBuilding}
+                        disabled={!selectedBuildingName}
                     >
                         Continuar
                     </ButtonCustom>
