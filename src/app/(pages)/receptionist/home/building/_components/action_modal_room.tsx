@@ -24,10 +24,10 @@ const ActionModalRoom = ({
     status,
     roomId,
 }: ModalProps) => {
-    if (!isOpen) return null;
 
+    const router = useRouter(); // Mover la declaración aquí
     const isOccupied = status === "OCCUPIED";
-    const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
+    const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' }); // Mover la declaración aquí
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -38,7 +38,6 @@ const ActionModalRoom = ({
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 20 } },
     };
-    const router = useRouter();
 
 
     const handleConfirm = async () => {
@@ -60,6 +59,8 @@ const ActionModalRoom = ({
             }, 3000);
         }
     };
+
+    if (!isOpen) return null; 
 
     return (
         <motion.div
