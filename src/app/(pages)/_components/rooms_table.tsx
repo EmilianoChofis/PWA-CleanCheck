@@ -34,7 +34,7 @@ const RoomsTable = () => {
                             </button>
                             {room.name}
                         </td>
-                        <td className="py-3 px-4 flex gap-2">
+                        <td className="py-3 px-4 gap-2">
                             {room.active ? (
                                 <>
                                     <button

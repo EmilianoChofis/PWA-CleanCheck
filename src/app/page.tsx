@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Banner from "./(pages)/(auth)/_components/banner";
-import TextInput from "./_components/text_input";
+import Banner from "./(pages)/(auth)/_components/banner"; // Reemplaza con tu componente real
+import TextInput from "./_components/text_input"; // Reemplaza con tu componente real
 import {
   EmailOutlined,
   LockOutlined,
@@ -13,10 +13,11 @@ import {
   VisibilityOffOutlined,
   InputOutlined,
 } from "@mui/icons-material";
-import ButtonCustom from "./_components/button_custom";
-import Title from "./_components/title";
-import { getRole, loginAction } from "@/app/actions/auth-actions";
-import { loginSchema } from "@/app/lib/zod";
+import ButtonCustom from "./_components/button_custom"; // Reemplaza con tu componente real
+import Title from "./_components/title"; // Reemplaza con tu componente real
+import { getRole, loginAction } from "@/app/actions/auth-actions"; // Reemplaza con tus funciones reales
+import { loginSchema } from "@/app/lib/zod"; // Reemplaza con tu esquema de validación real
+
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const LoginPage: React.FC = () => {
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -33,7 +35,7 @@ const LoginPage: React.FC = () => {
   });
 
   const getSession = async () => {
-    const role = await getRole();
+    const role = await getRole(); // Reemplaza con tu función real
     setIsLoading(false);
     router.push(`${role}/home`);
   };
@@ -41,7 +43,7 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     const checkSession = async () => {
-      const role = await getRole();
+      const role = await getRole(); // Reemplaza con tu función real
       setIsLoading(false);
       if (role) {
         router.push(`${role}/home`);
@@ -51,7 +53,7 @@ const LoginPage: React.FC = () => {
   }, []);
 
   const onSubmitHandler = async (values: z.infer<typeof loginSchema>) => {
-    const response = await loginAction(values);
+    const response = await loginAction(values); // Reemplaza con tu función real
     startTransition(() => {
       setIsLoading(true);
       if (response.success) {
@@ -64,7 +66,6 @@ const LoginPage: React.FC = () => {
   };
 
   const handleForgetPassword = () => {
-    // router.push("/recoverPassword");
     router.push("/resetPassword");
   };
 
@@ -73,15 +74,12 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gray-100"> {/* Añadido un fondo para mejor visualización */}
       <Banner />
-      <div className="w-full md:w-1/2 p-8 font-[family-name:var(--font-jost-medium)]">
-        <Title className="text-2xl text-primary" title="Iniciar sesión" />
-        <form
-          onSubmit={form.handleSubmit(onSubmitHandler)}
-          className="space-y-4"
-        >
-          <div className="px-2 py-2">
+      <div className="w-full md:w-1/2 p-6 md:p-8 font-[family-name:var(--font-jost-medium)]">
+        <Title className="text-3xl font-bold text-primary mb-6" title="Iniciar sesión" />
+        <form onSubmit={form.handleSubmit(onSubmitHandler)} className="bg-white rounded-lg shadow-md p-6"> {/* Añadido estilo al formulario */}
+          <div>
             <TextInput
               label="Correo"
               {...form.register("email")}
@@ -95,42 +93,28 @@ const LoginPage: React.FC = () => {
               {...form.register("password")}
               type={showPassword ? "text" : "password"}
               iconLeft={<LockOutlined />}
-              iconRight={
-                showPassword ? (
-                  <VisibilityOutlined />
-                ) : (
-                  <VisibilityOffOutlined />
-                )
-              }
+              iconRight={showPassword ? <VisibilityOutlined onClick={handlePasswordVisibility} /> : <VisibilityOffOutlined onClick={handlePasswordVisibility} />}
               onIconClick={handlePasswordVisibility}
               placeholder="••••••••••••••"
               error={form.formState.errors.password?.message}
             />
-            {<p className="mt-2 text-sm text-error">{error ? error : " "}</p>}
+            <p className="mt-2 text-sm text-red-500">{error ? error : " "}</p>
           </div>
           <ButtonCustom
-            className="w-full"
+            className="w-full mt-6"
             variant="filled"
             type="submit"
             backgroundColor="primary"
             icon={<InputOutlined />}
             colorText="background"
-            disabled={
-              !!form.formState.errors.email ||
-              !!form.formState.errors.password ||
-              isPending
-            }
+            disabled={!!form.formState.errors.email || !!form.formState.errors.password || isPending}
             isLoading={isLoading}
           >
             Iniciar sesión
           </ButtonCustom>
         </form>
-        <div className="text-center py-4">
-          <ButtonCustom
-            variant="text"
-            colorText="primary"
-            onClick={handleForgetPassword}
-          >
+        <div className="text-center mt-6">
+          <ButtonCustom variant="text" colorText="primary" onClick={handleForgetPassword}>
             ¿Olvidaste tu contraseña?
           </ButtonCustom>
         </div>

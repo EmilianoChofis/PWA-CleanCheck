@@ -8,9 +8,7 @@ import Legend from "./_components/leyend";
 import RoomFloor from "./_components/room_floor";
 import RegisterEntryRoom from "./_components/register_entry_room";
 import ActionModalRoom from "./_components/action_modal_room";
-import {
-  getBuildingsByStatus,
-} from "@/app/utils/building-service";
+import { getBuildingsByStatus } from "@/app/utils/building-service";
 import { Room } from "@/app/types/Room";
 
 export default function Building() {
@@ -54,7 +52,7 @@ export default function Building() {
       console.log(`Entrada marcada para la habitación: ${roomSelected.name}`);
       setIsModalOpen(true);
     }
-  }
+  };
 
   const handleMarkExit = () => {
     if (roomSelected) {
@@ -76,11 +74,9 @@ export default function Building() {
     return <p>No se seleccionó ningún edificio.</p>;
   }
 
-  console.log("Edificio seleccionado:", selectedBuilding);
-
   return (
-    <div className="grid grid-cols-3 gap-4 p-8 pb-20 w-full font-[family-name:var(--font-jost-regular)]">
-      <div className="col-span-2 overflow-y-auto max-h-[calc(100vh-200px)]">
+    <div className="flex flex-col md:flex-row min-h-screen gap-4 p-8">
+      <div className="flex-1 md:max-h-[calc(100vh-200px)] overflow-y-auto">
         <Breadcrumb
           items={[
             { label: "Inicio", link: "/receptionist/home" },
@@ -98,25 +94,23 @@ export default function Building() {
           </div>
           <Legend />
           <div className="px-2 py-2">
-  {
-    selectedBuilding?.floors?.length > 0 ? (
-      selectedBuilding.floors.map((floor, index) => (
-        <RoomFloor
-          key={index}
-          floorSelected={floor}
-          onClickRoomSelected={(room) => handleRoomSelect(room)}
-        />
-      ))
-    ) : (
-      <div className="text-center mt-5">
-        <p>No hay habitaciones disponibles</p>
-      </div>
-    )
-  }
-</div>
+            {selectedBuilding?.floors?.length > 0 ? (
+              selectedBuilding.floors.map((floor, index) => (
+                <RoomFloor
+                  key={index}
+                  floorSelected={floor}
+                  onClickRoomSelected={(room) => handleRoomSelect(room)}
+                />
+              ))
+            ) : (
+              <div className="text-center mt-5">
+                <p>No hay habitaciones disponibles</p>
+              </div>
+            )}
+          </div>
         </main>
       </div>
-      <div className="col-span-1">
+      <div className="md:w-64 w-full mt-4 md:mt-0">
         {roomSelected ? (
           <>
             <Title

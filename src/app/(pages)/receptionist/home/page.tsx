@@ -5,6 +5,7 @@ import { getBuildings } from "@/app/utils/building-service";
 import { useRouter } from "next/navigation";
 import { useBuildingContext } from "./BuildingContext";
 import Shortcuts from "../../_components/shortcuts";
+import BuildingCardList from "../../_components/building_card_list";
 
 export default function Home() {
     const { setSelectedBuilding } = useBuildingContext();
@@ -15,7 +16,7 @@ export default function Home() {
             const response = await getBuildings();
             setBuildings(response.data);
         } catch (error) {
-            throw new Error("Error al obtener los edificios");
+            console.error("Error fetching buildings:", error);
         }
     };
 
@@ -29,16 +30,18 @@ export default function Home() {
         router.push(`/receptionist/home/building`);
     };
 
+    const isLargeScreen = window.innerWidth > 768;
+
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] p-8 pb-20 gap-16 w-full font-[family-name:var(--font-jost-regular)]">
-            <main className="container-fluid">
-                <div className="flex flex-row justify-between items-center mb-3">
-                    <Shortcuts />
-                </div>
-                <div className="py-2">
+        <div>
+            <Shortcuts />
+            <div>
+                {isLargeScreen ? (
                     <BuildingTable buildings={buildings} onClick={handleBuildingClick} />
-                </div>
-            </main>
+                ) : (
+                    <BuildingCardList buildings={buildings} onClick={handleBuildingClick} />
+                )}
+            </div>
         </div>
     );
 }

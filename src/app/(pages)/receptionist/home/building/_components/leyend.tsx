@@ -9,7 +9,7 @@ const Legend = () => {
   ];
 
   return (
-    <div className={styles.legends}>
+    <div className={`${styles.legends} scrollbar-hide overflow-x-auto`}>
       {legendItems.map((item) => (
         <div key={item.label} className={styles.legendItem}>
           <span
