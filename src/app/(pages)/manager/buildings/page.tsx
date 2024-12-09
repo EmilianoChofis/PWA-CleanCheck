@@ -1,45 +1,53 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Title from "@/app/_components/title";
-import Searchbar from "../../_components/searchbar"
+import Searchbar from "../../_components/searchbar";
 import CategoryButton from "../../_components/category_button";
 import BuildingManagerTable from "../../_components/building_manager_table";
 import ButtonCustom from "@/app/_components/button_custom";
-import RegisterBuildingModal from "../_components/register_building_modal";
+import RegisterBuildingModal from "../home/_components/register_building_modal";
+import { getBuildings } from "@/app/utils/building-service";
+import { BuildingDashboard } from "@/app/types/BuildingDashboard";
 
 export default function RecepcionistHome() {
+    const [buildings, setBuildings] = useState<BuildingDashboard[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [categories, setCategories] = useState([
         { label: "Todos", active: true },
         { label: "Activos", active: false },
         { label: "Deshabilitados", active: false },
     ]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
+    const fetchBuildings = async () => {
+        try {
+            setIsLoading(true);
+            const response = await getBuildings();
+            setBuildings(response.data);
+        } catch (error) {
+            setError("Hubo un error al cargar la lista de edificios.");
+            console.error("Error fetching buildings:", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
+    useEffect(() => {
+        fetchBuildings();
+    }, []);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+    const handleConfirm = () => closeModal();
+
     const handleCategoryClick = (clickedCategory: string) => {
-        setCategories((prevCategories) =>
-            prevCategories.map((category) => ({
+        setCategories(prevCategories =>
+            prevCategories.map(category => ({
                 ...category,
                 active: category.label === clickedCategory,
             }))
         );
-    };
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleConfirm = () => {
-        console.log("Usuario registrado");
-        closeModal();
     };
 
     return (
@@ -58,14 +66,19 @@ export default function RecepcionistHome() {
                     </ButtonCustom>
                 </div>
                 <div className="py-2">
-                    <Searchbar label="Buscar incidencia" onChange={handleSearchChange} />
+                    <Searchbar label="Buscar incidencia" onChange={() => {}} />
                     <CategoryButton
                         categories={categories}
-                        onCategoryClick={(category) => handleCategoryClick(category)}
+                        onCategoryClick={handleCategoryClick}
                     />
                 </div>
                 <div className="w-full">
-                    <BuildingManagerTable />
+                    {error && <p className="text-red-500">{error}</p>}
+                    {isLoading ? (
+                        <p className="text-center">Cargando edificios...</p>
+                    ) : (
+                        <BuildingManagerTable buildings={buildings} />
+                    )}
                 </div>
             </main>
             <RegisterBuildingModal

@@ -3,6 +3,10 @@
   gap: 15px;
   margin-top: 10px;
   font-size: 14px;
+
+  /* Estas propiedades aseguran que el contenedor permita el desbordamiento horizontal */
+  overflow-x: auto; /* Scroll horizontal */
+  white-space: nowrap; /* Evita que el contenido se rompa en varias líneas */
 }
 
 .legendItem {

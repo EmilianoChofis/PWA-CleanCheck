@@ -8,4 +8,3 @@ export type User = {
   role: "Maid" | "Receptionist" | "Manager";
   records: any[];
   reports: any[];
-};

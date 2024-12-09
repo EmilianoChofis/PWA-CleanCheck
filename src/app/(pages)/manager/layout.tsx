@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "../_components/navbar";
 import Sidebar from "../_components/sidebar";
-import { HomeOutlined, ReportProblemOutlined } from "@mui/icons-material";
+import { BusinessOutlined, HomeOutlined, PeopleOutlineOutlined, ReportProblemOutlined } from "@mui/icons-material";
 import { SessionProvider } from "next-auth/react";
 import { useState, useEffect } from "react";
 
@@ -32,12 +32,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         menuItems={[
                             {
                                 label: "Inicio",
-                                path: "/receptionist/home",
+                                path: "/manager/home",
                                 icon: <HomeOutlined className="text-primary" />,
                             },
                             {
+                                label: "Edificios",
+                                path: "/manager/buildings",
+                                icon: <BusinessOutlined className="text-primary" />,
+                            },
+                            {
+                                label: "Usuarios",
+                                path: "/manager/users",
+                                icon: <PeopleOutlineOutlined className="text-primary" />,
+                            },
+                            {
                                 label: "Incidencias",
-                                path: "/receptionist/incidences",
+                                path: "/manager/incidences",
                                 icon: <ReportProblemOutlined className="text-primary" />,
                             },
                         ]}

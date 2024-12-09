@@ -49,3 +49,8 @@
   font-weight: 600;
   margin-bottom: 10px;
 }
+
+.selected {
+  border-color: black;
+  border-width: 2px;
+}

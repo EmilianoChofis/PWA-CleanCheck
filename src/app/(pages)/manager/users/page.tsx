@@ -1,11 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Title from "@/app/_components/title";
 import Searchbar from "../../_components/searchbar";
 import CategoryButton from "../../_components/category_button";
 import ButtonCustom from "@/app/_components/button_custom";
 import UsersTable from "../../_components/users_table";
-import RegisterUserModal from "../_components/register_users_modal";
+
+import RegisterUserModal from "../home/_components/register_users_modal";
+import UsersCardList from "../../_components/users_card_list";
 
 export default function GestionUsers() {
     const [categories, setCategories] = useState([
@@ -15,9 +17,24 @@ export default function GestionUsers() {
     ]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLargeScreen(window.innerWidth > 768);
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
+        setSearchTerm(e.target.value.toLowerCase());
     };
 
     const handleCategoryClick = (clickedCategory: string) => {
@@ -29,19 +46,6 @@ export default function GestionUsers() {
         );
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleConfirm = () => {
-        console.log("Usuario registrado");
-        closeModal();
-    };
-
     return (
         <div className="grid grid-rows-[auto_1fr_auto] p-8 pb-20 gap-16 w-full">
             <main className="w-full">
@@ -51,7 +55,7 @@ export default function GestionUsers() {
                         variant="filled"
                         colorText="background"
                         backgroundColor="primary"
-                        onClick={openModal}
+                        onClick={() => setIsModalOpen(true)}
                         className="px-8 py-3 text-lg"
                     >
                         Registrar usuario
@@ -59,19 +63,25 @@ export default function GestionUsers() {
                 </div>
                 <div className="py-2">
                     <Searchbar label="Buscar" onChange={handleSearchChange} />
-                    <CategoryButton
-                        categories={categories}
-                        onCategoryClick={(category) => handleCategoryClick(category)}
-                    />
-                </div>
-                <div className="w-full">
-                    <UsersTable />
-                </div>
+                    <div className="px-2 py-2">
+                        <CategoryButton
+                            categories={categories}
+                            onCategoryClick={(category) => handleCategoryClick(category)}
+                        />
+                    </div>
+                    </div>
+                    <div className="w-full">
+                        {isLargeScreen ? (
+                            <UsersTable searchTerm={searchTerm} />
+                        ) : (
+                            <UsersCardList searchTerm={searchTerm} />
+                        )}
+                    </div>
             </main>
             <RegisterUserModal
                 isOpen={isModalOpen}
-                onClose={closeModal}
-                onConfirm={handleConfirm}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={() => setIsModalOpen(false)}
             />
         </div>
     );

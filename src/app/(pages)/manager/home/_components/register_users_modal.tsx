@@ -4,12 +4,17 @@ import { EmailOutlined, PersonOutlineOutlined, AssignmentIndOutlined } from '@mu
 import TextInput from '@/app/_components/text_input';
 import SelectInput from '@/app/_components/select_input';
 import { ModalProps } from '@/app/types/ModalProps';
+import { URL_BASE } from '@/app/utils/url-base';
+import { motion } from 'framer-motion';
 
 const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userRole, setUserRole] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [, setError] = useState('');
+    const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
 
     const roles = [
         { value: 'cleaning staff', label: 'Personal de Limpieza' },
@@ -23,6 +28,8 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
         setUserEmail('');
         setUserRole('');
         setEmailError('');
+        setError('');
+        setAnimationState({ type: null, message: '' });
         onClose();
     };
 
@@ -36,7 +43,64 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
         setEmailError(isValidEmail(email) ? '' : 'Correo electrónico inválido');
     };
 
+    const handleConfirm = async () => {
+        setError('');
+        if (!isButtonEnabled) return;
+
+        setLoading(true);
+        const password =
+            userRole === 'cleaning staff'
+                ? 'maid1234'
+                : userRole === 'recepcionist'
+                    ? 'recep123'
+                    : '';
+
+        const endpoint =
+            userRole === 'cleaning staff'
+                ? '/Maid'
+                : userRole === 'recepcionist'
+                    ? '/Receptionist'
+                    : '';
+
+        try {
+            const response = await fetch(`${URL_BASE}/auth/createUser${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: userName, email: userEmail, password }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al registrar el usuario');
+            }
+
+            setAnimationState({ type: 'success', message: 'Usuario registrado exitosamente!' });
+            setTimeout(() => {
+                setAnimationState({ type: null, message: '' });
+                onConfirm();
+                handleClose();
+            }, 1500);
+        } catch (err: unknown) {
+            const errorMessage =
+                err instanceof Error
+                    ? err.message
+                    : 'Ocurrió un error al registrar el usuario';
+
+            setError(errorMessage);
+            setAnimationState({ type: 'error', message: 'Error al registrar el usuario. Intenta de nuevo.' });
+            setTimeout(() => {
+                setAnimationState({ type: null, message: '' });
+            }, 3000);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const isButtonEnabled = userName.trim() !== '' && isValidEmail(userEmail) && userRole.trim() !== '';
+
+    const messageVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 20 } },
+    };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
@@ -65,6 +129,25 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                     options={roles}
                     placeholder="Selecciona un rol"
                 />
+                <motion.div
+                    key={animationState.message}
+                    variants={messageVariants}
+                    initial="hidden"
+                    animate={animationState.type ? "visible" : "hidden"}
+                    style={{ marginBottom: '1rem' }}
+                >
+                    {animationState.type === 'success' && (
+                        <div className="bg-green-200 text-green-700 p-2 rounded">
+                            {animationState.message}
+                        </div>
+                    )}
+                    {animationState.type === 'error' && (
+                        <div className="bg-red-200 text-red-700 p-2 rounded">
+                            {animationState.message}
+                        </div>
+                    )}
+                </motion.div>
+
                 <div className="flex justify-center gap-4 mt-6">
                     <ButtonCustom
                         colorText="complementary"
@@ -78,11 +161,11 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                         variant="filled"
                         colorText="background"
                         backgroundColor="primary"
-                        onClick={onConfirm}
-                        disabled={!isButtonEnabled}
+                        onClick={handleConfirm}
+                        disabled={!isButtonEnabled || loading}
                         className={`w-full ${!isButtonEnabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        Registrar
+                        {loading ? 'Registrando...' : 'Registrar'}
                     </ButtonCustom>
                 </div>
             </div>

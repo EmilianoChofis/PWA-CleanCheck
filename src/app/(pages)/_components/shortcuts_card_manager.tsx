@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Shortcuts } from "@/app/types/Shortcuts";
-import RegisterBuildingModal from "../manager/_components/register_building_modal";
-import RegisterUserModal from "../manager/_components/register_users_modal";
-import RegisterRoomsModal from "../manager/_components/register_rooms_modal";
+import RegisterBuildingModal from "../manager/home/_components/register_building_modal";
+import RegisterRoomsModal from "../manager/home/_components/register_rooms_modal";
+import RegisterUserModal from "../manager/home/_components/register_users_modal";
+
 
 const ShortcutsCardManager = ({ action, icon: Icon }: Shortcuts) => {
     const [registerBuildingModalOpen, setRegisterBuildingModalOpen] = useState(false);

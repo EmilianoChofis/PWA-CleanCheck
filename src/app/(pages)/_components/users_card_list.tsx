@@ -5,7 +5,7 @@ import ActivateDeactivateModal from "../manager/users/_components/change_status_
 import UpdateUserModal from "../manager/users/_components/update_user_modal";
 import { User } from "@/app/types/User";
 
-const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
+const UsersCardList = ({ searchTerm }: { searchTerm: string }) => {
     const [usersData, setUsersData] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -118,75 +118,52 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
     };
 
     return (
-        <>
-            <table className="w-full border-collapse">
-                <thead>
-                    <tr className="bg-gray-100 text-left text-sm border-b border-gray-200 font-bold">
-                        <th className="py-3 px-4">#</th>
-                        <th className="py-3 px-4">Nombre</th>
-                        <th className="py-3 px-4">Tipo de Usuario</th>
-                        <th className="py-3 px-4">Email</th>
-                        <th className="py-3 px-4">Acciones</th>
-                        <th className="py-3 px-4">Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredUsers.map((user, index) => (
-                        <tr key={user.id} className="border-b border-gray-200">
-                            <td className="py-3 px-4">{index + 1}</td>
-                            <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">
-                                {user.status ? (
-                                    <button className="p-2 bg-complementary rounded-full">
-                                        <PersonOutlineOutlined className="text-background" />
-                                    </button>
-                                ) : (
-                                    <button className="p-2 bg-error rounded-full">
-                                        <PersonOutlineOutlined className="text-background" />
-                                    </button>
-                                )}
-                                {user.name}
-                            </td>
-                            <td className="py-3 px-4">{user.role.name}</td>
-                            <td className="py-3 px-4">{user.email}</td>
-                            <td className="py-3 px-4 flex gap-2">
-                                {user.status ? (
-                                    <>
-                                        <button
-                                            className="p-2 border-2 border-primary rounded-full"
-                                            aria-label={`Editar usuario ${user.name}`}
-                                            onClick={() => handleOpenModalUpdate(user)}
-                                        >
-                                            <EditOutlined className="text-primary" />
-                                        </button>
-                                        <button
-                                            className="p-2 border-2 border-error rounded-full"
-                                            aria-label={`Eliminar usuario ${user.name}`}
-                                            onClick={() => handleOpenModalDelete(user)}
-                                        >
-                                            <DeleteOutlineOutlined className="text-error" />
-                                        </button>
-                                    </>
-                                ) : (
-                                    <button
-                                        className="p-2 border-2 border-secondary rounded-full"
-                                        aria-label={`Restaurar usuario ${user.name}`}
-                                        onClick={() => handleOpenModalDelete(user)}
-                                    >
-                                        <RestoreFromTrashOutlined className="text-secondary" />
-                                    </button>
-                                )}
-                            </td>
-                            <td className="py-3 px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4">
+            {filteredUsers.map((user) => (
+                <div key={user.id} className="bg-gray-100 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out">
+                    <div className="flex items-center gap-4">
+                        <div className="p-2 bg-primary rounded-full text-center">
+                            <PersonOutlineOutlined className="text-background" />
+                        </div>
+                        <div>
+                            <p className="text-lg font-medium">{user.name}</p>
+                            <p className="text-gray-600 text-sm">{user.email}</p>
+                        </div>
+                    </div>
+                    <div className="mt-4">
+                        <p className="text-sm">Tipo de Usuario: {user.role.name}</p>
+                        <p className="text-sm">{user.status ? "Activo" : "Inactivo"}</p>
+                    </div>
+                    <div className="mt-4 flex gap-2">
+                        {user.status ? (
+                            <>
                                 <button
-                                    className={`py-1 px-4 rounded-lg ${user.status ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
+                                    className="p-2 border-2 border-primary rounded-full"
+                                    aria-label={`Editar usuario ${user.name}`}
+                                    onClick={() => handleOpenModalUpdate(user)}
                                 >
-                                    {user.status ? "Activo" : "Inactivo"}
+                                    <EditOutlined className="text-primary" />
                                 </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                                <button
+                                    className="p-2 border-2 border-error rounded-full"
+                                    aria-label={`Eliminar usuario ${user.name}`}
+                                    onClick={() => handleOpenModalDelete(user)}
+                                >
+                                    <DeleteOutlineOutlined className="text-error" />
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                className="p-2 border-2 border-secondary rounded-full"
+                                aria-label={`Restaurar usuario ${user.name}`}
+                                onClick={() => handleOpenModalDelete(user)}
+                            >
+                                <RestoreFromTrashOutlined className="text-secondary" />
+                            </button>
+                        )}
+                    </div>
+                </div>
+            ))}
             <ActivateDeactivateModal
                 isOpen={deleteModalIsOpen}
                 onClose={handleCloseModalDelete}
@@ -204,8 +181,8 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
                 roleId={userToUpdate?.roleId ?? ''}
                 onConfirm={handleConfirmUpdate}
             />
-        </>
+        </div>
     );
 };
 
-export default UsersTable;
+export default UsersCardList;

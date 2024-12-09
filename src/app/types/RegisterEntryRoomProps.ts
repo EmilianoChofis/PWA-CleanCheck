@@ -3,4 +3,5 @@ export type RegisterEntryRoomProps = {
     roomNumber: string;
     status: string;
     onMarkEntry: () => void;
+    onMarkExit: () => void;
 };
