@@ -4,6 +4,7 @@ import {
   SentimentDissatisfiedOutlined,
 } from "@mui/icons-material";
 import { BuildingDashboard } from "@/app/types/BuildingDashboard";
+import Title from "@/app/_components/title";
 
 const BuildingTable = ({
   buildings,
@@ -14,6 +15,7 @@ const BuildingTable = ({
 }) => {
   return (
     <div className="table-container mt-2">
+      <Title className="text-2xl text-primary mb-4" title="Lista de edificios" />
       {buildings.length > 0 ? (
         <table className="w-full border-collapse">
           <thead>

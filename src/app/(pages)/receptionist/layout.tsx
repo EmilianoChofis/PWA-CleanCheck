@@ -26,7 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Navbar toggleSidebar={toggleSidebar} />
             <div className="flex flex-col md:flex-row min-h-screen">
                 <div
-                    className={`sidebar bg-gray-100 p-4 md:w-auto lg:w-auto xl:w-auto 2xl:w-auto ${isSidebarOpen ? "block" : "hidden"} md:block h-[calc(100vh-4rem)] fixed md:relative top-16`}
+                    className={`sidebar bg-gray-100 p-4 md:w-auto lg:w-auto xl:w-auto 2xl:w-auto ${isSidebarOpen ? "block" : "hidden"} md:block h-screen fixed md:relative top-16`}
                 >
                     <Sidebar
                         menuItems={[
@@ -43,7 +43,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         ]}
                     />
                 </div>
-                <main className="flex-1 mt-16 p-4 ml-0">{children}</main>
+                <main className="flex-1 mt-16 p-4 ml-0 h-screen overflow-y-auto">
+                    {children}
+                </main>
             </div>
         </SessionProvider>
     );
