@@ -27,7 +27,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps
           ref={ref}
           type={type}
           placeholder={placeholder}
-          maxLength={70}
+          maxLength={255}
           className="w-full py-2 px-10 rounded-lg border"
         />
         {iconRight && (

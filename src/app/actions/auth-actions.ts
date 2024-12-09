@@ -27,6 +27,6 @@ export const getRole = async () => {
     const session = await auth();
     return session?.user?.role;
   } catch (error) {
-    throw new Error("An error occurred");
+    throw new Error("Error al obtener el rol del usuario: " + error);
   }
 };

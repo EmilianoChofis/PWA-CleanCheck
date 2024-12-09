@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useBuildingContext } from "../BuildingContext";
 import Title from "@/app/_components/title";
 import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
@@ -16,9 +16,11 @@ import {
 } from "@/app/utils/building-service";
 import { Room } from "@/app/types/Room";
 import { Toast } from "@/app/lib/toast";
+import { useRouter } from "next/navigation";
 
 export default function Building() {
   const { data: session } = useSession();
+  const router = useRouter();
   const { selectedBuilding, setSelectedBuilding } = useBuildingContext();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDetailedModalOpen, setDetailedModalOpen] = useState(false);
@@ -76,30 +78,21 @@ export default function Building() {
   };
 
   const handleReportIssue = () => {
-    console.log("Reportar problema");
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
+    setModalOpen(!isModalOpen);
   };
 
   const handleGenerateReport = () => {
-    console.log("Generar reporte");
-    setDetailedModalOpen(true);
+    setDetailedModalOpen(!isDetailedModalOpen);
   };
 
-  const handleCloseDetailedModal = () => {
-    setDetailedModalOpen(false);
-  };
-
-  const handleSubmitReport = (description: string, files: File[]) => {
-    console.log("Descripción:", description);
-    console.log("Archivos:", files);
-  };
+  useEffect(() => {
+    if (!selectedBuilding) {
+      router.push("/maid/home");
+    }
+  }, [selectedBuilding, router]);
 
   if (!selectedBuilding) {
-    return <p>No se seleccionó ningún edificio.</p>;
+    return null;
   }
 
   return (
@@ -163,14 +156,14 @@ export default function Building() {
       </div>
       <ConfirmReportModal
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        onClose={handleReportIssue}
         onReport={handleGenerateReport}
       />
       <DetailedReportModal
         isOpen={isDetailedModalOpen}
-        onClose={handleCloseDetailedModal}
-        onSubmitReport={handleSubmitReport}
-        roomNumber={"P1H8"}
+        onClose={handleGenerateReport}
+        onCloseConfirm={handleReportIssue}
+        room={roomSelected ? roomSelected : undefined}
       />
     </div>
   );

@@ -5,6 +5,8 @@ import WorkZones from "../../_components/work_zones";
 import { getBuildings } from "@/app/utils/building-service";
 import { useRouter } from "next/navigation";
 import { useBuildingContext } from "./BuildingContext";
+import Title from "@/app/_components/title";
+import { Building } from "@/app/types/Building";
 
 export default function Home() {
   const { setSelectedBuilding } = useBuildingContext();
@@ -15,7 +17,7 @@ export default function Home() {
       const response = await getBuildings();
       setBuildings(response.data);
     } catch (error) {
-      throw new Error("Error al obtener los edificios");
+      throw new Error("Error al obtener los edificios: " + error);
     }
   };
 
@@ -24,7 +26,7 @@ export default function Home() {
   }, []);
 
   const router = useRouter();
-  const handleBuildingClick = (building: any) => {
+  const handleBuildingClick = (building: Building) => {
     setSelectedBuilding(building);
     router.push(`/maid/home/building`);
   };
@@ -36,6 +38,7 @@ export default function Home() {
           <WorkZones />
         </div>
         <div className="py-2">
+          <Title className="text-2xl text-primary" title="Lista de edificios" />
           <BuildingTable buildings={buildings} onClick={handleBuildingClick} />
         </div>
       </main>
