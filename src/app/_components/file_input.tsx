@@ -1,12 +1,5 @@
-import React, { useState } from "react";
-
-interface FileInputProps {
-  label?: string;
-  placeholder?: string;
-  icon?: React.ReactNode;
-  error?: string;
-  onChange: (files: File[]) => void;
-}
+import React from "react";
+import { FileInputProps } from "../types/FileInputProps";
 
 const FileInput: React.FC<FileInputProps> = ({
   label,

@@ -14,9 +14,9 @@ export default function RecepcionistHome() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [categories, setCategories] = useState([
-        { label: "Todos", active: true },
-        { label: "Activos", active: false },
-        { label: "Deshabilitados", active: false },
+        { label: "Todos", value: "all", active: true },
+        { label: "Activos", value: "active", active: false },
+        { label: "Deshabilitados", value: "disabled", active: false },
     ]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 

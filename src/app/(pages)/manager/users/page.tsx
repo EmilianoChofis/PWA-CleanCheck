@@ -11,9 +11,9 @@ import UsersCardList from "../../_components/users_card_list";
 
 export default function GestionUsers() {
     const [categories, setCategories] = useState([
-        { label: "Todos", active: true },
-        { label: "Personal de Servicio", active: false },
-        { label: "Recepcionistas", active: false },
+        { label: "Todos", value: "all", active: true },
+        { label: "Personal de Servicio", value: "service", active: false },
+        { label: "Recepcionistas", value: "receptionist", active: false },
     ]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);

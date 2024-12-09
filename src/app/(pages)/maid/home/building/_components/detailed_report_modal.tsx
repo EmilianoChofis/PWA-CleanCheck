@@ -50,7 +50,7 @@ const DetailedReportModal = ({
           if (response.statusCode === 200) {
             setIsLoading(false);
             form.reset();
-            onCloseConfirm && onCloseConfirm();
+            onCloseConfirm?.();
             onClose();
             Toast.fire({
               icon: "success",
@@ -61,7 +61,7 @@ const DetailedReportModal = ({
           setIsLoading(false);
           Toast.fire({
             icon: "error",
-            title: "Error al reportar la incidencia",
+            title: "Error al reportar la incidencia: " + error,
           });
         }
       }
@@ -69,7 +69,7 @@ const DetailedReportModal = ({
   };
 
   const handleCloseModal = () => {
-    onCloseConfirm && onCloseConfirm();
+    onCloseConfirm?.();
     onClose();
     form.reset();
   };

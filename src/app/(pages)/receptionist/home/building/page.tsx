@@ -15,7 +15,7 @@ export default function Building() {
   const { selectedBuilding, setSelectedBuilding } = useBuildingContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState([
-    { label: "Todas", value: null, active: true },
+    { label: "Todas", value: "", active: true },
     { label: "Ocupadas", value: "OCCUPIED", active: false },
     { label: "Desocupadas", value: "UNOCCUPIED", active: false },
     { label: "Limpias", value: "CLEAN", active: false },

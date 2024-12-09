@@ -1,3 +1,6 @@
+import { Incidence } from "./Incidence";
+import { Record } from "./Record";
+
 export type User = {
   id: string;
   name: string;
@@ -6,6 +9,6 @@ export type User = {
   status: boolean;
   blocked: boolean;
   role: "Maid" | "Receptionist" | "Manager";
-  records: any[];
-  reports: any[];
+  records: Record[];
+  reports: Incidence[];
 }

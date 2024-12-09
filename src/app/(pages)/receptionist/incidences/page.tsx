@@ -3,14 +3,14 @@ import { useState } from "react";
 import Title from "@/app/_components/title";
 import Searchbar from "../../_components/searchbar";
 import CategoryButton from "../../_components/category_button";
-import IncidencesTable from "./_components/incidences_table";
+// import IncidencesTable from "./_components/incidences_table";
 
 export default function Incidences() {
     const [categories, setCategories] = useState([
-        { label: "Todas", active: true },
-        { label: "En proceso", active: false },
-        { label: "Deshabilitadas", active: false },
-        { label: "Disponibles", active: false },
+        { label: "Todas", value: "all", active: true },
+        { label: "En proceso", value: "in-process", active: false },
+        { label: "Deshabilitadas", value: "disabled", active: false },
+        { label: "Disponibles", value: "available", active: false },
     ]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +38,7 @@ export default function Incidences() {
                     />
                 </div>
                 <div className="py-2">
-                    <IncidencesTable />
+                    {/* <IncidencesTable /> */}
                 </div>
             </main>
         </div>

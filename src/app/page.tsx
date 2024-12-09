@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Banner from "./(pages)/(auth)/_components/banner"; // Reemplaza con tu componente real
-import TextInput from "./_components/text_input"; // Reemplaza con tu componente real
+import Banner from "./(pages)/(auth)/_components/banner";
+import TextInput from "./_components/text_input";
 import {
   EmailOutlined,
   LockOutlined,
@@ -13,10 +13,10 @@ import {
   VisibilityOffOutlined,
   InputOutlined,
 } from "@mui/icons-material";
-import ButtonCustom from "./_components/button_custom"; // Reemplaza con tu componente real
-import Title from "./_components/title"; // Reemplaza con tu componente real
-import { getRole, loginAction } from "@/app/actions/auth-actions"; // Reemplaza con tus funciones reales
-import { loginSchema } from "@/app/lib/zod"; // Reemplaza con tu esquema de validación real
+import ButtonCustom from "./_components/button_custom";
+import Title from "./_components/title";
+import { getRole, loginAction } from "@/app/actions/auth-actions";
+import { loginSchema } from "@/app/lib/zod";
 
 
 const LoginPage: React.FC = () => {
@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
   });
 
   const getSession = async () => {
-    const role = await getRole(); // Reemplaza con tu función real
+    const role = await getRole();
     setIsLoading(false);
     router.push(`${role}/home`);
   };
@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     const checkSession = async () => {
-      const role = await getRole(); // Reemplaza con tu función real
+      const role = await getRole();
       setIsLoading(false);
       if (role) {
         router.push(`${role}/home`);
@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
   }, []);
 
   const onSubmitHandler = async (values: z.infer<typeof loginSchema>) => {
-    const response = await loginAction(values); // Reemplaza con tu función real
+    const response = await loginAction(values);
     startTransition(() => {
       setIsLoading(true);
       if (response.success) {
@@ -74,11 +74,11 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-100"> {/* Añadido un fondo para mejor visualización */}
+    <div className="min-h-screen flex flex-col md:flex-row bg-gray-100">
       <Banner />
       <div className="w-full md:w-1/2 p-6 md:p-8 font-[family-name:var(--font-jost-medium)]">
         <Title className="text-3xl font-bold text-primary mb-6" title="Iniciar sesión" />
-        <form onSubmit={form.handleSubmit(onSubmitHandler)} className="bg-white rounded-lg shadow-md p-6"> {/* Añadido estilo al formulario */}
+        <form onSubmit={form.handleSubmit(onSubmitHandler)} className="bg-white rounded-lg shadow-md p-6">
           <div>
             <TextInput
               label="Correo"

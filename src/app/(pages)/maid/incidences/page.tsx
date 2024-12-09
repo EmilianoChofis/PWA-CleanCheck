@@ -24,7 +24,7 @@ export default function Incidences() {
       const response = await getIncidences();
       setReports(response.data);
     } catch (error) {
-      throw new Error("Error al obtener las incidencias");
+      throw new Error("Error al obtener las incidencias: " + error);
     }
   };
 

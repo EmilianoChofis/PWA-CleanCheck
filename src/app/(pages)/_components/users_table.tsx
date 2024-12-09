@@ -31,12 +31,11 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
                 };
                 const data = await getUsers(paginationDto);
                 const filteredData = data
-                    .filter((user: User) => user.role.name === "Maid" || user.role.name === "Receptionist")
+                    .filter((user: User) => user.role === "Maid" || user.role === "Receptionist")
                     .map((user: User) => ({
                         ...user,
                         role: {
-                            ...user.role,
-                            name: user.role.name === "Maid" ? "Personal de limpieza" : "Recepcionista",
+                            name: user.role === "Maid" ? "Personal de limpieza" : "Recepcionista",
                         },
                     }));
 
@@ -56,7 +55,7 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
     const filteredUsers = usersData.filter((user) =>
         user.name.toLowerCase().includes(searchTerm) ||
         user.email.toLowerCase().includes(searchTerm) ||
-        user.role.name.toLowerCase().includes(searchTerm)
+        user.role.toLowerCase().includes(searchTerm)
     );
 
     if (isLoading) {
@@ -73,7 +72,7 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
             id: user.id,
             name: user.name,
             email: user.email,
-            roleId: user.role.id,
+            roleId: user.role,
         });
     };
 
@@ -146,7 +145,7 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
                                 )}
                                 {user.name}
                             </td>
-                            <td className="py-3 px-4">{user.role.name}</td>
+                            <td className="py-3 px-4">{user.role}</td>
                             <td className="py-3 px-4">{user.email}</td>
                             <td className="py-3 px-4 flex gap-2">
                                 {user.status ? (

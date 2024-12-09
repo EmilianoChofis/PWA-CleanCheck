@@ -26,7 +26,7 @@ export default function Building() {
   const [isDetailedModalOpen, setDetailedModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([
-    { label: "Todas", value: null, active: true },
+    { label: "Todas", value: "", active: true },
     { label: "Ocupadas", value: "OCCUPIED", active: false },
     { label: "Desocupadas", value: "UNOCCUPIED", active: false },
     { label: "Limpias", value: "CLEAN", active: false },
