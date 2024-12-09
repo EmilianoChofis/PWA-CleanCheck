@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Compilar el código TypeScript
-RUN nmx tsc
+RUN npx tsc
 
 # Construir la aplicación Next.js
 RUN npm run build
