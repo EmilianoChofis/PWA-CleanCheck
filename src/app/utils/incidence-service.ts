@@ -1,7 +1,5 @@
-import { URL_BASE } from "./url-base";
-
 export const getIncidences = async () => {
-  const response = await fetch(`${URL_BASE}/report/getAll`, {
+  const response = await fetch(`${process.env.URL_BASE}/report/getAll`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

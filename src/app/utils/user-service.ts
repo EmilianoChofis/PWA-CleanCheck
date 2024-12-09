@@ -1,5 +1,3 @@
-import { URL_BASE } from './url-base';
-
 export interface PaginationType {
     filter: string;
     limit: number;
@@ -14,7 +12,7 @@ export interface PaginationDto {
 }
 
 export const getUsers = async (paginationDto: PaginationDto) => {
-    const response = await fetch(`${URL_BASE}/user/getAll`, {
+    const response = await fetch(`${process.env.URL_BASE}/user/getAll`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -33,11 +31,11 @@ export const getUsers = async (paginationDto: PaginationDto) => {
         throw new Error(apiResponse.message || 'Error en la respuesta del servidor');
     }
 
-    return apiResponse.data; 
+    return apiResponse.data;
 };
 
 export const changeUserStatus = async (userId: string, status: string) => {
-    const response = await fetch(`${URL_BASE}/user/updateStatus/${userId}`, {
+    const response = await fetch(`${process.env.URL_BASE}/user/updateStatus/${userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -55,8 +53,8 @@ export const changeUserStatus = async (userId: string, status: string) => {
 };
 
 
-export const updateUser = async (userId: string, name: string, email: string, roleId: string ) => {
-    const response = await fetch(`${URL_BASE}/user/update`, {
+export const updateUser = async (userId: string, name: string, email: string, roleId: string) => {
+    const response = await fetch(`${process.env.URL_BASE}/user/update`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

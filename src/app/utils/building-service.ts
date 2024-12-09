@@ -1,7 +1,5 @@
-import { URL_BASE } from "./url-base";
-
 export const getBuildings = async () => {
-  const response = await fetch(`${URL_BASE}/dashboard/getAll`, {
+  const response = await fetch(`${process.env.URL_BASE}/dashboard/getAll`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -19,7 +17,7 @@ export const getBuildingsByStatus = async (
   buildingId: string,
   status: string
 ) => {
-  const response = await fetch(`${URL_BASE}/room/getByStatusAndBuilding`, {
+  const response = await fetch(`${process.env.URL_BASE}/room/getByStatusAndBuilding`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -38,7 +36,7 @@ export const getBuildingsByStatus = async (
 };
 
 export const changeStatusRoom = async (roomId: string, status: string) => {
-  const response = await fetch(`${URL_BASE}/room/change-status`, {
+  const response = await fetch(`${process.env.URL_BASE}/room/change-status`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -75,7 +73,7 @@ export const createReport = async (
     files.map((file) => convertToBase64(file))
   );
 
-  const response = await fetch(`${URL_BASE}/report/create`, {
+  const response = await fetch(`${process.env.URL_BASE}/report/create`, {
     method: "POST",
     body: JSON.stringify({
       description: description,
