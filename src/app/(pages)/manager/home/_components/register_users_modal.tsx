@@ -60,6 +60,38 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                 : userRole === 'recepcionist'
                     ? '/Receptionist'
                     : '';
+
+        try {
+            const response = await fetch(`${process.env.URL_BASE}/auth/createUser${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: userName, email: userEmail, password }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al registrar el usuario');
+            }
+
+            setAnimationState({ type: 'success', message: 'Usuario registrado exitosamente!' });
+            setTimeout(() => {
+                setAnimationState({ type: null, message: '' });
+                onConfirm();
+                handleClose();
+            }, 1500);
+        } catch (err: unknown) {
+            const errorMessage =
+                err instanceof Error
+                    ? err.message
+                    : 'Ocurrió un error al registrar el usuario';
+
+            setError(errorMessage);
+            setAnimationState({ type: 'error', message: 'Error al registrar el usuario. Intenta de nuevo.' });
+            setTimeout(() => {
+                setAnimationState({ type: null, message: '' });
+            }, 3000);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const isButtonEnabled = userName.trim() !== '' && isValidEmail(userEmail) && userRole.trim() !== '';
