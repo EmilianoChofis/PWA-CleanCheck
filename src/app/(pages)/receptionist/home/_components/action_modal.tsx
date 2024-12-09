@@ -3,6 +3,18 @@ import ButtonCustom from "@/app/_components/button_custom";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useBuildingContext } from "../BuildingContext"
+import { Floor } from "@/app/types/Floor";
+
+interface Building {
+    building: {
+        id: string;
+        name: string;
+        number: number;
+        status: boolean;
+        createdAt: string;
+        floors: Floor[];
+    };
+}
 
 interface ModalProps {
     isOpen: boolean;
@@ -10,7 +22,7 @@ interface ModalProps {
     onContinue: () => void;
     title: string;
     description: string;
-    buildings: any[];
+    buildings: Building[];
     loading: boolean;
     error: unknown;
 }
@@ -42,7 +54,7 @@ const ActionModal = ({
                     building.building?.name.toLowerCase().trim() ===
                     selectedBuildingName.toLowerCase().trim()
             );
-    
+
             if (buildingObject) {
                 setSelectedBuilding(buildingObject.building);
                 router.push("/receptionist/home/building");
@@ -51,7 +63,7 @@ const ActionModal = ({
             }
         }
     };
-    
+
 
     if (!isOpen) return null;
 

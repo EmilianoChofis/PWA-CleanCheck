@@ -6,10 +6,13 @@ import { useRouter } from "next/navigation";
 import { useBuildingContext } from "./BuildingContext";
 import Shortcuts from "../../_components/shortcuts";
 import BuildingCardList from "../../_components/building_card_list";
+import { Building } from "@/app/types/Building";
+
 
 export default function Home() {
     const { setSelectedBuilding } = useBuildingContext();
     const [buildings, setBuildings] = useState([]);
+    const [isLargeScreen, setIsLargeScreen] = useState(false); 
 
     const fetchBuildings = async () => {
         try {
@@ -25,12 +28,23 @@ export default function Home() {
     }, []);
 
     const router = useRouter();
-    const handleBuildingClick = (building: any) => {
+    const handleBuildingClick = (building: Building) => {
         setSelectedBuilding(building);
         router.push(`/receptionist/home/building`);
     };
 
-    const isLargeScreen = window.innerWidth > 768;
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLargeScreen(window.innerWidth > 768);
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     return (
         <div>

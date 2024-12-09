@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import SidebarItem from "./sidebar_item";
+import SidebarItem, { MenuItem } from "./sidebar_item";
 import { useSession } from "next-auth/react";
 
-const Sidebar = ({ menuItems }: { menuItems: any[] }) => {
+const Sidebar = ({ menuItems }: { menuItems: MenuItem[] }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
