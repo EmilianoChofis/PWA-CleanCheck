@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:server": "tsc server.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -18,14 +19,18 @@
     "@prisma/client": "^6.0.0",
     "@types/next-pwa": "^5.6.9",
     "framer-motion": "^11.13.1",
-    "next": "15.0.1",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "next": "^15.0.1",
     "next-auth": "^5.0.0-beta.25",
     "next-pwa": "^5.6.0",
+    "path": "^0.12.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.2",
     "sweetalert2": "^11.14.5",
     "tailwind-scrollbar-hide": "^1.1.7",
+    "url": "^0.11.4",
     "yup": "^1.4.0",
     "zod": "^3.23.8"
   },
