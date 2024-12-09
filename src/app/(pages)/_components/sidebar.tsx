@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SidebarItem from "./sidebar_item";
 import { useSession } from "next-auth/react";
+import { SidebarMenuItemsProps } from "@/app/types/SidebarMenuItemsProps";
 
-const Sidebar = ({ menuItems }: { menuItems: any[] }) => {
+const Sidebar = ({ menuItems }: { menuItems: SidebarMenuItemsProps[] }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);

@@ -1,4 +1,4 @@
-import { Incidences } from "@/app/types/Incidences";
+import { Incidences } from "@/app/types/Incidence";
 import { ApartmentOutlined } from "@mui/icons-material";
 import styles from "@/app/styles/components/incidences_table.module.css";
 import Link from "next/link";

@@ -1,11 +1,16 @@
-import  withPWA  from 'next-pwa'
+import withPWA from "next-pwa";
+import { NextConfig } from "next";
 
-const nextConfig = withPWA({
-  dest: 'public',
+const nextConfig: NextConfig = withPWA({
+  dest: "public",
   register: true,
   skipWaiting: true,
-  //disable must be changed for the production build
-  disable: false
-})
+  disable: false,
+});
 
-export default nextConfig;
+export default {
+  ...nextConfig,
+  images: {
+    domains: ["cleancheckprov.s3.amazonaws.com"],
+  },
+};

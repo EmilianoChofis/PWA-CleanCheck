@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useBuildingContext } from "../BuildingContext";
 import Title from "@/app/_components/title";
 import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
@@ -16,9 +16,11 @@ import {
 } from "@/app/utils/building-service";
 import { Room } from "@/app/types/Room";
 import { Toast } from "@/app/lib/toast";
+import { useRouter } from "next/navigation";
 
 export default function Building() {
   const { data: session } = useSession();
+  const router = useRouter();
   const { selectedBuilding, setSelectedBuilding } = useBuildingContext();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDetailedModalOpen, setDetailedModalOpen] = useState(false);
@@ -83,8 +85,14 @@ export default function Building() {
     setDetailedModalOpen(!isDetailedModalOpen);
   };
 
+  useEffect(() => {
+    if (!selectedBuilding) {
+      router.push("/maid/home");
+    }
+  }, [selectedBuilding, router]);
+
   if (!selectedBuilding) {
-    return <p>No se seleccionó ningún edificio.</p>;
+    return null;
   }
 
   return (

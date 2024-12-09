@@ -2,7 +2,7 @@ import { URL_BASE } from "./url-base";
 
 export const login = async (email: string, password: string) => {
   const response = await fetch(`${URL_BASE}/auth/signIn`, {
-    method: "POST",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },

@@ -4,7 +4,7 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 
 interface BuildingContextProps {
   selectedBuilding: Building | null;
-  setSelectedBuilding: React.Dispatch<React.SetStateAction<any | null>>;
+  setSelectedBuilding: React.Dispatch<React.SetStateAction<Building | null>>;
 }
 
 const BuildingContext = createContext<BuildingContextProps | undefined>(
@@ -12,7 +12,7 @@ const BuildingContext = createContext<BuildingContextProps | undefined>(
 );
 
 export const BuildingProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedBuilding, setSelectedBuilding] = useState<any | null>(null);
+  const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
 
   return (
     <BuildingContext.Provider value={{ selectedBuilding, setSelectedBuilding }}>
