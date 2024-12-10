@@ -6,10 +6,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8083:443"
-    volumes:
-      - /home/ubuntu/fullchain.pem:/fullchain.pem
-      - /home/ubuntu/privkey.pem:/privkey.pem
-      - /home/ubuntu/.env:/.env
     environment:
       - AUTH_SECRET=${AUTH_SECRET}
       - URL_BASE=https:integradora.duckdns.org:8082/apí-clean
