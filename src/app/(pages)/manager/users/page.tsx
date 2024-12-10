@@ -69,14 +69,14 @@ export default function GestionUsers() {
                             onCategoryClick={(category) => handleCategoryClick(category)}
                         />
                     </div>
-                    </div>
-                    <div className="w-full">
-                        {isLargeScreen ? (
-                            <UsersTable searchTerm={searchTerm} />
-                        ) : (
-                            <UsersCardList searchTerm={searchTerm} />
-                        )}
-                    </div>
+                </div>
+                <div className="w-full">
+                    {isLargeScreen ? (
+                        <UsersTable searchTerm={searchTerm} activeCategory={categories.find(c => c.active)?.value || "all"} />
+                    ) : (
+                        <UsersCardList searchTerm={searchTerm} />
+                    )}
+                </div>
             </main>
             <RegisterUserModal
                 isOpen={isModalOpen}

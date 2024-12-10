@@ -8,7 +8,11 @@ export type User = {
   createdAt: string;
   status: boolean;
   blocked: boolean;
-  role: "Maid" | "Receptionist" | "Manager";
+  role: {
+    id: string;
+    name: string;
+    description: string;
+  };
   records: Record[];
   reports: Incidence[];
 }

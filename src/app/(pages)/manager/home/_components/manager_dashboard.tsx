@@ -2,16 +2,36 @@
 import { useEffect, useState } from "react";
 import Title from "@/app/_components/title";
 import { ApartmentOutlined, PersonOutline } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
-import { getUsers } from "@/app/utils/user-service";
+import {getUsers } from "@/app/utils/user-service";
 import { User } from "@/app/types/User";
-import { getBuildings } from "@/app/utils/building-service";
-import { BuildingDashboard } from "@/app/types/BuildingDashboard";
+import router from "next/dist/client/router";
+
+const buildingData = [
+    {
+        id: 1,
+        name: "Edificio Altapalmira",
+        reportedRooms: 2,
+        disabledRooms: 1,
+        totalRooms: 18,
+    },
+    {
+        id: 2,
+        name: "Edificio Paseos del río",
+        reportedRooms: 3,
+        disabledRooms: 2,
+        totalRooms: 19,
+    },
+    {
+        id: 3,
+        name: "Edificio Calle de los doctores",
+        reportedRooms: 1,
+        disabledRooms: 0,
+        totalRooms: 16,
+    },
+];
 
 const ManagerDashboard = () => {
-    const router = useRouter();
     const [usersData, setUsersData] = useState<User[]>([]);
-    const [buildings, setBuildings] = useState<BuildingDashboard[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,31 +50,14 @@ const ManagerDashboard = () => {
             }
         };
 
-        const fetchBuildings = async () => {
-            try {
-                setIsLoading(true);
-                const response = await getBuildings();
-                setBuildings(response.data);
-            } catch (error) {
-                setError("Hubo un error al cargar la lista de edificios.");
-                console.error("Error fetching buildings:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchBuildings();
         fetchUsers();
     }, []);
-
-
-
-    const filteredUsers = usersData.filter((user) => {
+    const filteredUsers = usersData.filter((user) =>{
         return user.role?.name === "Maid" || user.role?.name === "Receptionist";
     }).map((user) => ({
         ...user,
         role: {
-            ...user.role,
+            ...user.role, // Mantén todas las propiedades del role
             name: user.role?.name === "Maid" ? "Personal de limpieza" : "Recepcionista",
         },
     }));
@@ -66,7 +69,7 @@ const ManagerDashboard = () => {
     if (error) {
         return <p>Error al cargar usuarios: {error}</p>;
     }
-
+    
 
     return (
         <div className="flex flex-col gap-8">
@@ -91,14 +94,14 @@ const ManagerDashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {buildings.slice(0, 3).map((building, index) => (
-                            <tr key={building.building.id} className="border-b border-gray-200">
+                        {buildingData.slice(0, 3).map((building, index) => (
+                            <tr key={building.id} className="border-b border-gray-200">
                                 <td className="py-3 px-4 text-center">{index + 1}</td>
                                 <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">
                                     <button className="p-2 bg-primary rounded-full">
                                         <ApartmentOutlined className="text-background" />
                                     </button>
-                                    {building.building.name}
+                                    {building.name}
                                 </td>
                                 <td className="py-3 px-4 text-orange-500 text-center">
                                     {building.reportedRooms}
@@ -134,7 +137,7 @@ const ManagerDashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUsers.slice(0, 3).map((user, index) => (
+                    {filteredUsers.slice(0, 3).map((user, index) => (
                             <tr key={user.id} className="border-b border-gray-200">
                                 <td className="py-3 px-4">{index + 1}</td>
                                 <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">

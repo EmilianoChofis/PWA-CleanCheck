@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
 import ButtonCustom from '@/app/_components/button_custom';
-import { EmailOutlined, PersonOutlineOutlined, AssignmentIndOutlined } from '@mui/icons-material';
+import { EmailOutlined, PersonOutlineOutlined, AssignmentIndOutlined, LockOutlined, VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 import TextInput from '@/app/_components/text_input';
 import SelectInput from '@/app/_components/select_input';
 import { ModalProps } from '@/app/types/ModalProps';
 import { motion } from 'framer-motion';
+import { registerUser } from '@/app/utils/auth-service';
+
 
 const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [userPassword, setUserPassword] = useState('');
     const [userRole, setUserRole] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [userNameError, setUserNameError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [, setError] = useState('');
-    const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
+    const [showPassword, setShowPassword] = useState(false);
+    const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null; message: string }>({
+        type: null,
+        message: '',
+    });
 
     const roles = [
         { value: 'cleaning staff', label: 'Personal de Limpieza' },
@@ -25,81 +32,62 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
     const handleClose = () => {
         setUserName('');
         setUserEmail('');
+        setUserPassword('');
         setUserRole('');
         setEmailError('');
-        setError('');
+        setUserNameError('');
         setAnimationState({ type: null, message: '' });
         onClose();
     };
 
-    const isValidEmail = (email: string) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
+    const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const email = e.target.value;
         setUserEmail(email);
         setEmailError(isValidEmail(email) ? '' : 'Correo electrónico inválido');
     };
+    const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.value;
+        setUserName(name);
+        setUserNameError(/^[a-zA-ZÀ-ÿ\s]+$/.test(name) ? '' : 'Solo letras');
+    };
+
+    const handlePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     const handleConfirm = async () => {
-        setError('');
-        if (!isButtonEnabled) return;
+        if (!userName || !isValidEmail(userEmail) || !userRole || !userPassword.trim()) return;
 
         setLoading(true);
-        const password =
-            userRole === 'cleaning staff'
-                ? 'maid1234'
-                : userRole === 'recepcionist'
-                    ? 'recep123'
-                    : '';
-
-        const endpoint =
-            userRole === 'cleaning staff'
-                ? '/Maid'
-                : userRole === 'recepcionist'
-                    ? '/Receptionist'
-                    : '';
+        const roleEndpoint = userRole === 'cleaning staff' ? '/Maid' : '/Receptionist';
 
         try {
-            const response = await fetch(`${process.env.URL_BASE}/auth/createUser${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: userName, email: userEmail, password }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al registrar el usuario');
-            }
+            await registerUser(userName, userEmail, userRole, userPassword, roleEndpoint);
 
             setAnimationState({ type: 'success', message: 'Usuario registrado exitosamente!' });
             setTimeout(() => {
-                setAnimationState({ type: null, message: '' });
                 onConfirm();
                 handleClose();
             }, 1500);
         } catch (err: unknown) {
-            const errorMessage =
-                err instanceof Error
-                    ? err.message
-                    : 'Ocurrió un error al registrar el usuario';
-
-            setError(errorMessage);
-            setAnimationState({ type: 'error', message: 'Error al registrar el usuario. Intenta de nuevo.' });
-            setTimeout(() => {
-                setAnimationState({ type: null, message: '' });
-            }, 3000);
+            setAnimationState({
+                type: 'error',
+                message: 'Error al registrar el usuario. Intenta de nuevo.',
+            });
+            setTimeout(() => setAnimationState({ type: null, message: '' }), 3000);
         } finally {
             setLoading(false);
         }
     };
 
-    const isButtonEnabled = userName.trim() !== '' && isValidEmail(userEmail) && userRole.trim() !== '';
-
-    const messageVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 20 } },
-    };
+    const isButtonEnabled =
+    userName.trim() !== '' &&
+    !userNameError &&
+    isValidEmail(userEmail) &&
+    userRole.trim() !== '' &&
+    userPassword.trim() !== '';
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
@@ -110,7 +98,8 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                     iconLeft={<PersonOutlineOutlined />}
                     placeholder="Nombre(s)"
                     type="text"
-                    onChange={(e) => setUserName(e.target.value)}
+                    onChange={handleUserNameChange}
+                    error={userNameError}
                 />
                 <TextInput
                     label="Correo Electrónico"
@@ -120,6 +109,20 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                     onChange={handleEmailChange}
                     error={emailError}
                 />
+                <TextInput
+                    label="Contraseña"
+                    type={showPassword ? 'text' : 'password'}
+                    iconLeft={<LockOutlined />}
+                    iconRight={
+                        showPassword ? (
+                            <VisibilityOutlined onClick={handlePasswordVisibility} />
+                        ) : (
+                            <VisibilityOffOutlined onClick={handlePasswordVisibility} />
+                        )
+                    }
+                    placeholder="••••••••••••••"
+                    onChange={(e) => setUserPassword(e.target.value)}
+                />
                 <SelectInput
                     label="Rol"
                     iconLeft={<AssignmentIndOutlined />}
@@ -128,25 +131,17 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                     options={roles}
                     placeholder="Selecciona un rol"
                 />
-                <motion.div
-                    key={animationState.message}
-                    variants={messageVariants}
-                    initial="hidden"
-                    animate={animationState.type ? "visible" : "hidden"}
-                    style={{ marginBottom: '1rem' }}
-                >
-                    {animationState.type === 'success' && (
-                        <div className="bg-green-200 text-green-700 p-2 rounded">
-                            {animationState.message}
-                        </div>
-                    )}
-                    {animationState.type === 'error' && (
-                        <div className="bg-red-200 text-red-700 p-2 rounded">
-                            {animationState.message}
-                        </div>
-                    )}
-                </motion.div>
-
+                {animationState.type && (
+                    <motion.div
+                        className={`p-2 rounded ${
+                            animationState.type === 'success' ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'
+                        }`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        {animationState.message}
+                    </motion.div>
+                )}
                 <div className="flex justify-center gap-4 mt-6">
                     <ButtonCustom
                         colorText="complementary"
