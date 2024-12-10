@@ -2,9 +2,9 @@
 import ButtonCustom from "@/app/_components/button_custom";
 import React, { useState } from "react";
 import { Business } from "@mui/icons-material";
-import { changeStatusRoom } from "@/app/utils/building-service";
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { changeStatusOccupied, changeStatusUnoccupied } from "@/app/utils/room-service";
 
 interface ModalProps {
     isOpen: boolean;
@@ -25,8 +25,10 @@ const ActionModalRoom = ({
     roomId,
 }: ModalProps) => {
 
-    const router = useRouter(); // Mover la declaración aquí
-    const isOccupied = status === "OCCUPIED";
+    const router = useRouter();
+
+    const isOccupied = status === 'OCCUPIED';
+    
     const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' }); // Mover la declaración aquí
 
     const containerVariants = {
@@ -41,10 +43,19 @@ const ActionModalRoom = ({
 
 
     const handleConfirm = async () => {
-        const newStatus = isOccupied ? "UNOCCUPIED" : "OCCUPIED";
         try {
-            await changeStatusRoom(roomId, newStatus);
-            setAnimationState({ type: 'success', message: '¡Operación exitosa!' });
+            if (status === 'CHECKED') {
+                await changeStatusOccupied(roomId);
+                console.log(roomId);
+                setAnimationState({ type: 'success', message: '¡Entrada marcada con éxito!' });
+            } else if (status === 'OCCUPIED') {
+                await changeStatusUnoccupied(roomId);
+                console.log(roomId);
+                setAnimationState({ type: 'success', message: '¡Salida marcada con éxito!' });
+            } else {
+                throw new Error("Estado de la habitación no válido");
+            }
+    
             setTimeout(() => {
                 onClose();
                 setAnimationState({ type: null, message: '' });
@@ -60,7 +71,7 @@ const ActionModalRoom = ({
         }
     };
 
-    if (!isOpen) return null; 
+    if (!isOpen) return null;
 
     return (
         <motion.div

@@ -1,3 +1,4 @@
+"use server";
 import { User } from "../types/User";
 
 export const getUsers = async (): Promise<User[]> => {

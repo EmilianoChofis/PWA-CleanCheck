@@ -42,7 +42,7 @@ const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; active
     }).map((user) => ({
         ...user,
         role: {
-            ...user.role, // Mantén todas las propiedades del role
+            ...user.role,
             name: user.role?.name === "Maid" ? "Personal de limpieza" : "Recepcionista",
         },
     }));
