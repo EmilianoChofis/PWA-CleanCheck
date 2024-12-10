@@ -19,28 +19,8 @@ const UsersCardList = ({ searchTerm }: { searchTerm: string }) => {
         const fetchUsers = async () => {
             try {
                 setIsLoading(true);
-                const paginationDto = {
-                    paginationType: {
-                        filter: "name",
-                        limit: 10,
-                        order: "asc" as "asc" | "desc",
-                        page: 0,
-                        sortBy: "name",
-                    },
-                    value: "",
-                };
-                const data = await getUsers(paginationDto);
-                const filteredData = data
-                    .filter((user: User) => user.role.name === "Maid" || user.role.name === "Receptionist")
-                    .map((user: User) => ({
-                        ...user,
-                        role: {
-                            ...user.role,
-                            name: user.role.name === "Maid" ? "Personal de limpieza" : "Recepcionista",
-                        },
-                    }));
-
-                setUsersData(filteredData);
+                const data = await getUsers();
+                setUsersData(data);
                 setIsLoading(false);
             } catch (err: unknown) {
                 if (err instanceof Error) {
@@ -54,10 +34,17 @@ const UsersCardList = ({ searchTerm }: { searchTerm: string }) => {
     }, []);
 
     const filteredUsers = usersData.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm) ||
-        user.role.name.toLowerCase().includes(searchTerm)
-    );
+        (user.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.email || "").toLowerCase().includes(searchTerm.toLowerCase())
+    ).filter((user) => {
+        return user.role?.name === "Maid" || user.role?.name === "Receptionist";
+    }).map((user) => ({
+        ...user,
+        role: {
+            ...user.role,
+            name: user.role?.name === "Maid" ? "Personal de limpieza" : "Recepcionista",
+        },
+    }));
 
     if (isLoading) {
         return <p>Cargando usuarios...</p>;
@@ -73,7 +60,7 @@ const UsersCardList = ({ searchTerm }: { searchTerm: string }) => {
             id: user.id,
             name: user.name,
             email: user.email,
-            roleId: user.role.id,
+            roleId: user.role.name,
         });
     };
 

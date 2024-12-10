@@ -1,16 +1,18 @@
-export type Role = {
+import { Incidence } from "./Incidence";
+import { Record } from "./Record";
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+  status: boolean;
+  blocked: boolean;
+  role: {
     id: string;
     name: string;
     description: string;
-};
-
-export type User = {
-    id: string;
-    name: string;
-    email: string;
-    password?: string;
-    role: Role;
-    status: boolean;
-    blocked: boolean;
-    createdAt: string;
-};
+  };
+  records: Record[];
+  reports: Incidence[];
+}

@@ -15,15 +15,17 @@ const RoomFloor = ({
     <div className={styles.floor}>
       <div className={styles.floorTitle}>{floorSelected.name}</div>
       <div className={styles.roomGrid}>
-        {
-          floorSelected.rooms.length > 0 ? floorSelected.rooms.map((room, index) => (
+        {floorSelected.rooms.length > 0 ? (
+          floorSelected.rooms.map((room, index) => (
             <RoomBox
               key={index}
               roomSelected={room}
               onClickRoomSelected={(room) => onClickRoomSelected(room)}
             />
-          )) : <p>No hay habitaciones disponibles</p>
-        }
+          ))
+        ) : (
+          <p>No hay habitaciones disponibles</p>
+        )}
       </div>
       <Divider />
     </div>

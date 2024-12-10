@@ -1,10 +1,12 @@
 import { Building } from "@/app/types/Building";
 import { ApartmentOutlined } from "@mui/icons-material";
 import { BuildingDashboard } from "@/app/types/BuildingDashboard";
+import Title from "@/app/_components/title";
 
 const BuildingCardList = ({ buildings, onClick }: { buildings: BuildingDashboard[]; onClick: (building: Building) => void }) => {
     return (
         <div className="space-y-4">
+            <Title className="text-2xl text-primary mb-4" title="Lista de edificios" />
             {buildings.map((buildingDash: BuildingDashboard) => (
                 <div
                     key={buildingDash.building.id}

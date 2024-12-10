@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import SidebarItem, { MenuItem } from "./sidebar_item";
+import SidebarItem from "./sidebar_item";
 import { useSession } from "next-auth/react";
+import { SidebarMenuItemsProps } from "@/app/types/SidebarMenuItemsProps";
 
-const Sidebar = ({ menuItems }: { menuItems: MenuItem[] }) => {
+const Sidebar = ({ menuItems }: { menuItems: SidebarMenuItemsProps[] }) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -15,7 +16,7 @@ const Sidebar = ({ menuItems }: { menuItems: MenuItem[] }) => {
   };
 
   return (
-    <div className="h-full overflow-y-auto p-4 font-[family-name:var(--font-jost-medium)]">
+    <aside className="sidebar fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-gray-100 p-4 font-[family-name:var(--font-jost-medium)] z-10">
       <h6 className="mb-4">
         Hola {session?.user.name},
         <p className="font-[family-name:var(--font-jost-bold)]">
@@ -35,7 +36,7 @@ const Sidebar = ({ menuItems }: { menuItems: MenuItem[] }) => {
           ))}
         </ul>
       </nav>
-    </div>
+    </aside>
   );
 };
 

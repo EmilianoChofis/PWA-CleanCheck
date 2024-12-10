@@ -13,11 +13,14 @@ RUN npm install
 # Copiar todo el código de la aplicación
 COPY . .
 
+# Compilar el código TypeScript
+RUN npx tsc
+
 # Construir la aplicación Next.js
 RUN npm run build
 
-# Exponer el puerto utilizado por Next.js
-EXPOSE 3000
+# Exponer el puerto HTTPS (puerto 443)
+EXPOSE 443
 
-# Comando para iniciar la aplicación
-CMD ["npm", "start"]
+# Comando para iniciar la aplicación con HTTPS
+CMD ["node", "dist/server.js"]

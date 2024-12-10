@@ -1,21 +1,21 @@
 "use client";
 import { useState } from "react";
-import { useBuildingContext } from "../BuildingContext";
 import Title from "@/app/_components/title";
 import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
 import CategoryButton from "@/app/(pages)/_components/category_button";
-import Legend from "./_components/leyend";
-import RoomFloor from "./_components/room_floor";
 import RegisterEntryRoom from "./_components/register_entry_room";
 import ActionModalRoom from "./_components/action_modal_room";
 import { getBuildingsByStatus } from "@/app/utils/building-service";
 import { Room } from "@/app/types/Room";
+import { useBuildingContext } from "@/app/context/BuildingContext";
+import RoomFloor from "@/app/(pages)/_components/room_floor";
+import Legend from "@/app/(pages)/_components/leyend";
 
 export default function Building() {
   const { selectedBuilding, setSelectedBuilding } = useBuildingContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState([
-    { label: "Todas", value: null, active: true },
+    { label: "Todas", value: "", active: true },
     { label: "Ocupadas", value: "OCCUPIED", active: false },
     { label: "Desocupadas", value: "UNOCCUPIED", active: false },
     { label: "Limpias", value: "CLEAN", active: false },

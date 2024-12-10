@@ -10,9 +10,9 @@ import RegisterRoomsModal from "../../home/_components/register_rooms_modal";
 
 export default function RecepcionistHome() {
     const [categories, setCategories] = useState([
-        { label: "Todos", active: true },
-        { label: "Activos", active: false },
-        { label: "Deshabilitados", active: false },
+        { label: "Todos",  value: "all", active: true },
+        { label: "Activos", value: "active", active: false },
+        { label: "Deshabilitados", value: "disabled", active: false },
     ]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

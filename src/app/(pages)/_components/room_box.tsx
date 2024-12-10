@@ -8,7 +8,7 @@ const RoomBox = ({
 	roomSelected: Room;
 	onClickRoomSelected: (room: Room) => void;
 }) => {
-	const statusClass = styles[status];
+	const statusClass = styles[roomSelected.status];
 
 	return (
 		<div

@@ -5,7 +5,7 @@ import ActivateDeactivateModal from "../manager/users/_components/change_status_
 import UpdateUserModal from "../manager/users/_components/update_user_modal";
 import { User } from "@/app/types/User";
 
-const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
+const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; activeCategory: string }) => {
     const [usersData, setUsersData] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -15,32 +15,13 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
     const [userToUpdate, setUserToUpdate] = useState<{ id: string; name: string; email: string; roleId: string } | null>(null);
     const [currentUserStatus, setCurrentUserStatus] = useState<'active' | 'inactive'>('active');
 
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 setIsLoading(true);
-                const paginationDto = {
-                    paginationType: {
-                        filter: "name",
-                        limit: 10,
-                        order: "asc" as "asc" | "desc",
-                        page: 0,
-                        sortBy: "name",
-                    },
-                    value: "",
-                };
-                const data = await getUsers(paginationDto);
-                const filteredData = data
-                    .filter((user: User) => user.role.name === "Maid" || user.role.name === "Receptionist")
-                    .map((user: User) => ({
-                        ...user,
-                        role: {
-                            ...user.role,
-                            name: user.role.name === "Maid" ? "Personal de limpieza" : "Recepcionista",
-                        },
-                    }));
-
-                setUsersData(filteredData);
+                const data = await getUsers();
+                setUsersData(data);
                 setIsLoading(false);
             } catch (err: unknown) {
                 if (err instanceof Error) {
@@ -51,13 +32,20 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
         };
 
         fetchUsers();
-    }, []);
+    }, [searchTerm, activeCategory]);
 
     const filteredUsers = usersData.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm) ||
-        user.role.name.toLowerCase().includes(searchTerm)
-    );
+        (user.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.email || "").toLowerCase().includes(searchTerm.toLowerCase())
+    ).filter((user) => {
+        return user.role?.name === "Maid" || user.role?.name === "Receptionist";
+    }).map((user) => ({
+        ...user,
+        role: {
+            ...user.role,
+            name: user.role?.name === "Maid" ? "Personal de limpieza" : "Recepcionista",
+        },
+    }));
 
     if (isLoading) {
         return <p>Cargando usuarios...</p>;
@@ -153,14 +141,12 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
                                     <>
                                         <button
                                             className="p-2 border-2 border-primary rounded-full"
-                                            aria-label={`Editar usuario ${user.name}`}
                                             onClick={() => handleOpenModalUpdate(user)}
                                         >
                                             <EditOutlined className="text-primary" />
                                         </button>
                                         <button
                                             className="p-2 border-2 border-error rounded-full"
-                                            aria-label={`Eliminar usuario ${user.name}`}
                                             onClick={() => handleOpenModalDelete(user)}
                                         >
                                             <DeleteOutlineOutlined className="text-error" />
@@ -169,7 +155,6 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
                                 ) : (
                                     <button
                                         className="p-2 border-2 border-secondary rounded-full"
-                                        aria-label={`Restaurar usuario ${user.name}`}
                                         onClick={() => handleOpenModalDelete(user)}
                                     >
                                         <RestoreFromTrashOutlined className="text-secondary" />
@@ -190,18 +175,18 @@ const UsersTable = ({ searchTerm }: { searchTerm: string }) => {
             <ActivateDeactivateModal
                 isOpen={deleteModalIsOpen}
                 onClose={handleCloseModalDelete}
-                userName={userToModify?.name ?? ''}
-                userId={userToModify?.id ?? ''}
+                userName={userToModify?.name || ''}
+                userId={userToModify?.id || ''}
                 onConfirm={handleConfirmDelete}
                 currentStatus={currentUserStatus}
             />
             <UpdateUserModal
                 isOpen={updateModalIsOpen}
                 onClose={handleCloseModalUpdate}
-                userName={userToUpdate?.name ?? ''}
-                userEmail={userToUpdate?.email ?? ''}
-                userId={userToUpdate?.id ?? ''}
-                roleId={userToUpdate?.roleId ?? ''}
+                userName={userToUpdate?.name || ''}
+                userEmail={userToUpdate?.email || ''}
+                userId={userToUpdate?.id || ''}
+                roleId={userToUpdate?.roleId || ''}
                 onConfirm={handleConfirmUpdate}
             />
         </>

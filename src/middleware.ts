@@ -8,6 +8,7 @@ const { auth: middleware } = NextAuth(authConfig);
 const publicRoutes = ["/", "/recoverPassword", "/resetPassword"];
 const maidRoutes = ["/maid"];
 const recepcionistRoutes = ["/receptionist"];
+const managerRoutes = ["/manager"];
 
 export default middleware(async (req) => {
   const { nextUrl, auth } = req;
@@ -19,14 +20,18 @@ export default middleware(async (req) => {
   }
 
   if (maidRoutes.some((route) => nextUrl.pathname.startsWith(route)) && token?.role !== "maid") {
-    return NextResponse.redirect(new URL("/unauthorized", nextUrl));
+    return NextResponse.redirect(new URL(`/${token?.role}/home`, nextUrl));
   }
 
   if (
     recepcionistRoutes.some((route) => nextUrl.pathname.startsWith(route)) &&
     token?.role !== "receptionist"
   ) {
-    return NextResponse.redirect(new URL("/unauthorized", nextUrl));
+    return NextResponse.redirect(new URL(`/${token?.role}/home`, nextUrl));
+  }
+
+  if (managerRoutes.some((route) => nextUrl.pathname.startsWith(route)) && token?.role !== "manager") {
+    return NextResponse.redirect(new URL(`/${token?.role}/home`, nextUrl));
   }
 
   return NextResponse.next();
