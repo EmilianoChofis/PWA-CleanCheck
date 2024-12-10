@@ -71,7 +71,7 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                 onConfirm();
                 handleClose();
             }, 1500);
-        } catch (err: unknown) {
+        } catch {
             setAnimationState({
                 type: 'error',
                 message: 'Error al registrar el usuario. Intenta de nuevo.',

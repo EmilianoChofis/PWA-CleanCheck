@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DeleteOutlineOutlined, EditOutlined, PersonOutlineOutlined, RestoreFromTrashOutlined } from "@mui/icons-material";
 import { getUsers, changeUserStatus, updateUser } from "@/app/utils/user-service";
 import ActivateDeactivateModal from "../manager/users/_components/change_status_modal";
