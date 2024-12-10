@@ -8,5 +8,5 @@ services:
       - "8083:3000"
     environment:
       - AUTH_SECRET=1mfpwwdm0J8rqEvTV4QJacl4WF7XtGTMca15YX3MkGU=
-      - URL_BASE=http:http://98.85.18.206:8082/apí-clean
+      - URL_BASE=http://98.85.18.206:8082/apí-clean
       - NEXTAUTH_URL=http://98.85.18.206:8083/
