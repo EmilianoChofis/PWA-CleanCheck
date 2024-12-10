@@ -9,4 +9,4 @@ services:
     environment:
       - AUTH_SECRET=1mfpwwdm0J8rqEvTV4QJacl4WF7XtGTMca15YX3MkGU=
       - URL_BASE=http://98.85.18.206:8082/apí-clean
-      - NEXTAUTH_URL=http://98.85.18.206:8082
+      - NEXTAUTH_URL=http://98.85.18.206:8083/
