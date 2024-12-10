@@ -1,11 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useBuildingContext } from "../BuildingContext";
+import { useBuildingContext } from "../../../../context/BuildingContext";
 import Title from "@/app/_components/title";
 import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
 import CategoryButton from "@/app/(pages)/_components/category_button";
-import Legend from "./_components/leyend";
-import RoomFloor from "./_components/room_floor";
 import RegisterCleaningRoom from "./_components/register_cleaning_room";
 import ConfirmReportModal from "./_components/confirm_report_modal";
 import DetailedReportModal from "./_components/detailed_report_modal";
@@ -17,6 +15,8 @@ import {
 import { Room } from "@/app/types/Room";
 import { Toast } from "@/app/lib/toast";
 import { useRouter } from "next/navigation";
+import Legend from "@/app/(pages)/_components/leyend";
+import RoomFloor from "@/app/(pages)/_components/room_floor";
 
 export default function Building() {
   const { data: session } = useSession();
@@ -115,19 +115,19 @@ export default function Building() {
           </div>
           <Legend />
           <div className="px-2 py-2">
-            {
-              selectedBuilding.floors.length > 0 ? selectedBuilding.floors.map((floor, index) => (
+            {selectedBuilding.floors.length > 0 ? (
+              selectedBuilding.floors.map((floor, index) => (
                 <RoomFloor
                   key={index}
                   floorSelected={floor}
                   onClickRoomSelected={(room) => handleRoomSelect(room)}
                 />
-              )) : (
-                <div className="text-center mt-5">
-                  <p>No hay habitaciones disponibles</p>
-                </div>
-              )
-            }
+              ))
+            ) : (
+              <div className="text-center mt-5">
+                <p>No hay habitaciones disponibles</p>
+              </div>
+            )}
           </div>
         </main>
       </div>

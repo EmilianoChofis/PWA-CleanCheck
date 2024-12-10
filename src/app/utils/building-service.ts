@@ -1,3 +1,5 @@
+"use server";
+
 export const getBuildings = async () => {
   const response = await fetch(`${process.env.URL_BASE}/dashboard/getAll`, {
     method: "GET",
@@ -17,16 +19,19 @@ export const getBuildingsByStatus = async (
   buildingId: string,
   status: string
 ) => {
-  const response = await fetch(`${process.env.URL_BASE}/room/getByStatusAndBuilding`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      status: status,
-      buildingId: buildingId,
-    }),
-  });
+  const response = await fetch(
+    `${process.env.URL_BASE}/room/getByStatusAndBuilding`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: status,
+        buildingId: buildingId,
+      }),
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Error al obtener los edificios por estado");

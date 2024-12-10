@@ -1,3 +1,5 @@
+"use server";
+
 export const login = async (email: string, password: string) => {
   const response = await fetch(`${process.env.URL_BASE}/auth/signIn`, {
     method: "PUT",

@@ -2,7 +2,7 @@
 import ButtonCustom from "@/app/_components/button_custom";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useBuildingContext } from "../BuildingContext"
+import { useBuildingContext } from "@/app/context/BuildingContext";
 import { Floor } from "@/app/types/Floor";
 
 interface Building {

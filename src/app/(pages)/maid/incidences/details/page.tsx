@@ -5,8 +5,8 @@ import Title from "@/app/_components/title";
 import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
 import { ReportProblemOutlined } from "@mui/icons-material";
-import { useIncidenceContext } from "../IncidencesContext";
 import Image from "next/image";
+import { useIncidenceContext } from "@/app/context/IncidencesContext";
 
 export default function IncidencesDetails() {
   const router = useRouter();

@@ -4,7 +4,7 @@ import BuildingTable from "../../_components/building_table";
 import WorkZones from "../../_components/work_zones";
 import { getBuildings } from "@/app/utils/building-service";
 import { useRouter } from "next/navigation";
-import { useBuildingContext } from "./BuildingContext";
+import { useBuildingContext } from "../../../context/BuildingContext";
 import Title from "@/app/_components/title";
 import { Building } from "@/app/types/Building";
 
