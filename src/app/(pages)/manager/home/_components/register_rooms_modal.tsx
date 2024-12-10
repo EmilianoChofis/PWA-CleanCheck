@@ -1,28 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ButtonCustom from '@/app/_components/button_custom';
 import { BusinessOutlined } from '@mui/icons-material';
 import NumberInput from '@/app/_components/number_input';
 import SelectInput from '@/app/_components/select_input';
 import { ModalProps } from '@/app/types/ModalProps';
-
+import { getBuildingsActive,createRoomsList } from '@/app/utils/building-service';
+import { Building } from '@/app/types/Building';
+import { Floor } from '@/app/types/Floor';
 const RegisterRoomsModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
     const [buildingName, setBuildingName] = useState('');
+    const [buildings, setBuildings] = useState<Building[]>([]);
     const [buildingFloor, setBuildingFloor] = useState('');
+    const [floors, setFloors] = useState<Floor[]>([]);
     const [numRooms, setNumRooms] = useState(0);
     const inputId = "numRoomsInput";
+    
+    const createRooms = async () => {
+        try {
+            const response = await createRoomsList(buildingFloor, numRooms);
+            console.log("Response:", response);
+            onConfirm();
+        } catch (error) {
+            console.error("Error creating rooms:", error);
+        }
+    }
+    useEffect(() => {
+        const fetchBuildings = async () => {
+            try {
+                const response = await getBuildingsActive();
+                setBuildings(response.data);
+            } catch (error) {
+                console.error("Error fetching buildings:", error);
+                setBuildings([]);
+            }
+        };
 
-    const buildings = [
-        { value: 'building1', label: 'Building 1' },
-        { value: 'building2', label: 'Building 2' },
-    ];
+        fetchBuildings();
+    }, []);
 
-    const floors = [
-        { value: '1', label: 'Floor 1' },
-        { value: '2', label: 'Floor 2' },
-        { value: '3', label: 'Floor 3' },
-    ];
+    const buildingsUse = buildings.map((building) => ({
+        value: building.id,
+        label: building.name,
+    }));
 
-    if (!isOpen) return null;
+    const handleBuildingChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+        const selectedBuildingId = e.target.value as string;
+        setBuildingName(selectedBuildingId);
+        try {
+            const selectedBuilding = buildings.find(building => building.id === selectedBuildingId);
+            if (selectedBuilding) {
+                setFloors(selectedBuilding.floors);
+            } else {
+                setFloors([]);
+            }
+        } catch (error) {
+            console.error("Error fetching floors:", error);
+            setFloors([]);
+        }
+    };
+
+    const floorsUse = floors.map((floor) => ({
+        value: floor.id,
+        label: floor.name,
+    }));
 
     const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Math.max(1, Math.min(20, Number(e.target.value)));
@@ -40,7 +80,10 @@ const RegisterRoomsModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
         onClose();
     };
 
+
     const isButtonEnabled = buildingName.trim() !== '' && buildingFloor.trim() !== '' && numRooms > 0;
+
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
@@ -49,9 +92,9 @@ const RegisterRoomsModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                 <SelectInput
                     label="Edificio"
                     iconLeft={<BusinessOutlined />}
-                    onChange={(e) => setBuildingName(e.target.value)}
+                    onChange={handleBuildingChange}
                     value={buildingName}
-                    options={buildings}
+                    options={buildingsUse}
                     placeholder="Selecciona un edificio"
                 />
                 <SelectInput
@@ -59,22 +102,10 @@ const RegisterRoomsModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                     iconLeft={<BusinessOutlined />}
                     onChange={(e) => setBuildingFloor(e.target.value)}
                     value={buildingFloor}
-                    options={floors}
+                    options={floorsUse}
                     placeholder="Selecciona un piso"
                 />
                 <label htmlFor={inputId} className="block text-primary mb-1 font-medium">Número de habitaciones</label>
-                <div className="flex items-center mb-4">
-                    <input
-                        type="range"
-                        min="1"
-                        max="20"
-                        value={numRooms}
-                        onChange={handleNumberChange}
-                        id={inputId}
-                        className="flex-grow mr-4"
-                    />
-                    <span className="text-lg font-bold">{numRooms}</span>
-                </div>
                 <NumberInput
                     onChange={(e) => handleNumberInputChange(parseInt(e.target.value, 10) || 0)}
                     value={numRooms}
@@ -94,11 +125,10 @@ const RegisterRoomsModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                         variant="filled"
                         colorText="background"
                         backgroundColor="primary"
-                        onClick={onConfirm}
+                        onClick={createRooms}
                         disabled={!isButtonEnabled}
-                        className={`w-full ${!isButtonEnabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        Registrar
+                        Confirmar
                     </ButtonCustom>
                 </div>
             </div>

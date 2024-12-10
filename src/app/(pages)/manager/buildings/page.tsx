@@ -6,7 +6,7 @@ import CategoryButton from "../../_components/category_button";
 import BuildingManagerTable from "../../_components/building_manager_table";
 import ButtonCustom from "@/app/_components/button_custom";
 import RegisterBuildingModal from "../home/_components/register_building_modal";
-import { getBuildings } from "@/app/utils/building-service";
+import { getBuildingsBuildingApi,getBuildingsActive,getBuildingsInactive } from "@/app/utils/building-service";
 import { BuildingDashboard } from "@/app/types/BuildingDashboard";
 
 export default function RecepcionistHome() {
@@ -14,27 +14,32 @@ export default function RecepcionistHome() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [categories, setCategories] = useState([
-        { label: "Todos", value: "all", active: true },
-        { label: "Activos", value: "active", active: false },
-        { label: "Deshabilitados", value: "disabled", active: false },
-    ]);
+        { label: "Todas", value: "all", active: true },
+        { label: "Activas", value: "active", active: false },
+        { label: "Inactivas", value: "disabled", active: false },
+      ]);
+    const [selectedCategory, setSelectedCategory] = useState("all");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const fetchBuildings = async () => {
+    const fetchBuildings = async (clickedCategory: string) => {
         try {
             setIsLoading(true);
-            const response = await getBuildings();
+            const response = clickedCategory==null || clickedCategory==="all"? await getBuildingsBuildingApi()
+                : clickedCategory==="active"? await getBuildingsActive()
+                : await getBuildingsInactive();
+                console.log("response data", response.data);
             setBuildings(response.data);
         } catch (error) {
-            setError("Hubo un error al cargar la lista de edificios.");
-            console.error("Error fetching buildings:", error);
+            //setError("Hubo un error al cargar la lista de edificios.");
+            //console.error("Error fetching buildings:", error);
+            setBuildings([]);
         } finally {
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchBuildings();
+        fetchBuildings("all");
     }, []);
 
     const openModal = () => setIsModalOpen(true);
@@ -42,12 +47,15 @@ export default function RecepcionistHome() {
     const handleConfirm = () => closeModal();
 
     const handleCategoryClick = (clickedCategory: string) => {
-        setCategories(prevCategories =>
-            prevCategories.map(category => ({
-                ...category,
-                active: category.label === clickedCategory,
+        setCategories((prevCategories) =>
+            prevCategories.map((category) => ({
+              ...category,
+              active: category.value === clickedCategory,
             }))
-        );
+        );        
+        console.log("categories", categories);
+        setSelectedCategory(clickedCategory);
+        fetchBuildings(clickedCategory);
     };
 
     return (
@@ -77,7 +85,8 @@ export default function RecepcionistHome() {
                     {isLoading ? (
                         <p className="text-center">Cargando edificios...</p>
                     ) : (
-                        <BuildingManagerTable buildings={buildings} />
+                        <BuildingManagerTable buildings={buildings} fetchBuildings={fetchBuildings} clickedCategory={selectedCategory}
+/>
                     )}
                 </div>
             </main>

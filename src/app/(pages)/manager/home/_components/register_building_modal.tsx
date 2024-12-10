@@ -4,7 +4,7 @@ import { BusinessOutlined } from '@mui/icons-material';
 import TextInput from "@/app/_components/text_input";
 import NumberInput from '@/app/_components/number_input';
 import { ModalProps } from '@/app/types/ModalProps';
-
+import { createBuilding } from '@/app/utils/building-service';
 const RegisterBuildingModal = ({
     isOpen,
     onClose,
@@ -13,7 +13,16 @@ const RegisterBuildingModal = ({
     const [buildingName, setBuildingName] = useState('');
     const [floors, setFloors] = useState(0);
     const inputId = "floorsInput";
-
+    const hanldleCreateBuilding = async () => {
+        try {
+            const response = await createBuilding(buildingName, floors);
+            if (response.statusCode === 201) {
+                onConfirm();
+            }
+        } catch (error) {
+            console.error("Error creating building:", error);
+        }
+    }
 
     if (!isOpen) return null;
 
@@ -79,7 +88,7 @@ const RegisterBuildingModal = ({
                         variant="filled"
                         colorText="background"
                         backgroundColor="primary"
-                        onClick={onConfirm}
+                        onClick={()=>hanldleCreateBuilding()}
                         disabled={!isButtonEnabled}
                         className={`w-full ${!isButtonEnabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >

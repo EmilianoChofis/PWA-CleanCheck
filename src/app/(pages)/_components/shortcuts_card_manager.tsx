@@ -70,6 +70,7 @@ const ShortcutsCardManager = ({ action, icon: Icon }: Shortcuts) => {
                         case "Registrar Edificio":
                             handleOpenRegisterBuildingModal();
                             break;
+                            break;
                         case "Registrar habitaciones":
                             handleOpenRegisterRoomsModal();
                             break;

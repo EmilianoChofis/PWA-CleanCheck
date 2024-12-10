@@ -20,7 +20,9 @@ const UsersCardList = ({ searchTerm }: { searchTerm: string }) => {
             try {
                 setIsLoading(true);
                 const data = await getUsers();
+                console.log("Data:", data);
                 setUsersData(data);
+                console.log("Users:", usersData);
                 setIsLoading(false);
             } catch (err: unknown) {
                 if (err instanceof Error) {
