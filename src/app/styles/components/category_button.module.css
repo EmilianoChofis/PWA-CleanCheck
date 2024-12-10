@@ -1,6 +1,14 @@
 .categoryButtons {
   display: flex;
   gap: 10px;
+  overflow-x: auto; 
+  padding-bottom: 10px;
+  scrollbar-width: none; 
+  scroll-behavior: smooth; 
+}
+
+.categoryButtons::-webkit-scrollbar {
+  display: none; 
 }
 
 .categoryButton {
@@ -10,6 +18,8 @@
   background-color: white;
   cursor: pointer;
   transition: background-color 0.2s;
+  white-space: nowrap; 
+  flex: 0 0 auto; 
 }
 
 .categoryButton.active {

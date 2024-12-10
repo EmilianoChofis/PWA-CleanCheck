@@ -1,6 +1,6 @@
 "use server";
 import { AuthError } from "next-auth";
-import { signIn } from "@/auth/auth";
+import { auth, signIn } from "@/auth/auth";
 
 export const loginAction = async (values: {
   email: string;
@@ -19,5 +19,14 @@ export const loginAction = async (values: {
     }
 
     return { error: "An error occurred" };
+  }
+};
+
+export const getRole = async () => {
+  try {
+    const session = await auth();
+    return session?.user?.role;
+  } catch (error) {
+    throw new Error("Error al obtener el rol del usuario: " + error);
   }
 };

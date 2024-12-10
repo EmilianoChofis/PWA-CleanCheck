@@ -3,13 +3,12 @@ import { RegisterCleaningRoomProps } from "@/app/types/RegisterCleaningRoomProps
 import { Business } from "@mui/icons-material";
 
 const RegisterCleaningRoom = ({
-  buildingName,
-  staff,
-  date,
-  roomNumber,
-  onMarkClean,
-  onReportIssue,
-}: RegisterCleaningRoomProps) => {
+  data,
+  isRoomSelected,
+}: {
+  data: RegisterCleaningRoomProps;
+  isRoomSelected: boolean;
+}) => {
   return (
     <>
       <section className="mb-4 bg-gray-100 p-4 rounded-md shadow-sm border flex flex-row items-center">
@@ -18,44 +17,48 @@ const RegisterCleaningRoom = ({
         </button>
         <div>
           <h3 className="text-lg text-primary font-[family-name:var(--font-jost-medium)]">
-            {buildingName}
+            {data.buildingName}
           </h3>
           <p className="text-sm">
             Personal:
-            <span className="text-primary"> {staff}</span>
+            <span className="text-primary"> {data.staff}</span>
           </p>
           <p className="text-sm">
             Fecha:
-            <span className="text-primary"> {date}</span>
+            <span className="text-primary"> {data.date}</span>
           </p>
           <p className="text-sm">
             Habitación:
             <span className="text-primary font-[family-name:var(--font-jost-bold)]">
               {" "}
-              {roomNumber}
+              {data.roomNumber}
             </span>
           </p>
         </div>
       </section>
-      <div className="py-3">
-        <ButtonCustom
-          className="w-full mb-3"
-          colorText="background"
-          variant="filled"
-          onClick={onMarkClean}
-        >
-          Marcar como limpia
-        </ButtonCustom>
-        <ButtonCustom
-          className="w-full mb-3"
-          variant="outlined"
-          colorText="error"
-          borderColor="error"
-          onClick={onReportIssue}
-        >
-          Reportar
-        </ButtonCustom>
-      </div>
+      {isRoomSelected && (
+        <div className="py-3">
+          <ButtonCustom
+            className="w-full mb-3"
+            colorText="background"
+            variant="filled"
+            onClick={data.onMarkClean}
+            disabled={data.roomStatus === "CLEAN"}
+            isLoading={data.isLoading}
+          >
+            Marcar como limpia
+          </ButtonCustom>
+          <ButtonCustom
+            className="w-full mb-3"
+            variant="outlined"
+            colorText="error"
+            borderColor="error"
+            onClick={data.onReportIssue}
+          >
+            Reportar
+          </ButtonCustom>
+        </div>
+      )}
     </>
   );
 };

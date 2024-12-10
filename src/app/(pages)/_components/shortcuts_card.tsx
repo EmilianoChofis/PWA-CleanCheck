@@ -1,23 +1,42 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Shortcuts } from "@/app/types/Shortcuts";
-import ActionModal from "../recepcionist/_components/action_modal";
+import ActionModal from "../receptionist/home/_components/action_modal";
+import { getBuildings } from "@/app/utils/building-service";
 
 const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
-    const [modalOpen, setModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [buildings, setBuildings] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<unknown>(null);
+
+    useEffect(() => {
+        const fetchBuildingsData = async () => {
+            try {
+                const response = await getBuildings();
+                setBuildings(response.data);
+                console.log("Edificios obtenidos:", response.data);
+            } catch (error) {
+                setError(error);
+                console.error("Error al obtener edificios:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBuildingsData();
+    }, []);
 
     const handleOpenModal = () => {
-        setModalOpen(true);
+        setIsModalOpen(true);
     };
 
     const handleCloseModal = () => {
-        setModalOpen(false);
+        setIsModalOpen(false);
     };
 
-    const handleAction = () => {
+    const getModalContent = () => {
         let title = "";
         let description = "";
-        const buildings = ["Edificio 1", "Edificio 2", "Edificio 3"];
 
         if (action === "Marcar Entrada") {
             title = "Marcar Entrada";
@@ -30,17 +49,10 @@ const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
             description = "Accede a la lista de habitaciones disponibles.";
         }
 
-        return (
-            <ActionModal
-                isOpen={modalOpen}
-                onClose={handleCloseModal}
-                onContinue={handleCloseModal}
-                title={title}
-                description={description}
-                buildings={buildings}
-            />
-        );
+        return { title, description };
     };
+
+    const { title, description } = getModalContent();
 
     return (
         <>
@@ -57,7 +69,16 @@ const ShortcutsCard = ({ action, icon: Icon }: Shortcuts) => {
                     </h2>
                 </div>
             </button>
-            {handleAction()}
+            <ActionModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onContinue={handleCloseModal}
+                title={title}
+                description={description}
+                buildings={buildings}
+                loading={loading}
+                error={error}
+            />
         </>
     );
 };

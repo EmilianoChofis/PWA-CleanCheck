@@ -1,5 +1,9 @@
 import { SidebarItemProps } from "@/app/types/SidebarItemProps";
 
+export interface MenuItem extends Omit<SidebarItemProps, "onClick" | "active"> {
+  path: string;
+}
+
 const SidebarItem = ({ label, icon, active, onClick }: SidebarItemProps) => {
   return (
     <div

@@ -2,13 +2,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SidebarItem from "./sidebar_item";
-import {
-  HomeOutlined,
-  ReportProblemOutlined,
-  PersonOutlineOutlined,
-} from "@mui/icons-material";
+import { useSession } from "next-auth/react";
+import { SidebarMenuItemsProps } from "@/app/types/SidebarMenuItemsProps";
 
-const Sidebar = () => {
+const Sidebar = ({ menuItems }: { menuItems: SidebarMenuItemsProps[] }) => {
+  const { data: session } = useSession();
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -17,28 +15,10 @@ const Sidebar = () => {
     router.push(path);
   };
 
-  const menuItems = [
-    {
-      label: "Inicio",
-      path: "/home",
-      icon: <HomeOutlined className="text-primary" />,
-    },
-    {
-      label: "Incidencias",
-      path: "/incidences",
-      icon: <ReportProblemOutlined className="text-primary" />,
-    },
-    {
-      label: "Perfil",
-      path: "/profile",
-      icon: <PersonOutlineOutlined className="text-primary" />,
-    },
-  ];
-
   return (
-    <aside className="sidebar fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] bg-gray-100 p-4 font-[family-name:var(--font-jost-medium)] z-10">
+    <aside className="h-full overflow-y-auto p-4 font-[family-name:var(--font-jost-medium)]">
       <h6 className="mb-4">
-        Hola Furro,
+        Hola {session?.user.name},
         <p className="font-[family-name:var(--font-jost-bold)]">
           ¿Qué quieres hacer hoy?
         </p>

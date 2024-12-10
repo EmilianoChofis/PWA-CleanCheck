@@ -1,8 +1,6 @@
-import { URL_BASE } from "./url-base";
-
 export const login = async (email: string, password: string) => {
-  const response = await fetch(`${URL_BASE}/auth/signIn`, {
-    method: "POST",
+  const response = await fetch(`${process.env.URL_BASE}/auth/signIn`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },

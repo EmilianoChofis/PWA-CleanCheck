@@ -14,7 +14,7 @@ const CategoryButton = ({
           className={`${styles.categoryButton} ${
             category.active ? styles.active : ""
           }`}
-          onClick={() => onCategoryClick(category.label)}
+          onClick={() => onCategoryClick(category.value)}
         >
           {category.label}
           {category.active && (
