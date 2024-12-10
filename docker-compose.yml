@@ -10,5 +10,5 @@ services:
       - /home/ubuntu/fullchain.pem:/app/fullchain.pem
       - /home/ubuntu/privkey.pem:/app/privkey.pem
     environment:
-      - AUTH_SECRET=${AUTH_SECRET}
+      - AUTH_SECRET=1mfpwwdm0J8rqEvTV4QJacl4WF7XtGTMca15YX3MkGU=
       - URL_BASE=https:integradora.duckdns.org:8082/apí-clean
