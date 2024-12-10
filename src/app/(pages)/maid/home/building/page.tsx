@@ -53,7 +53,15 @@ export default function Building() {
   };
 
   const handleRoomSelect = (room: Room) => {
-    setRoomSelected(room);
+    if (room.status === "OCCUPIED" || room.status === "UNOCCUPIED") {
+      setRoomSelected(room);
+    } else {
+      setRoomSelected(undefined);
+      Toast.fire({
+        icon: "warning",
+        title: "Solo puedes seleccionar habitaciones ocupadas",
+      });
+    }
   };
 
   const handleMarkClean = async (room: Room) => {

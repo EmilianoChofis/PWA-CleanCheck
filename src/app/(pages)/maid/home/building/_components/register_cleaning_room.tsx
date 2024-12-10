@@ -38,25 +38,28 @@ const RegisterCleaningRoom = ({
       </section>
       {isRoomSelected && (
         <div className="py-3">
-          <ButtonCustom
-            className="w-full mb-3"
-            colorText="background"
-            variant="filled"
-            onClick={data.onMarkClean}
-            disabled={data.roomStatus === "CLEAN"}
-            isLoading={data.isLoading}
-          >
-            Marcar como limpia
-          </ButtonCustom>
-          <ButtonCustom
-            className="w-full mb-3"
-            variant="outlined"
-            colorText="error"
-            borderColor="error"
-            onClick={data.onReportIssue}
-          >
-            Reportar
-          </ButtonCustom>
+          {data.roomStatus === "UNOCCUPIED" && (
+            <ButtonCustom
+              className="w-full mb-3"
+              colorText="background"
+              variant="filled"
+              onClick={data.onMarkClean}
+              disabled={data.isLoading}
+            >
+              Marcar como limpia
+            </ButtonCustom>
+          )}
+          {data.roomStatus === "OCCUPIED" && (
+            <ButtonCustom
+              className="w-full mb-3"
+              variant="outlined"
+              colorText="error"
+              borderColor="error"
+              onClick={data.onReportIssue}
+            >
+              Reportar
+            </ButtonCustom>
+          )}
         </div>
       )}
     </>
