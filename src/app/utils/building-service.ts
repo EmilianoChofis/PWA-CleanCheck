@@ -40,25 +40,6 @@ export const getBuildingsByStatus = async (
   return response.json();
 };
 
-export const changeStatusRoom = async (roomId: string, status: string) => {
-  const response = await fetch(`${process.env.URL_BASE}/room/change-status`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id: roomId,
-      newStatus: status,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error("Error al cambiar el estado de la habitación");
-  }
-
-  return response.json();
-};
-
 export const createReport = async (
   description: string,
   userId: string,

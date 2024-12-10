@@ -29,3 +29,18 @@ export const changeStatusUnoccupied = async (roomId: string) => {
 
     return response.json();
 };
+
+export const changeStatusClean= async (roomId: string) => {
+    const response = await fetch(`${process.env.URL_BASE}/room/changeStatusClean/${roomId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Error al cambiar el estado de la habitación a desocupada");
+    }
+
+    return response.json();
+};
