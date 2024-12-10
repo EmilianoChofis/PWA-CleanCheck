@@ -18,12 +18,13 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
     const [updatedName, setUpdatedName] = useState(userName);
     const [updatedEmail, setUpdatedEmail] = useState(userEmail);
     const [emailError, setEmailError] = useState('');
+    const [userNameError, setUserNameError] = useState('');
     const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
-    const [initialName, setInitialName] = useState(userName); // Store initial name
-    const [initialEmail, setInitialEmail] = useState(userEmail); // Store initial email
+    const [initialName, setInitialName] = useState(userName);
+    const [initialEmail, setInitialEmail] = useState(userEmail);
 
     useEffect(() => {
-        setInitialName(userName); // Set initial values on mount
+        setInitialName(userName);
         setInitialEmail(userEmail);
     }, [userName, userEmail]);
 
@@ -35,7 +36,7 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
     if (!isOpen) return null;
 
     const handleClose = () => {
-        setAnimationState({ type: null, message: '' }); // Clear message before closing
+        setAnimationState({ type: null, message: '' });
         onClose();
     };
 
@@ -47,7 +48,13 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
         setEmailError(isValidEmail(email) ? '' : 'Correo electrónico inválido');
     };
 
-    const isButtonEnabled = (updatedName !== initialName || updatedEmail !== initialEmail) && isValidEmail(updatedEmail);
+    const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.value;
+        setUpdatedName(name);
+        setUserNameError(/^[a-zA-ZÀ-ÿ\s]+$/.test(name) ? '' : 'Solo letras');
+    };
+
+    const isButtonEnabled = (updatedName !== initialName || updatedEmail !== initialEmail) && isValidEmail(updatedEmail) && !userNameError;
 
     const handleUpdate = async () => {
         if (isButtonEnabled) {
@@ -102,7 +109,8 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
                         placeholder="Nombre(s)"
                         type="text"
                         value={updatedName}
-                        onChange={(e) => setUpdatedName(e.target.value)}
+                        onChange={handleUserNameChange}
+                        error={userNameError}
                     />
                 </motion.div>
 
@@ -117,10 +125,8 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
                         error={emailError}
                     />
                 </motion.div>
-
-                {/* Success/Error Message Animation */}
                 <motion.div
-                    key={animationState.message} // Force re-render
+                    key={animationState.message}
                     variants={messageVariants}
                     initial="hidden"
                     animate={animationState.type ? "visible" : "hidden"}

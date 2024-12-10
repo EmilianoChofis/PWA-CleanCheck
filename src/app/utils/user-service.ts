@@ -1,24 +1,14 @@
-export interface PaginationType {
-    filter: string;
-    limit: number;
-    order: 'asc' | 'desc';
-    page: number;
-    sortBy: string;
-}
+"use server";
+import { User } from "../types/User";
 
-export interface PaginationDto {
-    paginationType: PaginationType;
-    value: string;
-}
-
-export const getUsers = async (paginationDto: PaginationDto) => {
+export const getUsers = async (): Promise<User[]> => {
     const response = await fetch(`${process.env.URL_BASE}/user/getAll`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(paginationDto),
     });
+    console.log("Respuesta del servidor:", response);
 
     if (!response.ok) {
         const errorData = await response.json();
@@ -31,11 +21,32 @@ export const getUsers = async (paginationDto: PaginationDto) => {
         throw new Error(apiResponse.message || 'Error en la respuesta del servidor');
     }
 
-    return apiResponse.data;
+    console.log("Usuarios obtenidos:", apiResponse.data);
+    return apiResponse.data as User[];
+};
+
+export const getActiveUsers = async (): Promise<User[]> => {
+    const response = await fetch(`${process.env.URL_BASE}/user/getActive`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    console.log("Respuesta del servidor:", response);
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al obtener los usuarios activos');
+    }
+    const apiResponse = await response.json();
+
+    if (apiResponse.error) {
+        throw new Error(apiResponse.message || 'Error en la respuesta del servidor');
+    }
+    return apiResponse.data as User[]; 
 };
 
 export const changeUserStatus = async (userId: string, status: string) => {
-    const response = await fetch(`${process.env.URL_BASE}/user/updateStatus/${userId}`, {
+    const response = await fetch(`${process.env.URL_BASE}/user/changeStatus/${userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -54,7 +65,7 @@ export const changeUserStatus = async (userId: string, status: string) => {
 
 
 export const updateUser = async (userId: string, name: string, email: string, roleId: string) => {
-    const response = await fetch(`${process.env.URL_BASE}/user/update`, {
+    const response = await fetch(`${process.env.URL_BASE}/api-clean/user/update`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -74,3 +85,5 @@ export const updateUser = async (userId: string, name: string, email: string, ro
 
     return response.json();
 }
+
+

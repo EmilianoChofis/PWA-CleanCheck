@@ -5,8 +5,8 @@ import Title from "@/app/_components/title";
 import Breadcrumb from "@/app/(pages)/_components/breadcrumb";
 import BedOutlinedIcon from "@mui/icons-material/BedOutlined";
 import { ReportProblemOutlined } from "@mui/icons-material";
-import { useIncidenceContext } from "../IncidencesContext";
 import Image from "next/image";
+import { useIncidenceContext } from "@/app/context/IncidencesContext";
 
 export default function IncidencesDetails() {
   const router = useRouter();
@@ -92,7 +92,7 @@ export default function IncidencesDetails() {
                 Habitación {selectedIncidence.room.name}
               </p>
               <p className="text-sm text-gray-600 font-[family-name:var(--font-jost-medium)]">
-                Deshabilitada | {selectedIncidence.room.floor.building.name}
+              {selectedIncidence.status} | {selectedIncidence.room.floor.building.name}
               </p>
               <p className="text-sm text-gray-600">
                 Fecha de reporte: {formatDate(selectedIncidence.createdAt)}

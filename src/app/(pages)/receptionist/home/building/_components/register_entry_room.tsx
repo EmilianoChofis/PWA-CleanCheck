@@ -2,6 +2,14 @@ import ButtonCustom from "@/app/_components/button_custom";
 import { RegisterEntryRoomProps } from "@/app/types/RegisterEntryRoomProps";
 import { Business, KeyboardTabOutlined, ExitToApp } from "@mui/icons-material";
 
+const statusTranslations: Record<string, string> = {
+  "OCCUPIED": "Ocupada",
+  "CHECKED": "Revisada",
+  "UNOCCUPIED": "Desocupada",
+  "CLEAN": "Limpia",
+  "INMAINTENANCE": "En mantenimiento",
+};
+
 const RegisterEntryRoom = ({
   buildingName,
   status,
@@ -9,6 +17,7 @@ const RegisterEntryRoom = ({
   onMarkEntry,
   onMarkExit,
 }: RegisterEntryRoomProps) => {
+  const translatedStatus = statusTranslations[status] || status;
   return (
     <>
       <div className="bg-gray-200 p-4 rounded-lg shadow-md flex flex-row items-center">
@@ -28,7 +37,7 @@ const RegisterEntryRoom = ({
           <p className="text-sm">
             Estado:{' '}
             <span className="text-primary font-[family-name:var(--font-jost-bold)]">
-              {status}
+              {translatedStatus}
             </span>{' '}
           </p>
         </div>
@@ -44,7 +53,7 @@ const RegisterEntryRoom = ({
             Marcar Salida
             <ExitToApp className="ml-2" />
           </ButtonCustom>
-        ) : status === "UNOCCUPIED" ? (
+        ) : status === "CHECKED" ? (
           <ButtonCustom
             className="w-full mb-3"
             colorText="background"

@@ -4,10 +4,10 @@ import Title from "@/app/_components/title";
 import Searchbar from "../../_components/searchbar";
 import CategoryButton from "../../_components/category_button";
 import IncidencesTable from "../../_components/incidences_table";
+import { useIncidenceContext } from "../../../context/IncidencesContext";
 import { getIncidences } from "@/app/utils/incidence-service";
 import { useRouter } from "next/navigation";
 import { Incidence } from "@/app/types/Incidence";
-import { useIncidenceContext } from "@/app/context/IncidencesContext";
 
 export default function Incidences() {
   const { setSelectedIncidence } = useIncidenceContext();
@@ -35,7 +35,7 @@ export default function Incidences() {
   const router = useRouter();
   const handleReportClick = (report: Incidence) => {
     setSelectedIncidence(report);
-    router.push(`/receptionist/incidences/details`);
+    router.push(`/manager/incidences/details`);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
