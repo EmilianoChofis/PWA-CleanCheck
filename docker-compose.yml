@@ -7,8 +7,9 @@ services:
     ports:
       - "8083:443"
     volumes:
-      - /home/ubuntu/fullchain.pem:/app/fullchain.pem
-      - /home/ubuntu/privkey.pem:/app/privkey.pem
+      - /home/ubuntu/fullchain.pem:fullchain.pem
+      - /home/ubuntu/privkey.pem:privkey.pem
+      - /home/ubuntu/.env:.env
     environment:
-      - AUTH_SECRET=1mfpwwdm0J8rqEvTV4QJacl4WF7XtGTMca15YX3MkGU=
+      - AUTH_SECRET=${AUTH_SECRET}
       - URL_BASE=https:integradora.duckdns.org:8082/apí-clean
