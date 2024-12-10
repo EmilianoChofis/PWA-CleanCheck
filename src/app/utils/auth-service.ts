@@ -9,6 +9,8 @@ export const login = async (email: string, password: string) => {
     body: JSON.stringify({ email, password }),
   });
 
+  console.log(response.json());
+
   if (!response.ok) {
     throw new Error("Correo y/o contraseña incorrectos");
   }
