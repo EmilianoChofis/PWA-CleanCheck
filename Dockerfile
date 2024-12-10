@@ -24,3 +24,5 @@ RUN npx tsc
 
 # Comando para iniciar la aplicación con HTTPS
 CMD ["npm", "run", "dev"]
+
+# Comando para iniciar la aplicación con HTTP
