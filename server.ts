@@ -13,8 +13,8 @@ const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
 // Rutas a los certificados
-const certPath = path.join(__dirname, '/home/ubuntu/fullchain.pem');
-const keyPath = path.join(__dirname, '/home/ubuntu/privkey.pem');
+const certPath = path.join(__dirname, '../fullchain.pem');
+const keyPath = path.join(__dirname, '../privkey.pem');
 
 const options = {
     key: fs.readFileSync(keyPath),

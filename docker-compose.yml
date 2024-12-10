@@ -6,3 +6,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8083:443"
+    environment:
+      - AUTH_SECRET=${AUTH_SECRET}
+      - URL_BASE=https:integradora.duckdns.org:8082/apí-clean
