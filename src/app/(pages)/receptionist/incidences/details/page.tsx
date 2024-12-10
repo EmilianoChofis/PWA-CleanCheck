@@ -92,7 +92,7 @@ export default function IncidencesDetails() {
                 Habitación {selectedIncidence.room.name}
               </p>
               <p className="text-sm text-gray-600 font-[family-name:var(--font-jost-medium)]">
-                Deshabilitada | {selectedIncidence.room.floor.building.name}
+              {selectedIncidence.status} | {selectedIncidence.room.floor.building.name}
               </p>
               <p className="text-sm text-gray-600">
                 Fecha de reporte: {formatDate(selectedIncidence.createdAt)}

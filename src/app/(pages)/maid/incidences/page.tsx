@@ -36,7 +36,7 @@ export default function Incidences() {
   const handleReportClick = (report: Incidence) => {
     setSelectedIncidence(report);
     router.push(`/maid/incidences/details`);
-  }
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.value);
