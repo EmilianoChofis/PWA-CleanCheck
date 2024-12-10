@@ -1,5 +1,5 @@
 # Usar la imagen oficial de Node.js como base
-FROM node:18-alpine
+FROM node:20
 
 # Configurar directorio de trabajo
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN npx tsc
 RUN npm run build
 
 # Exponer el puerto HTTPS (puerto 443)
-EXPOSE 443
+EXPOSE 3000
 
 # Comando para iniciar la aplicación con HTTPS
-CMD ["node", "dist/server.js"]
+CMD ["npm", "run", "start"]

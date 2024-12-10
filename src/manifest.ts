@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "CleanCheck PWA",
     short_name: "CleanCheck",
-    description: "A Progressive Web App for CleanCheck",
+    description: "A Progressive Web App for CleanCheck _)",
     start_url: "/",
     display: "standalone",
     background_color: "#262351",
