@@ -172,6 +172,7 @@ export default function IncidencesDetails() {
               colorText="background"
               variant="filled"
               onClick={handleOpenAcceptModal}
+              backgroundColor="success"
             >
               Aceptar reporte
             </ButtonCustom>
