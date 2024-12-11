@@ -35,7 +35,7 @@ const RegisterRoomsModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
             }
         };
 
-        fetchBuildings();
+        fetchBuildings().then(r => r);
     }, []);
 
     const buildingsUse = buildings.map((building) => ({
@@ -63,12 +63,6 @@ const RegisterRoomsModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
         value: floor.id,
         label: floor.name,
     }));
-
-    const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Math.max(1, Math.min(20, Number(e.target.value)));
-        setNumRooms(value);
-    };
-
     const handleNumberInputChange = (value: number) => {
         setNumRooms(Math.max(1, Math.min(20, value)));
     };

@@ -1,30 +1,28 @@
 import React from 'react';
 import { ApartmentOutlined, DeleteOutlineOutlined, EditOutlined, RestoreFromTrashOutlined } from '@mui/icons-material';
 import Link from 'next/link';
-import { BuildingDashboard } from "@/app/types/BuildingDashboard"; // Importa el tipo si no está
 import { changeStatusBuilding } from "@/app/utils/building-service";
 import { Toast } from '@/app/lib/toast';
-import build from 'next/dist/build';
 const handleStatusBuilding = async (buildingId: string, fetchBuildings:(category:string)=>void,clickedCategory:string) => {
     try {
         const response= await changeStatusBuilding(buildingId);
         if (response.statusCode === 200) {
-            Toast.fire({
+            await Toast.fire({
                 icon: "success",
                 title: "Edificio actualizado correctamente",
-              });        
+            });
                 fetchBuildings(clickedCategory);
             } else {
-                Toast.fire({
+                await Toast.fire({
                     icon: "error",
                     title: "Error al actualizar el edificio",
-                  });       
+                });
                  }
     } catch (error) {
         console.error("Error changing building status:", error);
     }
 }
-
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
 const BuildingManagerTable = ({ buildings, fetchBuildings, clickedCategory }: { buildings: any[]; fetchBuildings: (category: string) => void; clickedCategory: string}) => {
     return (
         <table className="w-full border-collapse">

@@ -30,8 +30,8 @@ export default function RecepcionistHome() {
                 console.log("response data", response.data);
             setBuildings(response.data);
         } catch (error) {
-            //setError("Hubo un error al cargar la lista de edificios.");
-            //console.error("Error fetching buildings:", error);
+            setError("Hubo un error al cargar la lista de edificios.");
+            console.error("Error fetching buildings:", error);
             setBuildings([]);
         } finally {
             setIsLoading(false);
@@ -39,7 +39,7 @@ export default function RecepcionistHome() {
     };
 
     useEffect(() => {
-        fetchBuildings("all");
+        fetchBuildings("all").then(r => r);
     }, []);
 
     const openModal = () => setIsModalOpen(true);
@@ -55,7 +55,7 @@ export default function RecepcionistHome() {
         );        
         console.log("categories", categories);
         setSelectedCategory(clickedCategory);
-        fetchBuildings(clickedCategory);
+        fetchBuildings(clickedCategory).then(r => r);
     };
 
     return (
