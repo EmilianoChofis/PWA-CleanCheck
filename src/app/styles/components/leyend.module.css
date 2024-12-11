@@ -22,12 +22,11 @@
 }
 
 .limpia {
-  background-color: var(--color-desactivado);
+  background-color: var(--color-exito);
 }
 
 .desocupada {
-  background-color: var(--background);
-  border: 1px solid #d8d8d8;
+  background-color: var(--color-complementario);
 }
 
 .enMantenimiento {
@@ -35,9 +34,10 @@
 }
 
 .ocupada {
-  background-color: var(--color-error);
+  background-color: #ccc;
 }
 
 .revisadas {
-  background-color: var(--color-exito);
+  background-color: var(--background);
+  border: 1px solid #535353;
 }

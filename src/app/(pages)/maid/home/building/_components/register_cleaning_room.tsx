@@ -38,7 +38,7 @@ const RegisterCleaningRoom = ({
       </section>
       {isRoomSelected && (
         <div className="py-3">
-          {data.roomStatus === "UNOCCUPIED" && (
+          {data.roomStatus === "UNOCCUPIED" ? (
             <ButtonCustom
               className="w-full mb-3"
               colorText="background"
@@ -48,8 +48,7 @@ const RegisterCleaningRoom = ({
             >
               Marcar como limpia
             </ButtonCustom>
-          )}
-          {data.roomStatus === "OCCUPIED" && (
+          ) : data.roomStatus === "OCCUPIED" ? (
             <ButtonCustom
               className="w-full mb-3"
               variant="outlined"
@@ -59,6 +58,10 @@ const RegisterCleaningRoom = ({
             >
               Reportar
             </ButtonCustom>
+          ) : (
+            <p className="text-center text-primary">
+              No se puede realizar ninguna acción
+            </p>
           )}
         </div>
       )}

@@ -19,11 +19,11 @@
 }
 
 .room.CLEAN {
-  background-color: var(--color-desactivado);
+  background-color: var(--color-exito);
 }
 
 .room.UNOCCUPIED {
-  background-color: var(--background);
+  background-color: var(--color-complementario);
   border: 1px solid #d8d8d8;
 }
 
@@ -32,12 +32,12 @@
 }
 
 .room.OCCUPIED {
-  background-color: var(--color-error);
+  background-color: #ccc;
   color: #fff;
 }
 
 .room.CHECKED {
-  background-color: var(--color-exito);
+  background-color: var(--background);
 }
 
 .floor {

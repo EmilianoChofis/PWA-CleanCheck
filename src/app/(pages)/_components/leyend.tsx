@@ -2,11 +2,11 @@ import styles from "@/app/styles/components/leyend.module.css";
 
 const Legend = () => {
   const legendItems = [
-    { label: "Ocupada", colorClass: styles.ocupada },
+    { label: "En uso", colorClass: styles.ocupada },
+    { label: "Disponible", colorClass: styles.revisadas },
     { label: "Desocupada", colorClass: styles.desocupada },
+    { label: "Reportada", colorClass: styles.enMantenimiento },
     { label: "Limpia", colorClass: styles.limpia },
-    { label: "Revisadas", colorClass: styles.revisadas },
-    { label: "En mantenimiento", colorClass: styles.enMantenimiento },
   ];
 
   return (

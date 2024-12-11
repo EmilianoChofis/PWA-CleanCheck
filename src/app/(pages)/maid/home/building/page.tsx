@@ -8,7 +8,7 @@ import RegisterCleaningRoom from "./_components/register_cleaning_room";
 import ConfirmReportModal from "./_components/confirm_report_modal";
 import DetailedReportModal from "./_components/detailed_report_modal";
 import { useSession } from "next-auth/react";
-import { getBuildingsByStatus, } from "@/app/utils/building-service";
+import { getBuildingsByStatus } from "@/app/utils/building-service";
 import { Room } from "@/app/types/Room";
 import { Toast } from "@/app/lib/toast";
 import { useRouter } from "next/navigation";
@@ -53,15 +53,7 @@ export default function Building() {
   };
 
   const handleRoomSelect = (room: Room) => {
-    if (room.status === "OCCUPIED" || room.status === "UNOCCUPIED") {
-      setRoomSelected(room);
-    } else {
-      setRoomSelected(undefined);
-      Toast.fire({
-        icon: "warning",
-        title: "Solo puedes seleccionar habitaciones ocupadas",
-      });
-    }
+    setRoomSelected(room);
   };
 
   const handleMarkClean = async (room: Room) => {
@@ -74,23 +66,16 @@ export default function Building() {
           icon: "success",
           title: "Habitación marcada como limpia",
         });
-      } else {
-        Toast.fire({
-          icon: "error",
-          title: "Error al marcar la habitación como limpia",
-        });
       }
     } catch (error) {
-      console.error("Error al cambiar el estado de la habitación a limpia:", error);
       Toast.fire({
         icon: "error",
-        title: "Error al marcar la habitación como limpia",
+        title: "Error al marcar la habitación como limpia: " + error,
       });
     } finally {
       setIsLoading(false);
     }
   };
-
 
   const handleReportIssue = () => {
     setModalOpen(!isModalOpen);

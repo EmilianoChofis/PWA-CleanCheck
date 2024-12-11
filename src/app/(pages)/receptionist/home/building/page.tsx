@@ -75,7 +75,7 @@ export default function Building() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen gap-4 p-8">
+    <div className="flex flex-col md:flex-row min-h-screen gap-4 p-8 font-[family-name:var(--font-jost-regular)]">
       <div className="flex-1 md:max-h-[calc(100vh-200px)] overflow-y-auto">
         <Breadcrumb
           items={[
@@ -111,23 +111,23 @@ export default function Building() {
         </main>
       </div>
       <div className="md:w-64 w-full mt-4 md:mt-0">
-        {roomSelected ? (
-          <>
-            <Title
-              className="text-2xl text-primary py-2"
-              title={roomSelected?.status === "OCCUPIED" ? "Marcar Salida" : "Marcar Entrada"}
-            />
-            <RegisterEntryRoom
-              buildingName={selectedBuilding.name}
-              roomNumber={roomSelected.name}
-              status={roomSelected.status}
-              onMarkEntry={handleMarkEntry}
-              onMarkExit={handleMarkExit}
-            />
-          </>
-        ) : (
-          <div className="h-32" />
-        )}
+        <Title
+          className="text-2xl text-primary py-2"
+          title={
+            roomSelected?.status === "OCCUPIED"
+              ? "Marcar Salida"
+              : "Marcar Entrada"
+          }
+        />
+        <RegisterEntryRoom
+          buildingName={selectedBuilding.name}
+          roomNumber={
+            roomSelected ? roomSelected.name : "Selecciona una habitación"
+          }
+          status={roomSelected ? roomSelected.status : ""}
+          onMarkEntry={handleMarkEntry}
+          onMarkExit={handleMarkExit}
+        />
       </div>
       <ActionModalRoom
         isOpen={isModalOpen}
