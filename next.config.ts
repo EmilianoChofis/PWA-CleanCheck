@@ -1,18 +1,23 @@
-import withPWA from "next-pwa";
-import { NextConfig } from "next";
+import withPWA from 'next-pwa'
 
-const pwa = withPWA({
-  dest: "public",
+const nextConfig = withPWA({
+  dest: 'public',
   register: true,
   skipWaiting: true,
   disable: false,
-});
-
-const nextConfig: NextConfig = {
-  ...pwa,
-  images: {
-    domains: ["cleancheckprov.s3.amazonaws.com"],
-  },
-};
+  runtimeCaching: [
+    {
+      urlPattern: /^https?.*/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'offlineCache',
+        expiration: {
+          maxEntries: 200,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        },
+      },
+    },
+  ],
+})
 
 export default nextConfig;
