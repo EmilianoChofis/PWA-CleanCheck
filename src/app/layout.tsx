@@ -2,6 +2,8 @@
 import "./styles/globals.css";
 import localFont from "next/font/local";
 import { useEffect, useState } from "react";
+import { initDB } from '@/utils/indexedDB';
+
 
 const jostBold = localFont({
   src: "./fonts/Jost-Bold.ttf",
@@ -35,7 +37,14 @@ export default function RootLayout({
         .register('/sw.js')
         .then((registration) => console.log('Service Worker registered:', registration))
         .catch((error) => console.log('Service Worker registration failed:', error));
-    }
+    };
+    initDB()
+    .then((db) => {
+      console.log('IndexedDB initialized successfully', db);
+    })
+    .catch((error) => {
+      console.error('Error initializing IndexedDB:', error);
+    });
   }, []);
 
   const fontClasses = isClient
