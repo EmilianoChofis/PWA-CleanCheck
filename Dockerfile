@@ -17,10 +17,12 @@ COPY . .
 RUN npx tsc
 
 # Construir la aplicación Next.js
-RUN npm run build
+#RUN npm run dev
 
 # Exponer el puerto HTTPS (puerto 443)
-EXPOSE 3000
+#EXPOSE 3000
 
 # Comando para iniciar la aplicación con HTTPS
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
+
+# Comando para iniciar la aplicación con HTTP
