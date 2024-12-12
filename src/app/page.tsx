@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
         router.push(`${role}/home`);
       }
     };
-    checkSession();
+    //checkSession();
   }, []);
 
   const onSubmitHandler = async (values: z.infer<typeof loginSchema>) => {
