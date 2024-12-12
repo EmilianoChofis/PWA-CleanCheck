@@ -12,6 +12,9 @@ const managerRoutes = ["/manager"];
 
 export default middleware(async (req) => {
   const { nextUrl, auth } = req;
+  console.log("nextUrl", nextUrl);
+  console.log("auth", auth);
+  console.log("req", req);
   const isLoggedIn = !!auth?.user;
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   console.log("auth secret", process.env.AUTH_SECRET);
