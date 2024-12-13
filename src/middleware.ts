@@ -12,30 +12,38 @@ const managerRoutes = ["/manager"];
 
 export default middleware(async (req) => {
   const { nextUrl, auth } = req;
-  console.log("nextUrl", nextUrl);
-  console.log("auth", auth);
-  console.log("req", req);
   const isLoggedIn = !!auth?.user;
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-  console.log("auth secret", process.env.AUTH_SECRET);
+  
+  console.log("Token completo:", token);
+  console.log("URL actual:", nextUrl.pathname);
+  console.log("Auth actual:", auth);
 
   if (!publicRoutes.includes(nextUrl.pathname) && !isLoggedIn) {
     return NextResponse.redirect(new URL("/", nextUrl));
   }
 
-  if (maidRoutes.some((route) => nextUrl.pathname.startsWith(route)) && token?.role !== "maid") {
-    return NextResponse.redirect(new URL(`/${token?.role}/home`, nextUrl));
-  }
+  if (token?.role) {
+    let redirectNeeded = false;
+    let targetRole = token.role;
 
-  if (
-    recepcionistRoutes.some((route) => nextUrl.pathname.startsWith(route)) &&
-    token?.role !== "receptionist"
-  ) {
-    return NextResponse.redirect(new URL(`/${token?.role}/home`, nextUrl));
-  }
+    if (maidRoutes.some((route) => nextUrl.pathname.startsWith(route)) && targetRole !== "maid") {
+      redirectNeeded = true;
+    }
 
-  if (managerRoutes.some((route) => nextUrl.pathname.startsWith(route)) && token?.role !== "manager") {
-    return NextResponse.redirect(new URL(`/${token?.role}/home`, nextUrl));
+    if (recepcionistRoutes.some((route) => nextUrl.pathname.startsWith(route)) && targetRole !== "receptionist") {
+      redirectNeeded = true;
+    }
+
+    if (managerRoutes.some((route) => nextUrl.pathname.startsWith(route)) && targetRole !== "manager") {
+      redirectNeeded = true;
+    }
+
+    if (redirectNeeded && targetRole) {
+      const redirectUrl = new URL(`/${targetRole}/home`, nextUrl);
+      console.log("Redirigiendo a:", redirectUrl.toString());
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   return NextResponse.next();
