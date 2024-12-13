@@ -25,7 +25,7 @@ export default middleware(async (req) => {
 
   if (token?.role) {
     let redirectNeeded = false;
-    let targetRole = token.role;
+    const targetRole = token.role;
 
     if (maidRoutes.some((route) => nextUrl.pathname.startsWith(route)) && targetRole !== "maid") {
       redirectNeeded = true;
@@ -39,7 +39,7 @@ export default middleware(async (req) => {
       redirectNeeded = true;
     }
 
-    if (redirectNeeded && targetRole) {
+    if (redirectNeeded) {
       const redirectUrl = new URL(`/${targetRole}/home`, nextUrl);
       console.log("Redirigiendo a:", redirectUrl.toString());
       return NextResponse.redirect(redirectUrl);
