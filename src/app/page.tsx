@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,9 +36,22 @@ const LoginPage: React.FC = () => {
 
   const getSession = async () => {
     const role = await getRole();
+    console.log("Este es el rol", role);
     setIsLoading(false);
     router.push(`${role}/home`);
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    const checkSession = async () => {
+      const role = await getRole();
+      setIsLoading(false);
+      if (role) {
+        router.push(`${role}/home`);
+      }
+    };
+    checkSession();
+  }, []);
 
   const onSubmitHandler = async (values: z.infer<typeof loginSchema>) => {
     const response = await loginAction(values);

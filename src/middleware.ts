@@ -14,10 +14,6 @@ export default middleware(async (req) => {
   const { nextUrl, auth } = req;
   const isLoggedIn = !!auth?.user;
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-  
-  console.log("Token completo:", token);
-  console.log("URL actual:", nextUrl.pathname);
-  console.log("Auth actual:", auth);
 
   if (!publicRoutes.includes(nextUrl.pathname) && !isLoggedIn) {
     return NextResponse.redirect(new URL("/", nextUrl));

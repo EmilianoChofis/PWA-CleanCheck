@@ -9,21 +9,26 @@ interface NotificationOptions {
 }
 
 const useConnectionStatus = () => {
-    const [isOnline, setIsOnline] = useState(navigator.onLine);
-    const [hasNotificationPermission, setHasNotificationPermission] = useState(
-        Notification.permission === 'granted'
+    const [isOnline, setIsOnline] = useState(
+        typeof window !== 'undefined' ? navigator.onLine : true
     );
+    //const [hasNotificationPermission, setHasNotificationPermission] = useState(
+    //    Notification.permission === 'granted'
+    //);
+    const [hasNotificationPermission, setHasNotificationPermission] = useState(false);
 
     const showNotification = async ({ title, message }: NotificationOptions) => {
         if (hasNotificationPermission) {
             try {
-                await navigator.serviceWorker.ready.then((registration) => {
-                    registration.showNotification(title, {
-                        body: message,
-                        icon: '/images/icon.png',
-                        badge: '/images/badge.png',
+                if (typeof window !== 'undefined') {
+                    await navigator.serviceWorker.ready.then((registration) => {
+                        registration.showNotification(title, {
+                            body: message,
+                            icon: '/images/icon.png',
+                            badge: '/images/badge.png',
+                        });
                     });
-                });
+                }
             } catch (err) {
                 console.error('Error showing notification: ', err)
                 Swal.fire({
@@ -43,13 +48,14 @@ const useConnectionStatus = () => {
 
     useEffect(() => {
         const requestNotificationPermission = async () => {
-            if (Notification.permission !== 'granted') {
+            if (
+                typeof window !== 'undefined' &&
+                Notification.permission !== 'granted'
+            ) {
                 const permission = await Notification.requestPermission();
                 setHasNotificationPermission(permission === 'granted');
             }
         };
-        requestNotificationPermission();
-
 
         const handleOnline = async () => {
             setIsOnline(true);
@@ -67,13 +73,17 @@ const useConnectionStatus = () => {
             });
         };
 
-        window.addEventListener('online', handleOnline);
-        window.addEventListener('offline', handleOffline);
+        requestNotificationPermission();
 
-        return () => {
-            window.removeEventListener('online', handleOnline);
-            window.removeEventListener('offline', handleOffline);
-        };
+        if (typeof window !== 'undefined') {
+            window.addEventListener('online', handleOnline);
+            window.addEventListener('offline', handleOffline);
+        }
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('online', handleOnline);
+            window.addEventListener('offline', handleOffline);
+        }
     }, [hasNotificationPermission]);
 
     return isOnline;

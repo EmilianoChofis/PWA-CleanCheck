@@ -5,6 +5,7 @@ const nextConfig = withPWA({
   register: true,
   skipWaiting: true,
   disable: false,
+  buildExcludes: [/app-build-manifest.json$/],
   runtimeCaching: [
     {
       // Cache static assets (images, fonts, icons)
