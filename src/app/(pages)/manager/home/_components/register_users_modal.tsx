@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ButtonCustom from '@/app/_components/button_custom';
 import { EmailOutlined, PersonOutlineOutlined, AssignmentIndOutlined, LockOutlined, VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 import TextInput from '@/app/_components/text_input';
@@ -6,7 +6,9 @@ import SelectInput from '@/app/_components/select_input';
 import { ModalProps } from '@/app/types/ModalProps';
 import { motion } from 'framer-motion';
 import { registerUser } from '@/app/utils/auth-service';
-
+import { initDB, savePendingRegistration } from '@/utils/indexedDB';
+import useConnectionStatus from '@/hooks/useConectionStatus';
+import { processOfflineRegistrations } from '@/utils/offline-manager';
 
 const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
     const [userName, setUserName] = useState('');
@@ -17,6 +19,7 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
     const [userNameError, setUserNameError] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const isOnline = useConnectionStatus();
     const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null; message: string }>({
         type: null,
         message: '',
@@ -26,6 +29,14 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
         { value: 'cleaning staff', label: 'Personal de Limpieza' },
         { value: 'recepcionist', label: 'Recepcionista' },
     ];
+
+    useEffect(() => {
+        initDB().catch(console.error);
+
+        if (isOnline) {
+            processOfflineRegistrations().catch(console.error);
+        }
+    }, [isOnline]);
 
     if (!isOpen) return null;
 
@@ -47,6 +58,7 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
         setUserEmail(email);
         setEmailError(isValidEmail(email) ? '' : 'Correo electrónico inválido');
     };
+
     const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const name = e.target.value;
         setUserName(name);
@@ -62,19 +74,39 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
 
         setLoading(true);
         const roleEndpoint = userRole === 'cleaning staff' ? '/Maid' : '/Receptionist';
+        const userData = {
+            userName,
+            userEmail,
+            userRole,
+            userPassword,
+            roleEndpoint
+        };
 
         try {
-            await registerUser(userName, userEmail, userRole, userPassword, roleEndpoint);
-
-            setAnimationState({ type: 'success', message: 'Usuario registrado exitosamente!' });
-            setTimeout(() => {
-                onConfirm();
-                handleClose();
-            }, 1500);
+            if (isOnline) {
+                await registerUser(userName, userEmail, userRole, userPassword, roleEndpoint);
+                setAnimationState({ type: 'success', message: 'Usuario registrado exitosamente!' });
+                setTimeout(() => {
+                    onConfirm();
+                    handleClose();
+                }, 1500);
+            } else {
+                await savePendingRegistration(userData);
+                setAnimationState({
+                    type: 'success',
+                    message: 'Registro guardado localmente. Se completará cuando vuelva la conexión.'
+                });
+                setTimeout(() => {
+                    onConfirm();
+                    handleClose();
+                }, 1500);
+            }
         } catch {
             setAnimationState({
                 type: 'error',
-                message: 'Error al registrar el usuario. Intenta de nuevo.',
+                message: isOnline
+                    ? 'Error al registrar el usuario. Intenta de nuevo.'
+                    : 'Error al guardar el registro offline. Intenta de nuevo.'
             });
             setTimeout(() => setAnimationState({ type: null, message: '' }), 3000);
         } finally {
@@ -83,11 +115,11 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
     };
 
     const isButtonEnabled =
-    userName.trim() !== '' &&
-    !userNameError &&
-    isValidEmail(userEmail) &&
-    userRole.trim() !== '' &&
-    userPassword.trim() !== '';
+        userName.trim() !== '' &&
+        !userNameError &&
+        isValidEmail(userEmail) &&
+        userRole.trim() !== '' &&
+        userPassword.trim() !== '';
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
@@ -133,9 +165,8 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
                 />
                 {animationState.type && (
                     <motion.div
-                        className={`p-2 rounded ${
-                            animationState.type === 'success' ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'
-                        }`}
+                        className={`p-2 rounded ${animationState.type === 'success' ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'
+                            }`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                     >

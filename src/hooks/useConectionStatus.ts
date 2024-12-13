@@ -12,9 +12,6 @@ const useConnectionStatus = () => {
     const [isOnline, setIsOnline] = useState(
         typeof window !== 'undefined' ? navigator.onLine : true
     );
-    //const [hasNotificationPermission, setHasNotificationPermission] = useState(
-    //    Notification.permission === 'granted'
-    //);
     const [hasNotificationPermission, setHasNotificationPermission] = useState(false);
 
     const showNotification = async ({ title, message }: NotificationOptions) => {
