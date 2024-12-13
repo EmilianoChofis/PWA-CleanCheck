@@ -3,6 +3,7 @@ import "./styles/globals.css";
 import localFont from "next/font/local";
 import { useEffect, useState } from "react";
 import { initDB } from '@/utils/indexedDB';
+import useConnectionStatus from "@/hooks/useConectionStatus";
 
 
 const jostBold = localFont({
@@ -29,6 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [isClient, setIsClient] = useState(false);
+  useConnectionStatus();
 
   useEffect(() => {
     setIsClient(true);
