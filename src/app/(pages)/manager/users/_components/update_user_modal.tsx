@@ -4,8 +4,7 @@ import { EmailOutlined, PersonOutlineOutlined } from '@mui/icons-material';
 import TextInput from '@/app/_components/text_input';
 import { motion } from 'framer-motion';
 import useConnectionStatus from '@/hooks/useConectionStatus';
-import { savePendingUpdate, saveUserLocal} from '@/utils/indexedDB';
-import { processOfflineUpdates} from '@/utils/offline-manager';
+import { savePendingUpdate, updateUserLocal} from '@/utils/indexedDB';
 
 interface UpdateUserModalProps {
     isOpen: boolean;
@@ -17,7 +16,7 @@ interface UpdateUserModalProps {
     onConfirm: (userId: string, name: string, email: string, roleId: string) => void;
 }
 
-const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId, onConfirm }: UpdateUserModalProps) => {
+const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId, onConfirm, }: UpdateUserModalProps) => {
     const [updatedName, setUpdatedName] = useState(userName);
     const [updatedEmail, setUpdatedEmail] = useState(userEmail);
     const [emailError, setEmailError] = useState('');
@@ -81,6 +80,12 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
                 }, 1500);
             } else {
                 await savePendingUpdate(updateData);
+                await updateUserLocal({
+                    userName: updatedName,
+                    userEmail: updatedEmail,
+                    userId,
+                    roleId,
+                });
                 setAnimationState({
                     type: 'success',
                     message: 'Actualización guardada localmente. Se completará cuando vuelva la conexión.'
@@ -88,6 +93,7 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
                 setTimeout(() => {
                     handleClose();
                 }, 1500);
+                window.location.reload();
             }
         } catch (error) {
             console.error("Error updating user:", error);

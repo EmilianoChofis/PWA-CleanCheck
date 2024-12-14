@@ -34,18 +34,17 @@ const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; active
             try {
                 setIsLoading(true);
                 if (isOnline) {
-                    deleteAllUserLocal();
                     const data = await getUsers();
+                    await deleteAllUserLocal();
                     for (const user of data) {
                         await saveUserLocal({
-                            userName: user.name, 
+                            userName: user.name,
                             userEmail: user.email,
                             userId: user.id,
-                            roleId: user.role.id,});
+                            roleId: user.role.id,
+                        });
                     }
                     setUsersData(data);
-                    const cachedData: UserLocal[] = await getUsersLocal();
-                    setUserDataLocal(cachedData);
                 } else {
                     const cachedData: UserLocal[] = await getUsersLocal();
                     setUserDataLocal(cachedData);

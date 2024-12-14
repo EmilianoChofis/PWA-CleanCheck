@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ButtonCustom from '@/app/_components/button_custom';
 import { EmailOutlined, PersonOutlineOutlined, AssignmentIndOutlined, LockOutlined, VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 import TextInput from '@/app/_components/text_input';
@@ -6,9 +6,8 @@ import SelectInput from '@/app/_components/select_input';
 import { ModalProps } from '@/app/types/ModalProps';
 import { motion } from 'framer-motion';
 import { registerUser } from '@/app/utils/auth-service';
-import { initDB, savePendingRegistration } from '@/utils/indexedDB';
+import { savePendingRegistration } from '@/utils/indexedDB';
 import useConnectionStatus from '@/hooks/useConectionStatus';
-import { processOfflineRegistrations } from '@/utils/offline-manager';
 
 const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
     const [userName, setUserName] = useState('');

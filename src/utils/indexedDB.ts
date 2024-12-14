@@ -44,7 +44,7 @@ export const initDB = (): Promise<IDBDatabase> => {
       }
       
       if (!db.objectStoreNames.contains(STORE_USERS)) {
-        db.createObjectStore(STORE_USERS, { keyPath: "id", autoIncrement: true });
+        db.createObjectStore(STORE_USERS, { keyPath: "userId"});
       }
     };
   });
@@ -83,16 +83,27 @@ export const getUsersLocal = async (): Promise<(User)[]> => {
   });
 };
 
-export const updateUserLocal = async (id: number, userData: User): Promise<void> => {
+export const updateUserLocal = async (userData: User): Promise<void> => {
   const db = await openDB();
   const transaction = db.transaction(STORE_USERS, "readwrite");
   const store = transaction.objectStore(STORE_USERS);
-  store.put({
-    ...userData,
-    id,
-    timestamp: Date.now(),
-  });
-}
+  
+  const getRequest = store.get(userData.userId);
+  getRequest.onsuccess = () => {
+    if (getRequest.result) {
+      store.put({
+        ...getRequest.result,
+        ...userData,
+        timestamp: Date.now(),
+      });
+    } else {
+      console.error(`User with ID ${userData.userId} not found`);
+    }
+  };
+  getRequest.onerror = () => {
+    console.error(`Failed to retrieve user with ID ${userData.userId}`);
+  };
+};
 
 export const savePendingRegistration = async (userData: UserData): Promise<void> => {
   const db = await openDB();
