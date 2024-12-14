@@ -4,9 +4,13 @@ import { getUsers, changeUserStatus, updateUser } from "@/app/utils/user-service
 import ActivateDeactivateModal from "../manager/users/_components/change_status_modal";
 import UpdateUserModal from "../manager/users/_components/update_user_modal";
 import { User } from "@/app/types/User";
+import useConnectionStatus from "@/hooks/useConectionStatus";
+import { initDB, saveUserLocal, getUsersLocal, User as UserLocal, deleteAllUserLocal } from "@/utils/indexedDB";
+import { processOfflineRegistrations, processOfflineUpdates } from "@/utils/offline-manager";
 
 const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; activeCategory: string }) => {
     const [usersData, setUsersData] = useState<User[]>([]);
+    const [userDataLocal, setUserDataLocal] = useState<UserLocal[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
@@ -14,38 +18,51 @@ const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; active
     const [userToModify, setUserToModify] = useState<{ id: string; name: string } | null>(null);
     const [userToUpdate, setUserToUpdate] = useState<{ id: string; name: string; email: string; roleId: string } | null>(null);
     const [currentUserStatus, setCurrentUserStatus] = useState<'active' | 'inactive'>('active');
+    const isOnline = useConnectionStatus();  
+    
+    useEffect(() => {
+        initDB().catch(console.error);
 
+        if (isOnline) {
+            processOfflineRegistrations().catch(console.error);
+            processOfflineUpdates().catch(console.error);
+        }
+    }, [isOnline]);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 setIsLoading(true);
-                const data = await getUsers();
-                setUsersData(data);
-                setIsLoading(false);
+                if (isOnline) {
+                    deleteAllUserLocal();
+                    const data = await getUsers();
+                    for (const user of data) {
+                        await saveUserLocal({
+                            userName: user.name, 
+                            userEmail: user.email,
+                            userId: user.id,
+                            roleId: user.role.id,});
+                    }
+                    setUsersData(data);
+                    const cachedData: UserLocal[] = await getUsersLocal();
+                    setUserDataLocal(cachedData);
+                } else {
+                    const cachedData: UserLocal[] = await getUsersLocal();
+                    setUserDataLocal(cachedData);
+                }
             } catch (err: unknown) {
                 if (err instanceof Error) {
                     setError(err.message);
                 }
+            } finally {
                 setIsLoading(false);
             }
         };
 
         fetchUsers();
-    }, [searchTerm, activeCategory]);
+    }, [isOnline, searchTerm, activeCategory]);
 
-    const filteredUsers = usersData.filter((user) =>
-        (user.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (user.email || "").toLowerCase().includes(searchTerm.toLowerCase())
-    ).filter((user) => {
-        return user.role?.name === "Maid" || user.role?.name === "Receptionist";
-    }).map((user) => ({
-        ...user,
-        role: {
-            ...user.role,
-            name: user.role?.name === "Maid" ? "Personal de limpieza" : "Recepcionista",
-        },
-    }));
+
 
     if (isLoading) {
         return <p>Cargando usuarios...</p>;
@@ -65,6 +82,16 @@ const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; active
         });
     };
 
+    const handleOpenModalUpdateLocal = (user: UserLocal) => {
+        setUpdateModalIsOpen(true);
+        setUserToUpdate({
+            id: user.userId,
+            name: user.userName,
+            email: user.userEmail,
+            roleId: user.roleId,
+        });
+    }
+
     const handleCloseModalUpdate = () => {
         setUpdateModalIsOpen(false);
         setUserToUpdate(null);
@@ -72,15 +99,39 @@ const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; active
 
     const handleConfirmUpdate = async (userId: string, name: string, email: string, roleId: string) => {
         try {
-            await updateUser(userId, name, email, roleId);
-            const updatedUsers = usersData.map((user) =>
-                user.id === userId ? { ...user, name, email } : user
-            );
-            setUsersData(updatedUsers);
+            if (isOnline) {
+                await updateUser(userId, name, email, roleId);
+                const updatedUsers = usersData.map((user) =>
+                    user.id === userId ? { ...user, name, email } : user
+                );
+                setUsersData(updatedUsers);
+                for (const user of updatedUsers) {
+                    await saveUserLocal({
+                        userName: user.name,
+                        userEmail: user.email,
+                        userId: user.id,
+                        roleId: user.role.id,
+                    });
+                }
+            } else {
+                const updatedUsers = usersData.map((user) =>
+                    user.id === userId ? { ...user, name, email } : user
+                );
+                setUsersData(updatedUsers);
+                for (const user of updatedUsers) {
+                    await saveUserLocal({
+                        userName: user.name,
+                        userEmail: user.email,
+                        userId: user.id,
+                        roleId: user.role.id,
+                    });
+                }
+            }
         } catch (error) {
             console.error("Error:", error);
         }
     };
+        
 
     const handleOpenModalDelete = (user: User) => {
         setDeleteModalIsOpen(true);
@@ -95,11 +146,21 @@ const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; active
 
     const handleConfirmDelete = async (userId: string, newStatus: 'active' | 'inactive') => {
         try {
-            await changeUserStatus(userId, newStatus);
+            if (isOnline) {
+                await changeUserStatus(userId, newStatus);
+            }
             const updatedUsers = usersData.map((user) =>
                 user.id === userId ? { ...user, status: newStatus === 'active' } : user
             );
             setUsersData(updatedUsers);
+            for (const user of updatedUsers) {
+                await saveUserLocal({
+                    userName: user.name,
+                    userEmail: user.email,
+                    userId: user.id,
+                    roleId: user.role.id,
+                });
+            }
         } catch (error) {
             console.error("Error:", error);
         }
@@ -118,8 +179,12 @@ const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; active
                         <th className="py-3 px-4">Estado</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {filteredUsers.map((user, index) => (
+            {isOnline ? (
+                usersData
+                    .filter((user) =>
+                        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map((user, index) => (
                         <tr key={user.id} className="border-b border-gray-200">
                             <td className="py-3 px-4">{index + 1}</td>
                             <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">
@@ -169,8 +234,45 @@ const UsersTable = ({ searchTerm, activeCategory }: { searchTerm: string; active
                                 </button>
                             </td>
                         </tr>
-                    ))}
-                </tbody>
+                    ))
+            ) : (
+                userDataLocal
+                    .filter((user) =>
+                        user.userName.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map((user, index) => (
+                        <tr key={user.userId} className="border-b border-gray-200">
+                            <td className="py-3 px-4">{index + 1}</td>
+                            <td className="py-3 px-4 flex items-center gap-2 text-primary font-[family-name:var(--font-jost-medium)]">
+                                <button className="p-2 bg-complementary rounded-full">
+                                    <PersonOutlineOutlined className="text-background" />
+                                </button>
+                                {user.userName}
+                            </td>
+                            <td className="py-3 px-4">{user.roleId}</td>
+                            <td className="py-3 px-4">{user.userEmail}</td>
+                            <td className="py-3 px-4 flex gap-2">
+                                <button
+                                    className="p-2 border-2 border-primary rounded-full"
+                                    onClick={() => handleOpenModalUpdateLocal(user)}
+                                >
+                                    <EditOutlined className="text-primary" />
+                                </button>
+                                <button
+                                    className="p-2 border-2 border-error rounded-full"
+                                    onClick={() => handleOpenModalUpdateLocal(user)}
+                                >
+                                    <DeleteOutlineOutlined className="text-error" />
+                                </button>
+                            </td>
+                            <td className="py-3 px-4">
+                                <button className="py-1 px-4 rounded-lg bg-green-500 text-white">
+                                    Activo
+                                </button>
+                            </td>
+                        </tr>
+                    ))
+            )}
             </table>
             <ActivateDeactivateModal
                 isOpen={deleteModalIsOpen}

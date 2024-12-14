@@ -3,6 +3,9 @@ import ButtonCustom from '@/app/_components/button_custom';
 import { EmailOutlined, PersonOutlineOutlined } from '@mui/icons-material';
 import TextInput from '@/app/_components/text_input';
 import { motion } from 'framer-motion';
+import useConnectionStatus from '@/hooks/useConectionStatus';
+import { savePendingUpdate, saveUserLocal} from '@/utils/indexedDB';
+import { processOfflineUpdates} from '@/utils/offline-manager';
 
 interface UpdateUserModalProps {
     isOpen: boolean;
@@ -19,9 +22,11 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
     const [updatedEmail, setUpdatedEmail] = useState(userEmail);
     const [emailError, setEmailError] = useState('');
     const [userNameError, setUserNameError] = useState('');
+    const [loading, setLoading] = useState(false);
     const [animationState, setAnimationState] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
     const [initialName, setInitialName] = useState(userName);
     const [initialEmail, setInitialEmail] = useState(userEmail);
+    const isOnline = useConnectionStatus();
 
     useEffect(() => {
         setInitialName(userName);
@@ -57,21 +62,46 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
     const isButtonEnabled = (updatedName !== initialName || updatedEmail !== initialEmail) && isValidEmail(updatedEmail) && !userNameError;
 
     const handleUpdate = async () => {
-        if (isButtonEnabled) {
-            try {
-                await onConfirm(userId, updatedName, updatedEmail, roleId);
+        if (!isButtonEnabled) return;
+        setLoading(true);
+        const updateData = {
+            userId,
+            name: updatedName,
+            email: updatedEmail,
+            roleId,
+        };
+
+        try {
+            if (isOnline) {
+                onConfirm(userId, updatedName, updatedEmail, roleId);
                 setAnimationState({ type: 'success', message: 'Usuario actualizado exitosamente!' });
                 setTimeout(() => {
                     setAnimationState({ type: null, message: '' });
                     handleClose();
                 }, 1500);
-            } catch (error) {
-                console.error("Error updating user:", error);
-                setAnimationState({ type: 'error', message: 'Error al actualizar el usuario. Intenta de nuevo.' });
+            } else {
+                await savePendingUpdate(updateData);
+                setAnimationState({
+                    type: 'success',
+                    message: 'Actualización guardada localmente. Se completará cuando vuelva la conexión.'
+                });
                 setTimeout(() => {
-                    setAnimationState({ type: null, message: '' });
-                }, 3000);
+                    handleClose();
+                }, 1500);
             }
+        } catch (error) {
+            console.error("Error updating user:", error);
+            setAnimationState({
+                type: 'error',
+                message: isOnline 
+                    ? 'Error al actualizar el usuario. Intenta de nuevo.'
+                    : 'Error al guardar la actualización offline. Intenta de nuevo.'
+            });
+            setTimeout(() => {
+                setAnimationState({ type: null, message: '' });
+            }, 3000);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -158,6 +188,7 @@ const UpdateUserModal = ({ isOpen, onClose, userName, userEmail, userId, roleId,
                         colorText="background"
                         backgroundColor="primary"
                         onClick={handleUpdate}
+                        isLoading={loading}
                         disabled={!isButtonEnabled}
                         className={`w-full ${!isButtonEnabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >

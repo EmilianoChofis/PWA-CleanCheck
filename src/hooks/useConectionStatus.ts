@@ -12,6 +12,7 @@ const useConnectionStatus = () => {
     const [isOnline, setIsOnline] = useState(
         typeof window !== 'undefined' ? navigator.onLine : true
     );
+
     const [hasNotificationPermission, setHasNotificationPermission] = useState(false);
 
     const showNotification = async ({ title, message }: NotificationOptions) => {
@@ -57,9 +58,10 @@ const useConnectionStatus = () => {
         const handleOnline = async () => {
             setIsOnline(true);
             await showNotification({
-                title: 'Conexión restaurada',
-                message: 'La conexión se ha restaurado, sincronizando los datos...',
+            title: 'Conexión restaurada',
+            message: 'La conexión se ha restaurado, sincronizando los datos...',
             });
+            window.location.reload();
         };
 
         const handleOffline = async () => {

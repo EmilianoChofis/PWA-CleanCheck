@@ -1,8 +1,15 @@
-import { registerUser } from "@/app/utils/auth-service";
-
-const DB_NAME = 'cleancheck';
-const STORE_NAME = 'pendingRegistrations';
+const DB_NAME = "cleancheck";
 const DB_VERSION = 1;
+const STORE_PENDING_REGISTRATIONS = "pendingRegistrations";
+const STORE_PENDING_UPDATES = "pendingUpdates";
+const STORE_USERS = "users";
+
+export interface User {
+  userName: string;
+  userEmail: string;
+  userId: string;
+  roleId: string;
+}
 
 interface UserData {
   userName: string;
@@ -11,17 +18,33 @@ interface UserData {
   userPassword: string;
 }
 
-export const initDB = (): Promise<void> => {
+interface PendingUpdate {
+  userId: string;
+  name: string;
+  email: string;
+  roleId: string;
+}
+
+export const initDB = (): Promise<IDBDatabase> => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve();
+    request.onsuccess = () => resolve(request.result);
 
-    request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+    request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+
+      if (!db.objectStoreNames.contains(STORE_PENDING_REGISTRATIONS)) {
+        db.createObjectStore(STORE_PENDING_REGISTRATIONS, { keyPath: "id", autoIncrement: true });
+      }
+
+      if (!db.objectStoreNames.contains(STORE_PENDING_UPDATES)) {
+        db.createObjectStore(STORE_PENDING_UPDATES, { keyPath: "id", autoIncrement: true });
+      }
+      
+      if (!db.objectStoreNames.contains(STORE_USERS)) {
+        db.createObjectStore(STORE_USERS, { keyPath: "id", autoIncrement: true });
       }
     };
   });
@@ -35,11 +58,47 @@ const openDB = (): Promise<IDBDatabase> => {
   });
 };
 
+export const saveUserLocal = async (userData: User): Promise<void> => {
+  const db = await openDB();
+  const transaction = db.transaction(STORE_USERS, "readwrite");
+  const store = transaction.objectStore(STORE_USERS);
+  store.add(userData);
+};
+
+export const deleteAllUserLocal = async (): Promise<void> => {
+  const db = await openDB();
+  const transaction = db.transaction(STORE_USERS, "readwrite");
+  const store = transaction.objectStore(STORE_USERS);
+  store.clear();
+}
+
+export const getUsersLocal = async (): Promise<(User)[]> => {
+  const db = await openDB();
+  const transaction = db.transaction(STORE_USERS, "readonly");
+  const store = transaction.objectStore(STORE_USERS);
+  return new Promise((resolve, reject) => {
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+};
+
+export const updateUserLocal = async (id: number, userData: User): Promise<void> => {
+  const db = await openDB();
+  const transaction = db.transaction(STORE_USERS, "readwrite");
+  const store = transaction.objectStore(STORE_USERS);
+  store.put({
+    ...userData,
+    id,
+    timestamp: Date.now(),
+  });
+}
+
 export const savePendingRegistration = async (userData: UserData): Promise<void> => {
   const db = await openDB();
-  const transaction = db.transaction(STORE_NAME, 'readwrite');
-  const store = transaction.objectStore(STORE_NAME);
-  await store.add({
+  const transaction = db.transaction(STORE_PENDING_REGISTRATIONS, "readwrite");
+  const store = transaction.objectStore(STORE_PENDING_REGISTRATIONS);
+  store.add({
     ...userData,
     timestamp: Date.now(),
   });
@@ -47,9 +106,9 @@ export const savePendingRegistration = async (userData: UserData): Promise<void>
 
 export const getPendingRegistrations = async (): Promise<(UserData & { id: number })[]> => {
   const db = await openDB();
-  const transaction = db.transaction(STORE_NAME, 'readonly');
-  const store = transaction.objectStore(STORE_NAME);
-  return new Promise<(UserData & { id: number })[]>((resolve, reject) => {
+  const transaction = db.transaction(STORE_PENDING_REGISTRATIONS, "readonly");
+  const store = transaction.objectStore(STORE_PENDING_REGISTRATIONS);
+  return new Promise((resolve, reject) => {
     const request = store.getAll();
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
@@ -58,27 +117,35 @@ export const getPendingRegistrations = async (): Promise<(UserData & { id: numbe
 
 export const deletePendingRegistration = async (id: number): Promise<void> => {
   const db = await openDB();
-  const transaction = db.transaction(STORE_NAME, 'readwrite');
-  const store = transaction.objectStore(STORE_NAME);
+  const transaction = db.transaction(STORE_PENDING_REGISTRATIONS, "readwrite");
+  const store = transaction.objectStore(STORE_PENDING_REGISTRATIONS);
   store.delete(id);
 };
 
-export const processOfflineRegistrations = async (): Promise<void> => {
-  const registrations = await getPendingRegistrations();
-  for (const registration of registrations) {
-    try {
-      const { id, ...userData } = registration;
-      const roleEndpoint = userData.userRole === 'cleaning staff' ? '/Maid' : '/Receptionist';
-      await registerUser(
-        userData.userName,
-        userData.userEmail,
-        userData.userRole,
-        userData.userPassword,
-        roleEndpoint
-      );
-      await deletePendingRegistration(id);
-    } catch (error) {
-      console.error('Error processing offline registration:', error);
-    }
-  }
+export const savePendingUpdate = async (updateData: PendingUpdate): Promise<void> => {
+  const db = await openDB();
+  const transaction = db.transaction(STORE_PENDING_UPDATES, "readwrite");
+  const store = transaction.objectStore(STORE_PENDING_UPDATES);
+  store.add({
+    ...updateData,
+    timestamp: Date.now(),
+  });
+};
+
+export const getPendingUpdates = async (): Promise<(PendingUpdate & { id: number })[]> => {
+  const db = await openDB();
+  const transaction = db.transaction(STORE_PENDING_UPDATES, "readonly");
+  const store = transaction.objectStore(STORE_PENDING_UPDATES);
+  return new Promise((resolve, reject) => {
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+};
+
+export const deletePendingUpdate = async (id: number): Promise<void> => {
+  const db = await openDB();
+  const transaction = db.transaction(STORE_PENDING_UPDATES, "readwrite");
+  const store = transaction.objectStore(STORE_PENDING_UPDATES);
+  store.delete(id);
 };

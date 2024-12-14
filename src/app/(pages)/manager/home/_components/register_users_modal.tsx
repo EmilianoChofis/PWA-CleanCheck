@@ -30,14 +30,6 @@ const RegisterUserModal = ({ isOpen, onClose, onConfirm }: ModalProps) => {
         { value: 'recepcionist', label: 'Recepcionista' },
     ];
 
-    useEffect(() => {
-        initDB().catch(console.error);
-
-        if (isOnline) {
-            processOfflineRegistrations().catch(console.error);
-        }
-    }, [isOnline]);
-
     if (!isOpen) return null;
 
     const handleClose = () => {

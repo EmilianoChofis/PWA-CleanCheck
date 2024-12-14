@@ -65,7 +65,7 @@ export const changeUserStatus = async (userId: string, status: string) => {
 
 
 export const updateUser = async (userId: string, name: string, email: string, roleId: string) => {
-    const response = await fetch(`${process.env.URL_BASE}/api-clean/user/update`, {
+    const response = await fetch(`${process.env.URL_BASE}/user/update`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
